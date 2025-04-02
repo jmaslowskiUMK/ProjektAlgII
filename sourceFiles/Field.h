@@ -1,0 +1,19 @@
+#pragma once
+#include <vector>
+#include "Node.h"
+
+class Field:public Node
+{
+private:
+	int production;
+	int xMiddle, yMiddle,radius;
+public:
+	Field();
+	Field(int x);
+	Field(int production, int xMiddle, int yMiddle, int radius);
+	int getProduction();
+	void setProduction(int x);
+	void print();
+
+};
+
