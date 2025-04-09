@@ -1,0 +1,16 @@
+(pomysł na przyszłość z Graficzną edycją grafu)
+
+
+Mateusz:
+  - integracja c++ (rozwiązania kuby) z GUI, formatowanie wejścia ogarnij
+Kacper:
+  - zastanów się nad koniecznością "typu ścierzki"
+  - otoczka wypukła i generator do niej
+KKuba:
+  - Karp
+  - Obsługa klas niskopoziomowego języka
+  - zredukuj ilość urzywanych przez ciebie wektorów
+  - usunięcie Klasy Line (zbędna)
+Milena:
+  - Udokumentowanie stosu technologicznego
+  - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra)
