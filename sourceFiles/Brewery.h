@@ -13,7 +13,7 @@ public:
 	Brewery(int xMiddle,int yMiddle,int radius,int barleyAmount);
 	int getBeerAmount();
 	void setBarley(int barley);
-	void print();
+	void print()override;
 	void setBeer(int x);
 };
 

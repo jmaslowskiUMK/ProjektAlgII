@@ -8,6 +8,6 @@ private:
 	int xMiddle, yMiddle,radius;
 public:
 	Pub(int xMiddle,int yMiddle,int radius);
-	void print();
+	void print()override;
 };
 

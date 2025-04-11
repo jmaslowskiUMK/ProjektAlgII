@@ -13,7 +13,6 @@ public:
 	Field(int production, int xMiddle, int yMiddle, int radius);
 	int getProduction();
 	void setProduction(int x);
-	void print();
-
+	void print()override;
 };
 
