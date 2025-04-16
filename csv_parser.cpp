@@ -47,5 +47,6 @@ extern "C" {
             }
         }
             objectKingdom.printContent();
+            objectKingdom.printBfs(objectKingdom.find("Field_1"));
     }
 }

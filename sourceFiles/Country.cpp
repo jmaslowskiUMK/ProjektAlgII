@@ -9,6 +9,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+//dodałem bo ostatnia funkcja
+#include <iostream>
+
 Country::Country() {
 }
 
@@ -159,4 +162,31 @@ void Country::printContent() {
 	for (int i = 0; i < nodeVector.size(); i++) {
 		nodeVector[i]->printName();
 	}
+}
+
+void Country::printBfs(std::shared_ptr<Node> startingNode) {
+	std::vector<std::shared_ptr<Node>> visited;
+    std::queue<std::shared_ptr<Node>> q;
+    q.push(startingNode);
+    std::shared_ptr<Node> curr;
+
+    while (!q.empty()) {
+        curr = q.front();  // Pobierz pierwszy element z kolejki
+        visited.push_back(curr);
+        q.pop();  // Usuwamy wierzchołek z kolejki po przetworzeniu
+
+        // Iteruj po krawędziach (relacjach) wierzchołka
+        for (auto& el : adjList[curr]) {
+            auto toNode = el.getToPtr();  // Wierzchołek docelowy
+            if (std::find(visited.begin(), visited.end(), toNode) == visited.end()) {  // Jeśli nie odwiedzony
+                q.push(toNode);  // Dodaj do kolejki
+            }
+
+            // Wyświetl relację w formie strzałki
+            curr->printName();  // Wypisz nazwę wierzchołka początkowego
+            std::cout << " -> "; // Strzałka
+            toNode->printName(); // Wypisz nazwę wierzchołka docelowego
+            std::cout << std::endl;
+        }
+    }
 }

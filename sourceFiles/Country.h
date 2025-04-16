@@ -40,4 +40,5 @@ public:
 
 	//zrób kuba coś co wypisze te relacje między node'ami
 	void printContent();
+	void printBfs(std::shared_ptr<Node> startingNode);
 };
