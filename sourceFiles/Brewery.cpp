@@ -5,7 +5,8 @@ Brewery::Brewery() {
 	beerAmount = 0;
 }
 
-Brewery::Brewery(int xMiddle, int yMiddle, int radius, int barleyAmount) {
+Brewery::Brewery(std::string ID, int xMiddle, int yMiddle, int radius, int barleyAmount) {
+	this->ID = ID;
 	this->xMiddle = xMiddle;
 	this->yMiddle = yMiddle;
 	this->radius = radius;

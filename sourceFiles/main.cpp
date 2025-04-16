@@ -2,7 +2,14 @@
 #include "Country.h"
 #include <utility>
 
+
 int main() {
+
+/*
+
+PROSZĘ SIĘ OBECNIE MAINEM NIE SUGEROWAĆ, NIE JEST AKTUALNY
+
+PO PRZYKŁADY UŻYCIA ZALECAM UDAĆ SIĘ DO CSV_PARSER.CPP
 
 
 	Country polska;
@@ -73,6 +80,16 @@ int main() {
 	polska.addRelationship(lane11);//F G
 	
 	std::cout<<polska.EdmondsKarp(las,ryneczekLidla);
+	*/
+
+	//g++ ./main.cpp ./Country.cpp ./Node.cpp ./Lane.cpp ./Brewery.cpp ./Pub.cpp ./Field.cpp .\Intersection.cpp
+
+	Country kingdom;
+	kingdom.createBrewery("Brewery_1", 69, 420, 10, 55);
+	kingdom.createField("Field_1", 2137, 466, 450, 10);
+	kingdom.createPub("Pub_1", 420, 156, 10);
+
+	//kingdom.find("Pub_1")->print();
 
 	return 0;
 }

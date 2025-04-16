@@ -4,11 +4,10 @@
 #include "Node.h"
 #include <vector>
 #include <queue>
-#include <algorithm> //find 
+#include <algorithm> //find
 #include <limits.h>
 #include <unordered_map>
 #include <unordered_set>
-
 
 Country::Country() {
 }
@@ -119,27 +118,45 @@ void Country::addRelationship(Lane lane) {//add Lane to adjList
 
 //create shared_ptr of each derived from Node class add to adjList
 
-std::shared_ptr<Pub> Country::createPub(int xMiiddle, int yMiddle, int radius){
-	auto pub = std::make_shared<Pub>(xMiiddle,yMiddle,radius);
+std::shared_ptr<Pub> Country::createPub(std::string ID, int xMiiddle, int yMiddle, int radius){
+	auto pub = std::make_shared<Pub>(ID, xMiiddle,yMiddle,radius);
 	adjList[pub] = {};
+	this->nodeVector.push_back(pub);
 	return pub;
 }
 
-std::shared_ptr<Brewery> Country::createBrewery(int xMiddle, int yMiddle, int radius, int barleyAmount) {
-	auto brewery = std::make_shared<Brewery>(xMiddle, yMiddle, radius, barleyAmount);
+std::shared_ptr<Brewery> Country::createBrewery(std::string ID, int xMiddle, int yMiddle, int radius, int barleyAmount) {
+	auto brewery = std::make_shared<Brewery>(ID, xMiddle, yMiddle, radius, barleyAmount);
 	adjList[brewery] = {};
+	nodeVector.push_back(brewery);
 	return brewery;
 }
 
 std::shared_ptr<Intersection> Country::createIntersection(int x, int y) {
 	auto intersection = std::make_shared<Intersection>(x, y);
 	adjList[intersection] = {};
+	nodeVector.push_back(intersection);
 	return intersection;
 }
 
-std::shared_ptr<Field> Country::createField(int production, int xMiddle, int yMiddle, int radius){
-	auto field = std::make_shared<Field>(production, xMiddle, yMiddle, radius);
+std::shared_ptr<Field> Country::createField(std::string ID, int production, int xMiddle, int yMiddle, int radius){
+	auto field = std::make_shared<Field>(ID, production, xMiddle, yMiddle, radius);
 	adjList[field] = {};
+	nodeVector.push_back(field);
 	return field;
 }
 
+std::shared_ptr<Node> Country::find(std::string ID) {
+	for (int i = 0; i < nodeVector.size(); i++) {
+		if (ID == nodeVector[i]->getID()) {
+			return nodeVector[i];
+		}
+	}
+	return std::shared_ptr<Node>();
+}
+
+void Country::printContent() {
+	for (int i = 0; i < nodeVector.size(); i++) {
+		nodeVector[i]->printName();
+	}
+}

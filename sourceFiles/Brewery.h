@@ -10,7 +10,7 @@ private:
 	int beerAmount;
 public:
 	Brewery();
-	Brewery(int xMiddle,int yMiddle,int radius,int barleyAmount);
+	Brewery(std::string ID, int xMiddle,int yMiddle,int radius,int barleyAmount);
 	int getBeerAmount();
 	void setBarley(int barley);
 	void print()override;

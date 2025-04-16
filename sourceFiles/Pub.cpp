@@ -1,7 +1,8 @@
 #include "Pub.h"
 #include <iostream>
 
-Pub::Pub(int xMiddle,int yMiddle, int radius) {
+Pub::Pub(std::string ID, int xMiddle,int yMiddle, int radius) {
+	this->ID = ID;
 	this->xMiddle = xMiddle;
 	this->yMiddle = yMiddle;
 	this->radius = radius;
@@ -12,6 +13,6 @@ void Pub::print() {
 	std::cout << "y: " << yMiddle << std::endl;
 	std::cout << "radius: " << radius << std::endl;	
 	std::cout << "adjacent: ";
-	
+
 	std::cout << std::endl;
 }

@@ -7,7 +7,7 @@ class Pub: public Node
 private:
 	int xMiddle, yMiddle,radius;
 public:
-	Pub(int xMiddle,int yMiddle,int radius);
+	Pub(std::string ID, int xMiddle,int yMiddle,int radius);
 	void print()override;
 };
 

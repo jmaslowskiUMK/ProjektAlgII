@@ -6,9 +6,13 @@ void Node::print() {
 }
 
 void Node::printName() {
-    std::cout << name << std::endl;
+    std::cout << ID << std::endl;
 }
 
 void Node::setName(std::string name) {
-    this->name = name;
+    this->ID = name;
+}
+
+std::string Node::getID() {
+    return this->ID;
 }
