@@ -2,15 +2,18 @@
 
 
 Mateusz:
-  - integracja c++ (rozwiązania kuby) z GUI, formatowanie wejścia ogarnij
+  - integracja c++ (rozwiązania kuby) z GUI, formatowanie wejścia ogarnij <- wykonane
+  - dycznamiczny Canvas integrujący otoczkę wypukłą, narazie bez integracji z MaxFlow.
+
 Kacper:
-  - zastanów się nad koniecznością "typu ścierzki"
-  - otoczka wypukła i generator do niej
+  - usuń typ ścierzki (zbędny)
+  - id rozwiązane jako inty (pola n+0, browary n+1, puby n+2, któe będziemy sortować)
+  - otoczka wypukła i generator do niej (?)
 KKuba:
-  - Karp
-  - Obsługa klas niskopoziomowego języka
-  - zredukuj ilość urzywanych przez ciebie wektorów
-  - usunięcie Klasy Line (zbędna)
+  - Karp <- wykonane
+  - algorytm Dynica lub +
+  - USTAL KONKRETNE ŹRÓDŁO I ZLEW
 Milena:
   - Udokumentowanie stosu technologicznego
-  - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra)
+  - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra) <-
+  - analiza drugiego akapitu (koszty naprawy dróg)
