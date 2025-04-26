@@ -4,33 +4,33 @@ import csv
 def generate_barley_yield(number_of_fields):
     fields = []
     for i in range(number_of_fields):
-        value = random.uniform(3, 8)  # random value between 3 and 8 tons
-        x = random.uniform(0, 50)  # fields on the left (just to make it look like in an algorithm)
-        y = random.uniform(0, 100)  # random y coord
-        fields.append({"id": f"Field_{i+1}", "yield": round(value, 2), "x": round(x, 2), "y": round(y, 2)})
+        value = random.randint(3000, 8000)  # random yield between 3000 and 8000 kg
+        x = random.randint(0, 50)  # fields on the left (as integers)
+        y = random.randint(0, 100)  # random y coordinate (as integers)
+        fields.append({"id": f"Field_{i+1}", "yield": value, "x": x, "y": y})
     return fields
 
 def generate_equal_barley_processed(number_of_breweries):
     breweries = []
-    processed_value = random.uniform(0.9, 4)  # random value between 0.9 and 4 tons
+    processed_value = random.randint(900, 4000)  # random processed yield between 900 and 4000 kg
     for i in range(number_of_breweries):
-        x = random.uniform(50, 150)  # Breweries in the middle (just to make it look like in an algorithm)
-        y = random.uniform(0, 100)  # random y coord
-        breweries.append({"id": f"Brewery_{i+1}", "processed": round(processed_value, 2), "x": round(x, 2), "y": round(y, 2)})
+        x = random.randint(50, 150)  # Breweries in the middle (as integers)
+        y = random.randint(0, 100)  # random y coordinate (as integers)
+        breweries.append({"id": f"Brewery_{i+1}", "processed": processed_value, "x": x, "y": y})
     return breweries
 
 def distribute_beer_to_pubs(total_beer, number_of_pubs):
     pubs = []
     remaining_beer = total_beer
     for i in range(number_of_pubs - 1):  # distributing to all pubs except the last one
-        share = round(random.uniform(0, remaining_beer / 2), 2)  # Random share
-        x = random.uniform(150, 200)  # pubs on the right (just to make it look like in an algorithm)
-        y = random.uniform(0, 100)  # random y coord
-        pubs.append({"id": f"Pub_{i+1}", "beer": share, "x": round(x, 2), "y": round(y, 2)})
+        share = random.randint(0, remaining_beer // 2)  # Random share as integers
+        x = random.randint(150, 200)  # pubs on the right (as integers)
+        y = random.randint(0, 100)  # random y coordinate (as integers)
+        pubs.append({"id": f"Pub_{i+1}", "beer": share, "x": x, "y": y})
         remaining_beer -= share
-    x = random.uniform(150, 200)  # last pub to close circle
-    y = random.uniform(0, 100)  # random y coord
-    pubs.append({"id": f"Pub_{number_of_pubs}", "beer": round(remaining_beer, 2), "x": round(x, 2), "y": round(y, 2)})
+    x = random.randint(150, 200)  # last pub to close circle
+    y = random.randint(0, 100)  # random y coordinate (as integers)
+    pubs.append({"id": f"Pub_{number_of_pubs}", "beer": remaining_beer, "x": x, "y": y})
     return pubs
 
 def generate_lanes_yield_to_brewery(fields, breweries):
@@ -39,20 +39,20 @@ def generate_lanes_yield_to_brewery(fields, breweries):
         number_of_lanes = random.randint(1, len(breweries))  # each field can have multiple lanes
         destinations = random.sample(breweries, number_of_lanes)  # randomly choose breweries
         for dest in destinations:
-            capacity = random.uniform(0.1, 1)  # transport capacity in tons (0.1 to 7 ton per trip)
+            capacity = random.randint(100, 1000)  # transport capacity in kg (100 to 1000 kg per trip)
             lanes.append({
                 "from": field["id"],
                 "to": dest["id"],
                 "type": "Field-to-Brewery",
-                "capacity": round(capacity, 2)
+                "capacity": capacity
             })
     return lanes
 
 def generate_lanes_brewery_to_pub(breweries, pubs):
     lanes = []
     for brewery in breweries:
-        number_of_lanes = random.randint(1, len(pubs))  # each and every brewery can have multiple lanes
-        destinations = random.sample(pubs, number_of_lanes)  # randomly choosen pubs
+        number_of_lanes = random.randint(1, len(pubs))  # each brewery can have multiple lanes
+        destinations = random.sample(pubs, number_of_lanes)  # randomly chosen pubs
         for dest in destinations:
             capacity = random.randint(100, 5000)  # capacity in liters
             lanes.append({
@@ -72,8 +72,8 @@ def save_all_to_csv(filename, fields, breweries, pubs, lanes):
         
         # writing headers
         writer.writerow([
-            "Category", "ID", "Yield (tons)", "Processed (tons)", "Beer (liters)", 
-            "X Coordinate", "Y Coordinate", "Lane From", "Lane To", "Lane Type", "Capacity (tons/liters)"
+            "Category", "ID", "Yield (kg)", "Processed (kg)", "Beer (liters)", 
+            "X Coordinate", "Y Coordinate", "Lane From", "Lane To", "Lane Type", "Capacity (kg/liters)"
         ])
         
         # writing fields
@@ -110,7 +110,7 @@ fields = generate_barley_yield(number_of_fields)
 number_of_breweries = int(input("Enter the number of breweries: "))
 breweries = generate_equal_barley_processed(number_of_breweries)
 
-total_beer = round(sum([brewery["processed"] * random.uniform(3000, 6400) for brewery in breweries]), 2)
+total_beer = sum([brewery["processed"] * random.randint(3000, 6400) for brewery in breweries])
 
 number_of_pubs = int(input("Enter the number of pubs: "))
 pubs = distribute_beer_to_pubs(total_beer, number_of_pubs)
