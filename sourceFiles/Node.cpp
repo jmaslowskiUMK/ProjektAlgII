@@ -16,3 +16,11 @@ void Node::setName(std::string name) {
 std::string Node::getID() {
     return this->ID;
 }
+
+int Node::getX() {
+    return this->xMiddle;
+}
+
+int Node::getY() {
+    return this->yMiddle;
+}

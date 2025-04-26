@@ -5,7 +5,6 @@
 class Brewery: public Node
 {
 private:
-	int xMiddle, yMiddle,radius;
 	int barleyAmount;
 	int beerAmount;
 public:

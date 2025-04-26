@@ -20,9 +20,9 @@ class Country
 {
 private:
 	int breweryEfficiency;
+public:
 	std::map<std::shared_ptr<Node>, std::vector<Lane> > adjList;
 	std::vector<std::shared_ptr<Node>> nodeVector;
-public:
 
 	Country();
 	~Country();
@@ -38,7 +38,6 @@ public:
 	std::shared_ptr<Node> find(std::string ID);
 
 
-	//zrób kuba coś co wypisze te relacje między node'ami
 	void printContent();
 	void printBfs(std::shared_ptr<Node> startingNode);
 };

@@ -5,7 +5,6 @@ class Field:public Node
 {
 private:
 	int production;
-	int xMiddle, yMiddle,radius;
 public:
 	Field();
 	Field(int x);

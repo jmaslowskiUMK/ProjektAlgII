@@ -6,6 +6,11 @@
 <body>
     <input type="file" id="csvFileInput" accept=".csv">
     <button id="processButton">Przetworz</button>
+
+    <canvas id="Map" style="border: 1px solid black;"></canvas>
+    <button onclick="draw()">Rysuj</button>
+    <input type="range" value="1" max="4" min="0.25" step="0.05">
+
     <script src="csv_parser.js"></script>
     <script src="script.js"></script>
 </body>
