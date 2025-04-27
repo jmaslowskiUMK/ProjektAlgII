@@ -7,7 +7,7 @@ def generate_barley_yield(number_of_fields):
         value = random.randint(3000, 8000)  # random yield between 3000 and 8000 kg
         x = random.randint(0, 50)  # fields on the left (as integers)
         y = random.randint(0, 100)  # random y coordinate (as integers)
-        fields.append({"id": f"Field_{i+1}", "yield": value, "x": x, "y": y})
+        fields.append({"id": i * 3, "yield": value, "x": x, "y": y})  # IDs as 0, 3, 6, etc.
     return fields
 
 def generate_equal_barley_processed(number_of_breweries):
@@ -16,7 +16,7 @@ def generate_equal_barley_processed(number_of_breweries):
     for i in range(number_of_breweries):
         x = random.randint(50, 150)  # Breweries in the middle (as integers)
         y = random.randint(0, 100)  # random y coordinate (as integers)
-        breweries.append({"id": f"Brewery_{i+1}", "processed": processed_value, "x": x, "y": y})
+        breweries.append({"id": i * 3 + 1, "processed": processed_value, "x": x, "y": y})  # IDs as 1, 4, 7, etc.
     return breweries
 
 def distribute_beer_to_pubs(total_beer, number_of_pubs):
@@ -26,12 +26,13 @@ def distribute_beer_to_pubs(total_beer, number_of_pubs):
         share = random.randint(0, remaining_beer // 2)  # Random share as integers
         x = random.randint(150, 200)  # pubs on the right (as integers)
         y = random.randint(0, 100)  # random y coordinate (as integers)
-        pubs.append({"id": f"Pub_{i+1}", "beer": share, "x": x, "y": y})
+        pubs.append({"id": i * 3 + 2, "beer": share, "x": x, "y": y})  # IDs as 2, 5, 8, etc.
         remaining_beer -= share
     x = random.randint(150, 200)  # last pub to close circle
     y = random.randint(0, 100)  # random y coordinate (as integers)
-    pubs.append({"id": f"Pub_{number_of_pubs}", "beer": remaining_beer, "x": x, "y": y})
+    pubs.append({"id": (number_of_pubs - 1) * 3 + 2, "beer": remaining_beer, "x": x, "y": y})  # Last pub ID follows the pattern
     return pubs
+
 
 def generate_lanes_yield_to_brewery(fields, breweries):
     lanes = []
@@ -43,7 +44,6 @@ def generate_lanes_yield_to_brewery(fields, breweries):
             lanes.append({
                 "from": field["id"],
                 "to": dest["id"],
-                "type": "Field-to-Brewery",
                 "capacity": capacity
             })
     return lanes
@@ -58,10 +58,10 @@ def generate_lanes_brewery_to_pub(breweries, pubs):
             lanes.append({
                 "from": brewery["id"],
                 "to": dest["id"],
-                "type": "Brewery-to-Pub",
                 "capacity": capacity
             })
     return lanes
+
 
 def save_all_to_csv(filename, fields, breweries, pubs, lanes):
     """
@@ -73,7 +73,7 @@ def save_all_to_csv(filename, fields, breweries, pubs, lanes):
         # writing headers
         writer.writerow([
             "Category", "ID", "Yield (kg)", "Processed (kg)", "Beer (liters)", 
-            "X Coordinate", "Y Coordinate", "Lane From", "Lane To", "Lane Type", "Capacity (kg/liters)"
+            "X Coordinate", "Y Coordinate", "Lane From", "Lane To", "Capacity (kg/liters)"
         ])
         
         # writing fields
@@ -101,7 +101,7 @@ def save_all_to_csv(filename, fields, breweries, pubs, lanes):
         for lane in lanes:
             writer.writerow([
                 "Lane", "", "", "", "",
-                "", "", lane["from"], lane["to"], lane["type"], lane["capacity"]
+                "", "", lane["from"], lane["to"], lane["capacity"]
             ])
 
 number_of_fields = int(input("Enter the number of fields: "))
