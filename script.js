@@ -19,18 +19,39 @@ document.addEventListener('DOMContentLoaded', () => {
     processButton.addEventListener('click', async () => {
         const file = fileInput.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = async (event) => {
-                const csvData = event.target.result;
+            if (document.querySelector('input[type="radio"]').id == "buildingMap") {
 
-                parserInstance = await CsvParser();
+                //  wgrywanie budynków
 
-                parserInstance.ccall('processCSV', null, ['string'], [csvData]);
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    const csvData = event.target.result;
 
-                // wyrysowanie mapy
-                draw();
-            };
-            reader.readAsText(file);
+                    parserInstance = await CsvParser();
+
+                    parserInstance.ccall('processCSVprocessCSVBuildings', null, ['string'], [csvData]);
+
+                    // wyrysowanie mapy
+                    draw();
+                };
+                reader.readAsText(file);
+            }   else if (document.querySelector('input[type="radio"]').id == "borderMap") {
+
+                //  wgrywanie otoczek
+
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    const csvData = event.target.result;
+
+                    parserInstance = await CsvParser();
+
+                    parserInstance.ccall('processCSVBorder', null, ['string'], [csvData]);
+
+                    // wyrysowanie mapy
+                    draw();
+                };
+                reader.readAsText(file);
+            }
         } else {
             alert('Wybierz plik CSV.');
         }
@@ -90,9 +111,9 @@ function draw() {
         ctx.fillStyle = "white";
         ctx.fill();
 
-        // ID
+        // name
         ctx.fillStyle = "black";
-        ctx.fillText(node.ID, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
+        ctx.fillText(node.name, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
     });
 
 }

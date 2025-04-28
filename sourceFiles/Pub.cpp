@@ -1,7 +1,7 @@
 #include "Pub.h"
 #include <iostream>
 
-Pub::Pub(std::string ID, int xMiddle,int yMiddle, int radius) {
+Pub::Pub(int ID, int xMiddle,int yMiddle, int radius) {
 	this->ID = ID;
 	this->xMiddle = xMiddle;
 	this->yMiddle = yMiddle;

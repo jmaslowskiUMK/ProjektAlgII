@@ -5269,7 +5269,7 @@ var wasmImports = {
 };
 var wasmExports = await createWasm();
 var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors', 0);
-var _processCSV = Module['_processCSV'] = createExportWrapper('processCSV', 1);
+var _processCSVBuildings = Module['_processCSVBuildings'] = createExportWrapper('processCSVBuildings', 1);
 var _malloc = createExportWrapper('malloc', 1);
 var ___getTypeName = createExportWrapper('__getTypeName', 1);
 var _fflush = createExportWrapper('fflush', 1);

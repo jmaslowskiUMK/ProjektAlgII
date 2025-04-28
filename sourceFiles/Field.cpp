@@ -17,7 +17,7 @@ void Field::setProduction(int x){
 	production = x;
 }
 
-Field::Field(std::string ID, int production, int xMiddle, int yMiddle, int radius) {
+Field::Field(int ID, int production, int xMiddle, int yMiddle, int radius) {
 	this->ID = ID;
 	this->xMiddle = xMiddle;
 	this->yMiddle = yMiddle;

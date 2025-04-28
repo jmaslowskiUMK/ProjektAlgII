@@ -1,17 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wczytywanie CSV (WebAssembly)</title>
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        #sidebar {
+            width: 320px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            box-sizing: border-box;
+            height: 100vh;
+        }
+
+        #sidebar input, #sidebar button {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        #sidebar input[type="range"] {
+            margin-top: 10px;
+        }
+
+        #canvas-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #Map {
+            border: 1px solid #ccc;
+            width: 800px;
+            height: 800px;
+            background-color: #eaeaea;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-align: center;
+        }
+
+        #processButton {
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+        }
+
+        #processButton:hover {
+            background-color: #2980b9;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .radio-group label {
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
+
+<div id="sidebar">
+    <h2>Wybór opcji</h2>
+    <div class="radio-group">
+        <label>
+            <input type="radio" name="mapType" id="buildingMap" checked> Mapa budynków
+        </label>
+        <label>
+            <input type="radio" name="mapType" id="borderMap"> Mapa otoczek
+        </label>
+    </div>
+    
     <input type="file" id="csvFileInput" accept=".csv">
-    <button id="processButton">Przetworz</button>
-
-    <canvas id="Map" style="border: 1px solid black;"></canvas>
-    <button onclick="draw()">Rysuj</button>
+    
+    <button id="processButton">Przetwórz</button>
+    
+    <h2>Zoom</h2>
     <input type="range" value="1" max="4" min="0.25" step="0.05">
+</div>
 
-    <script src="csv_parser.js"></script>
-    <script src="script.js"></script>
+<div id="canvas-container">
+    <canvas id="Map"></canvas>
+</div>
+
+<script src="csv_parser.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
