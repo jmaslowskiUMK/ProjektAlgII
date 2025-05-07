@@ -5,32 +5,27 @@
 
 int main() {
 
-/*
-
-PROSZĘ SIĘ OBECNIE MAINEM NIE SUGEROWAĆ, NIE JEST AKTUALNY
-
-PO PRZYKŁADY UŻYCIA ZALECAM UDAĆ SIĘ DO CSV_PARSER.CPP
-
+//examples in CSV_PARSER.CPP
 
 	Country polska;
 	//code creates shared_ptr to classes that derive from Node. setName() is a method defined in Node, holds a string with name 
-	auto pubMentzena = polska.createPub(1, 2, 4);
+	auto pubMentzena = polska.createPub("fafaf",1, 2, 4);
 	pubMentzena->setName("pubMentzena");
-	auto lysePole = polska.createField(1, 1, 4, 4);
+	auto lysePole = polska.createField("fafafa",1, 1, 4, 4);
 	lysePole->setName("lysePole");
-	auto pubULecha = polska.createPub(2, 3, 5);
+	auto pubULecha = polska.createPub("aaaa",2, 3, 5);
 	pubULecha->setName("pubULecha");
-	auto pubPodKogutem = polska.createPub(4, 1, 4);
+	auto pubPodKogutem = polska.createPub("ccc",4, 1, 4);
 	pubPodKogutem->setName("pubPodKogutem");
-	auto zlotePole = polska.createField(0, 0, 5, 5);
+	auto zlotePole = polska.createField("zzzz",0, 0, 5, 5);
 	zlotePole->setName("zlotePole");
-	auto las = polska.createField(3, 2, 41, 5);
+	auto las = polska.createField("fafafafafa",3, 2, 41, 5);
 	las->setName("las");
-	auto browarWarka = polska.createBrewery(1, 4, 5, 155);
+	auto browarWarka = polska.createBrewery("aaa",1, 4, 5, 155);
 	browarWarka->setName("browarWarka");
-	auto browarZywiec = polska.createBrewery(5, 2, 1, 41);
+	auto browarZywiec = polska.createBrewery("fafafaaaaaa",5, 2, 1, 41);
 	browarZywiec->setName("browarZywiec");
-	auto browareczekLidla = polska.createBrewery(3, 3, 3, 3);
+	auto browareczekLidla = polska.createBrewery("papa",3, 3, 3, 3);
 	browareczekLidla->setName("browareczekLidla");
 	auto rondo = polska.createIntersection(3, 3);
 	rondo->setName("rondo");
@@ -40,15 +35,18 @@ PO PRZYKŁADY UŻYCIA ZALECAM UDAĆ SIĘ DO CSV_PARSER.CPP
 	starowka->setName("starowka");
 	auto ryneczekLidla = polska.createIntersection(0, 0);
 	ryneczekLidla->setName("ryneczekLidla");
-	auto browarBarka = polska.createBrewery(24, 24, 24,24);
+	auto browarBarka = polska.createBrewery("papapapapa",24, 24, 24,24);
 	ryneczekLidla->setName("browarBarka");
-
+	
 	//example from: https://pl.wikipedia.org/wiki/Algorytm_Edmondsa-Karpa
 	//code is making instances of class Lane(shared_ptr from,shared_ptr to,int flow) and addsRelationship to adjacency list adjList(shared_ptr from, Lane)
-	//Source = las, Sink = ryneczekLidla
+	//Source = las, pubPodKogutem Sink = ryneczekLidla,browarBarka
 	Lane lane1(las, zlotePole, 3);
 	polska.addRelationship(lane1);//A B
-	
+
+	Lane lane1_1(pubPodKogutem,zlotePole,3);
+	polska.addRelationship(lane1_1);
+
 	Lane lane2(zlotePole, rynek, 4);
 	polska.addRelationship(lane2);//B C
 	
@@ -79,17 +77,27 @@ PO PRZYKŁADY UŻYCIA ZALECAM UDAĆ SIĘ DO CSV_PARSER.CPP
 	Lane lane11(pubULecha, ryneczekLidla, 9);
 	polska.addRelationship(lane11);//F G
 	
-	std::cout<<polska.EdmondsKarp(las,ryneczekLidla);
-	*/
+	Lane lane11_1(pubULecha,browarBarka,9 );
+	polska.addRelationship(lane11_1);
 
+
+	//multiSink and multiSource algorithm test
+	std::vector<std::shared_ptr<Node>> sinks;
+	std::vector<std::shared_ptr<Node>> sources;
+	sinks.push_back(ryneczekLidla);
+	sinks.push_back(browarBarka);
+	sources.push_back(las);
+	sources.push_back(pubPodKogutem);
+	std::cout<<polska.edmondsKarpManyToMany(sources,sinks);
+	std::cout<<std::endl;
+	std::cout<<polska.dinic(sources,sinks)<<std::endl;
 	//g++ ./main.cpp ./Country.cpp ./Node.cpp ./Lane.cpp ./Brewery.cpp ./Pub.cpp ./Field.cpp .\Intersection.cpp
-
-	Country kingdom;
+	
+	/*Country kingdom;
 	kingdom.createBrewery("Brewery_1", 69, 420, 10, 55);
 	kingdom.createField("Field_1", 2137, 466, 450, 10);
 	kingdom.createPub("Pub_1", 420, 156, 10);
-
+*/
 	//kingdom.find("Pub_1")->print();
-
 	return 0;
 }

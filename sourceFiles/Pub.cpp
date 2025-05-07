@@ -16,3 +16,7 @@ void Pub::print() {
 
 	std::cout << std::endl;
 }
+
+Pub::Pub(){
+
+}
