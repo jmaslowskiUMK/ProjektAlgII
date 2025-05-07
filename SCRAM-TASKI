@@ -6,14 +6,14 @@ Mateusz:
   - dycznamiczny Canvas integrujący otoczkę wypukłą, narazie bez integracji z MaxFlow.
 
 Kacper:
-  - usuń typ ścierzki (zbędny)
-  - id rozwiązane jako inty (pola n+0, browary n+1, puby n+2, któe będziemy sortować)
-  - otoczka wypukła i generator do niej (?)
+  - usuń typ ścierzki (zbędny) <- wykonane
+  - id rozwiązane jako inty (pola n+0, browary n+1, puby n+2, któe będziemy sortować) <- wykonane
+  - otoczka wypukła i generator do niej (?) <- wykonane
 KKuba:
   - Karp <- wykonane
-  - algorytm Dynica lub +
-  - USTAL KONKRETNE ŹRÓDŁO I ZLEW
+  - algorytm Dynica lub + <- wykonane
+  - USTAL KONKRETNE ŹRÓDŁO I ZLEW <- wykonane
 Milena:
   - Udokumentowanie stosu technologicznego
-  - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra) <-
-  - analiza drugiego akapitu (koszty naprawy dróg)
+  - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra) 
+  - analiza drugiego akapitu (koszty naprawy dróg) <- wykonane
