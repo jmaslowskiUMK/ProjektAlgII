@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     parserInstance = await CsvParser();
 
-                    parserInstance.ccall('processCSVprocessCSVBuildings', null, ['string'], [csvData]);
+                    parserInstance.ccall('processCSVBuildings', null, ['string'], [csvData]);
 
                     // wyrysowanie mapy
                     draw();
