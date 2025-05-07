@@ -4,16 +4,20 @@
 Mateusz:
   - integracja c++ (rozwiązania kuby) z GUI, formatowanie wejścia ogarnij <- wykonane
   - dycznamiczny Canvas integrujący otoczkę wypukłą, narazie bez integracji z MaxFlow.
-
+  - funkcje getCoordinates i getRelations połączyć
 Kacper:
   - usuń typ ścierzki (zbędny) <- wykonane
   - id rozwiązane jako inty (pola n+0, browary n+1, puby n+2, któe będziemy sortować) <- wykonane
   - otoczka wypukła i generator do niej (?) <- wykonane
+  - testy
+  - dokumentacja testów
 KKuba:
   - Karp <- wykonane
   - algorytm Dynica lub + <- wykonane
-  - USTAL KONKRETNE ŹRÓDŁO I ZLEW <- wykonane
+  - USTAL KONKRETNE ŹRÓDŁO I ZLEW <- wykonane      
+  - 2 akapit wiju wiju
 Milena:
   - Udokumentowanie stosu technologicznego
   - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra) 
   - analiza drugiego akapitu (koszty naprawy dróg) <- wykonane
+  - DOkumentacja 
