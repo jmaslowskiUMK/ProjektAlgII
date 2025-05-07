@@ -40,6 +40,7 @@ def distribute_beer_to_pubs(total_beer, number_of_pubs):
     pubs.append({"id": (number_of_pubs - 1) * 3 + 2, "beer": remaining_beer, "x": x, "y": y})
     return pubs
 
+
 def generate_lanes_yield_to_brewery(fields, breweries):
     lanes = []
     for field in fields:
@@ -67,6 +68,7 @@ def generate_lanes_brewery_to_pub(breweries, pubs):
                 "capacity": capacity
             })
     return lanes
+
 
 def save_all_to_csv(filename, fields, breweries, pubs, lanes):
     with open(filename, mode='w', newline='', encoding='utf-8') as file:

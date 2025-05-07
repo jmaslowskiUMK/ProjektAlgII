@@ -1,5 +1,5 @@
 1. Skompiluj C++ do WebAssembly uruchom w wierszu poleceń:
-    emcc csv_parser.cpp -o csv_parser.js -s EXPORTED_FUNCTIONS="['_processCSV']" -s MODULARIZE=1 -s EXPORT_NAME="CsvParser" -s EXPORTED_RUNTIME_METHODS="['ccall']"
+    emcc csv_parser.cpp ./sourceFiles/Country.cpp ./sourceFiles/Node.cpp ./sourceFiles/Lane.cpp ./sourceFiles/Brewery.cpp ./sourceFiles/Pub.cpp ./sourceFiles/Field.cpp -o csv_parser.js -s EXPORTED_FUNCTIONS="['_processCSV']" -s MODULARIZE=1 -s EXPORT_NAME="CsvParser" -s EXPORTED_RUNTIME_METHODS="['ccall']" --bind
    
 3. Uruchom Serwer Node.js w wierszu poleceń:
     node server.js

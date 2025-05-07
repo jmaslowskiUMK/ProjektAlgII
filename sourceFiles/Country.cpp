@@ -125,14 +125,14 @@ void Country::addRelationship(	std::map<std::shared_ptr<Node>, std::vector<Lane>
 
 //create shared_ptr of each derived from Node class add to adjList
 
-std::shared_ptr<Pub> Country::createPub(std::string ID, int xMiiddle, int yMiddle, int radius){
+std::shared_ptr<Pub> Country::createPub(int ID, int xMiiddle, int yMiddle, int radius){
 	auto pub = std::make_shared<Pub>(ID, xMiiddle,yMiddle,radius);
 	adjList[pub] = {};
 	this->nodeVector.push_back(pub);
 	return pub;
 }
 
-std::shared_ptr<Brewery> Country::createBrewery(std::string ID, int xMiddle, int yMiddle, int radius, int barleyAmount) {
+std::shared_ptr<Brewery> Country::createBrewery(int ID, int xMiddle, int yMiddle, int radius, int barleyAmount) {
 	auto brewery = std::make_shared<Brewery>(ID, xMiddle, yMiddle, radius, barleyAmount);
 	adjList[brewery] = {};
 	nodeVector.push_back(brewery);
@@ -146,14 +146,14 @@ std::shared_ptr<Intersection> Country::createIntersection(int x, int y) {
 	return intersection;
 }
 
-std::shared_ptr<Field> Country::createField(std::string ID, int production, int xMiddle, int yMiddle, int radius){
+std::shared_ptr<Field> Country::createField(int ID, int production, int xMiddle, int yMiddle, int radius){
 	auto field = std::make_shared<Field>(ID, production, xMiddle, yMiddle, radius);
 	adjList[field] = {};
 	nodeVector.push_back(field);
 	return field;
 }
 
-std::shared_ptr<Node> Country::find(std::string ID) {
+std::shared_ptr<Node> Country::find(int ID) {
 	for (int i = 0; i < nodeVector.size(); i++) {
 		if (ID == nodeVector[i]->getID()) {
 			return nodeVector[i];
@@ -168,6 +168,7 @@ void Country::printContent() {
 	}
 }
 
+/*
 void Country::printBfs(std::shared_ptr<Node> startingNode) {
 	std::vector<std::shared_ptr<Node>> visited;
     std::queue<std::shared_ptr<Node>> q;
@@ -194,7 +195,7 @@ void Country::printBfs(std::shared_ptr<Node> startingNode) {
         }
     }
 }
-
+*/
 int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec) {
     int max_flow = 0;
     std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges

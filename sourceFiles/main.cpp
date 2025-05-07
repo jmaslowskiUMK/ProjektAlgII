@@ -8,7 +8,9 @@ int main() {
 //examples in CSV_PARSER.CPP
 
 	Country polska;
-	//code creates shared_ptr to classes that derive from Node. setName() is a method defined in Node, holds a string with name 
+	//code creates shared_ptr to classes that derive from Node. setName() is a method defined in Node, holds a string with name
+
+	// ID is now an integer, name is separate string variable
 	auto pubMentzena = polska.createPub("fafaf",1, 2, 4);
 	pubMentzena->setName("pubMentzena");
 	auto lysePole = polska.createField("fafafa",1, 1, 4, 4);

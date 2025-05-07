@@ -2,12 +2,18 @@
 #include <string>
 
 class Node {
+private:
 public:
-    std::string ID;
+    int xMiddle, yMiddle, radius;
+    int ID;
+    std::string name;
+
     virtual ~Node() = default;
     virtual void print();
     void printName();
-    //nadanie ID (zmieniłem nazwę bo chodzi o element pozwalający na rozpoznanie) niech odbywa się w konstruktorze każdego obiektu dziedzicznego
+    int getID();
+    std::string getName();
     void setName(std::string name);
-    std::string getID();
+    int getX();
+    int getY();
 };

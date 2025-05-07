@@ -1,14 +1,6 @@
-Category,ID,Yield (tons),Processed (tons),Beer (liters),X Coordinate,Y Coordinate,Lane From,Lane To,Lane Type,Capacity (tons/liters)
-Field,Field_1,3.66,,,39.33,75.43,,,,
-Field,Field_2,3.16,,,27.58,18.13,,,,
-Field,Field_3,6.47,,,46.14,69.26,,,,
-Brewery,Brewery_1,,1.71,,52.25,42.55,,,,
-Brewery,Brewery_2,,1.71,,123.08,83.69,,,,
-Pub,Pub_1,,,16363.19,162.76,94.3,,,,
-Lane,,,,,,,Field_1,Brewery_1,Field-to-Brewery,0.83
-Lane,,,,,,,Field_1,Brewery_2,Field-to-Brewery,0.65
-Lane,,,,,,,Field_2,Brewery_1,Field-to-Brewery,0.97
-Lane,,,,,,,Field_2,Brewery_2,Field-to-Brewery,0.25
-Lane,,,,,,,Field_3,Brewery_1,Field-to-Brewery,0.95
-Lane,,,,,,,Brewery_1,Pub_1,Brewery-to-Pub,2367
-Lane,,,,,,,Brewery_2,Pub_1,Brewery-to-Pub,2566
+Category,ID,Yield (kg),Processed (kg),Beer (liters),X Coordinate,Y Coordinate,Lane From,Lane To,Capacity (kg/liters)
+Field,0,7899,,,14,92,,,,
+Brewery,1,,2137,,87,31,,,,
+Pub,2,,,9114305,172,62,,,,
+Lane,,,,,,,0,1,463
+Lane,,,,,,,1,2,2356
