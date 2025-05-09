@@ -13,18 +13,18 @@ def generate_barley_yield(number_of_fields):
     fields = []
     existing_coordinates = set()
     for i in range(number_of_fields):
-        value = random.randint(3000, 8000)  #random yield
+        value = random.randint(3000, 8000)  # random yield
         x, y = generate_unique_coordinates(existing_coordinates, -1000, 1000, -1000, 1000)
-        fields.append({"id": i * 3, "yield": value, "x": x, "y": y})  # IDs as 0, 3, 6, etc.
+        fields.append({"id": i * 3, "yield": value, "x": x, "y": y})
     return fields
 
 def generate_equal_barley_processed(number_of_breweries):
     breweries = []
     existing_coordinates = set()
-    processed_value = random.randint(900, 4000)  #random processed yield
+    processed_value = random.randint(900, 4000)  # random processed yield
     for i in range(number_of_breweries):
         x, y = generate_unique_coordinates(existing_coordinates, -1000, 1000, -1000, 1000)
-        breweries.append({"id": i * 3 + 1, "processed": processed_value, "x": x, "y": y})  # IDs as 1, 4, 7, etc.
+        breweries.append({"id": i * 3 + 1, "processed": processed_value, "x": x, "y": y})
     return breweries
 
 def distribute_beer_to_pubs(total_beer, number_of_pubs):
@@ -34,69 +34,74 @@ def distribute_beer_to_pubs(total_beer, number_of_pubs):
     for i in range(number_of_pubs - 1):
         share = random.randint(0, remaining_beer // 2)
         x, y = generate_unique_coordinates(existing_coordinates, -1000, 1000, -1000, 1000)
-        pubs.append({"id": i * 3 + 2, "beer": share, "x": x, "y": y})  # IDs as 2, 5, 8, etc.
+        pubs.append({"id": i * 3 + 2, "beer": share, "x": x, "y": y})
         remaining_beer -= share
     x, y = generate_unique_coordinates(existing_coordinates, -1000, 1000, -1000, 1000)
     pubs.append({"id": (number_of_pubs - 1) * 3 + 2, "beer": remaining_beer, "x": x, "y": y})
     return pubs
 
-
-def generate_lanes_yield_to_brewery(fields, breweries):
+def generate_lanes_yield_to_brewery(fields, breweries, repair_probability):
     lanes = []
     for field in fields:
         number_of_lanes = random.randint(1, len(breweries))
         destinations = random.sample(breweries, number_of_lanes)
         for dest in destinations:
-            capacity = random.randint(100, 1000)  #capacity in kg
+            capacity = random.randint(100, 1000)
+            repair_cost = random.randint(1, 10) if random.random() < repair_probability else 0
             lanes.append({
                 "from": field["id"],
                 "to": dest["id"],
-                "capacity": capacity
+                "capacity": capacity,
+                "repair_cost": repair_cost
             })
     return lanes
 
-def generate_lanes_brewery_to_pub(breweries, pubs):
+def generate_lanes_brewery_to_pub(breweries, pubs, repair_probability):
     lanes = []
     for brewery in breweries:
         number_of_lanes = random.randint(1, len(pubs))
         destinations = random.sample(pubs, number_of_lanes)
         for dest in destinations:
-            capacity = random.randint(100, 5000)  #capacity in liters
+            capacity = random.randint(100, 5000)
+            repair_cost = random.randint(1, 10) if random.random() < repair_probability else 0
             lanes.append({
                 "from": brewery["id"],
                 "to": dest["id"],
-                "capacity": capacity
+                "capacity": capacity,
+                "repair_cost": repair_cost
             })
     return lanes
-
 
 def save_all_to_csv(filename, fields, breweries, pubs, lanes):
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow([
             "Category", "ID", "Yield (kg)", "Processed (kg)", "Beer (liters)", 
-            "X Coordinate", "Y Coordinate", "Lane From", "Lane To", "Capacity (kg/liters)"
+            "X Coordinate", "Y Coordinate", "Lane From", "Lane To", 
+            "Capacity (kg/liters)", "Repair Cost"
         ])
         for field in fields:
             writer.writerow([
                 "Field", field["id"], field["yield"], "", "",
-                field["x"], field["y"], "", "", ""
+                field["x"], field["y"], "", "", "", ""
             ])
         for brewery in breweries:
             writer.writerow([
                 "Brewery", brewery["id"], "", brewery["processed"], "",
-                brewery["x"], brewery["y"], "", "", ""
+                brewery["x"], brewery["y"], "", "", "", ""
             ])
         for pub in pubs:
             writer.writerow([
                 "Pub", pub["id"], "", "", pub["beer"],
-                pub["x"], pub["y"], "", "", ""
+                pub["x"], pub["y"], "", "", "", ""
             ])
         for lane in lanes:
             writer.writerow([
                 "Lane", "", "", "", "",
-                "", "", lane["from"], lane["to"], lane["capacity"]
+                "", "", lane["from"], lane["to"], 
+                lane["capacity"], lane["repair_cost"]
             ])
+
 
 number_of_fields = int(input("Enter the number of fields: "))
 fields = generate_barley_yield(number_of_fields)
@@ -109,8 +114,10 @@ total_beer = sum([brewery["processed"] * random.randint(1, 10) for brewery in br
 number_of_pubs = int(input("Enter the number of pubs: "))
 pubs = distribute_beer_to_pubs(total_beer, number_of_pubs)
 
-lanes_field_to_brewery = generate_lanes_yield_to_brewery(fields, breweries)
-lanes_brewery_to_pub = generate_lanes_brewery_to_pub(breweries, pubs)
+repair_probability = float(input("Enter probability (0 to 1) that a lane has repair cost > 0: "))
+
+lanes_field_to_brewery = generate_lanes_yield_to_brewery(fields, breweries, repair_probability)
+lanes_brewery_to_pub = generate_lanes_brewery_to_pub(breweries, pubs, repair_probability)
 
 combined_lanes = lanes_field_to_brewery + lanes_brewery_to_pub
 

@@ -103,7 +103,7 @@ int Country::edmondsKarp(std::shared_ptr<Node> from, std::shared_ptr<Node> to) {
 				}
 			}
 			if (!foundReverse) {//create reverse Paths
-				adjListCopy[lane.getToPtr()].emplace_back(lane.getToPtr(), lane.getFromPtr(), minFlow);
+				adjListCopy[lane.getToPtr()].emplace_back(lane.getToPtr(), lane.getFromPtr(), minFlow, lane.getRepairCost());
 			}
 		}
 
@@ -206,12 +206,12 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
     auto superSink = std::make_shared<Pub>();    
 
     for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
-        Lane lane(superSource, source, INT_MAX);
+        Lane lane(superSource, source, INT_MAX, 0);
         addRelationship(adjListCopy, lane);
     }
 
     for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-        Lane lane(sink, superSink, INT_MAX);
+        Lane lane(sink, superSink, INT_MAX, 0);
         addRelationship(adjListCopy, lane);
     }
 
@@ -251,7 +251,7 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
                 }
             }
             if (!foundReverse) {//create reverse Paths
-                revLanes.emplace_back(lane.getToPtr(), lane.getFromPtr(), minFlow);
+                revLanes.emplace_back(lane.getToPtr(), lane.getFromPtr(), minFlow, lane.getRepairCost());
             }
         }
 
@@ -272,12 +272,12 @@ int Country::dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::
     auto superSink = std::make_shared<Pub>();    
 
     for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
-        Lane lane(superSource, source, INT_MAX);
+        Lane lane(superSource, source, INT_MAX, 0);
         addRelationship(adjListCopy, lane);
     }
 
     for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-        Lane lane(sink, superSink, INT_MAX);
+        Lane lane(sink, superSink, INT_MAX, 0);
         addRelationship(adjListCopy, lane);
     }
 
@@ -343,7 +343,7 @@ int Country::sendFlow(std::shared_ptr<Node> u,std::shared_ptr<Node> sink, int fl
                     }
                 }
                 if (!reverseFound) {
-                    adjListCopy[v].emplace_back(v, u, tempFlow);
+                    adjListCopy[v].emplace_back(v, u, tempFlow, lane.getRepairCost());
                 }
 
                 return tempFlow;

@@ -9,10 +9,11 @@ Lane::~Lane() {
 
 }
 
-Lane::Lane(std::shared_ptr<Node> from, std::shared_ptr<Node> to, int flow) {
+Lane::Lane(std::shared_ptr<Node> from, std::shared_ptr<Node> to, int flow, int repair_cost) {
 	this->from = from;
 	this->to = to;
 	this->flow = flow;
+	this->repair_cost = repair_cost;
 }
 
 std::shared_ptr<Node> Lane::getFromPtr() {
@@ -29,4 +30,8 @@ int Lane::getFlow() {
 
 void Lane::setFlow(int flow) {
 	this->flow = flow;
+}
+
+int Lane::getRepairCost() {
+	return repair_cost;
 }

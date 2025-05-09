@@ -9,7 +9,7 @@
 #include "./sourceFiles/Field.h"
 #include "./sourceFiles/Brewery.h"
 
-#define ROW_LENGTH 10
+#define ROW_LENGTH 11
 #define CONST_RADIUS 10
 
 using namespace emscripten;
@@ -46,13 +46,12 @@ extern "C" {
                 auto to = objectKingdom.find(stoi(row[8]));
 
                 if (from && to) {
-                    Lane lane(from, to, stod(row[9]));
+                    Lane lane(from, to, stod(row[9]), stoi(row[10]));
                     objectKingdom.addRelationship(lane);
                 }
             }
         }
-            //objectKingdom.printContent();
-            //objectKingdom.printBfs(objectKingdom.find("Field_1"));
+        objectKingdom.printContent();
     }
 }
 

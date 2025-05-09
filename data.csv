@@ -1,6 +1,24 @@
-Category,ID,Yield (kg),Processed (kg),Beer (liters),X Coordinate,Y Coordinate,Lane From,Lane To,Capacity (kg/liters)
-Field,0,7899,,,14,92,,,,
-Brewery,1,,2137,,87,31,,,,
-Pub,2,,,9114305,172,62,,,,
-Lane,,,,,,,0,1,463
-Lane,,,,,,,1,2,2356
+Category,ID,Yield (kg),Processed (kg),Beer (liters),X Coordinate,Y Coordinate,Lane From,Lane To,Capacity (kg/liters),Repair Cost
+Field,0,6253,,,723,-337,,,,
+Field,3,3198,,,763,611,,,,
+Field,6,4187,,,753,-877,,,,
+Field,9,4482,,,-2,-732,,,,
+Field,12,6161,,,992,-495,,,,
+Brewery,1,,3890,,804,916,,,,
+Brewery,4,,3890,,345,-891,,,,
+Brewery,7,,3890,,-157,867,,,,
+Pub,2,,,81690,-131,-586,,,,
+Lane,,,,,,,0,1,403,1
+Lane,,,,,,,0,7,502,0
+Lane,,,,,,,3,1,517,0
+Lane,,,,,,,3,7,236,2
+Lane,,,,,,,3,4,187,0
+Lane,,,,,,,6,1,156,8
+Lane,,,,,,,6,4,269,9
+Lane,,,,,,,6,7,100,0
+Lane,,,,,,,9,4,351,0
+Lane,,,,,,,9,7,340,0
+Lane,,,,,,,12,4,694,0
+Lane,,,,,,,1,2,3157,2
+Lane,,,,,,,4,2,4173,0
+Lane,,,,,,,7,2,2942,0
