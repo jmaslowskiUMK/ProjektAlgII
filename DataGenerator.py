@@ -1,5 +1,41 @@
 import random
 import csv
+import math
+
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+def generate_points(min_x, max_x, min_y, max_y, number_of_points):
+    return [Point(random.randint(min_x, max_x), random.randint(min_y, max_y)) for _ in range(number_of_points)]
+
+def random_start_point(points):
+    return random.choice(points)
+
+def is_inside_circle(center, p, radius):
+    return math.hypot(p.x - center.x, p.y - center.y) <= radius
+
+def det(p, q, r):
+    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y)
+
+# Graham's algorithm for convex hull
+def convex_hull(points):
+    if len(points) < 3:
+        return []
+
+    hull = [points[0], points[1]]
+    for i in range(2, len(points)):
+        while len(hull) >= 2:
+            second = hull.pop()
+            first = hull[-1]
+            if det(first, second, points[i]) < 0:
+                hull.append(second)
+                break
+        hull.append(points[i])
+    return hull[::-1]  # reverse to match C++ stack pop order
+
 
 def generate_unique_coordinates(existing_coordinates, x_min, x_max, y_min, y_max):
     while True:
@@ -72,7 +108,7 @@ def generate_lanes_brewery_to_pub(breweries, pubs, repair_probability):
             })
     return lanes
 
-def save_all_to_csv(filename, fields, breweries, pubs, lanes):
+def save_all_to_csv(filename, fields, breweries, pubs, lanes, hulls=None):
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow([
@@ -101,6 +137,12 @@ def save_all_to_csv(filename, fields, breweries, pubs, lanes):
                 "", "", lane["from"], lane["to"], 
                 lane["capacity"], lane["repair_cost"]
             ])
+        # save hulls
+        for hull_idx, hull in enumerate(hulls):
+            writer.writerow([f"Hull {hull_idx+1}", "Array of Points"])
+            for idx, p in enumerate(hull):
+                writer.writerow([f"HullPoint {hull_idx+1}", idx, "", "", "", p.x, p.y, "", "", "", ""])
+        
 
 
 number_of_fields = int(input("Enter the number of fields: "))
@@ -121,5 +163,29 @@ lanes_brewery_to_pub = generate_lanes_brewery_to_pub(breweries, pubs, repair_pro
 
 combined_lanes = lanes_field_to_brewery + lanes_brewery_to_pub
 
-save_all_to_csv("input_data.csv", fields, breweries, pubs, combined_lanes)
+# generating points for convex hulls within canvas, for now input number of hulls (later add generating for all canvas????), possible with large radius
+max_x = 1000
+max_y = 1000
+min_x = -1000
+min_y = -1000
+points = generate_points(min_x, max_x, min_y, max_y, 10000)
+radius = int(input("Enter the radius of the circles: "))
+number_of_hulls = int(input("Enter the number of hulls: "))
+
+hulls = []
+
+for i in range(number_of_hulls):
+    if len(points) < 3:
+        print(f"Not enough points left to create hull {i+1}")
+        break
+    center = random_start_point(points)
+    points_in_circle = [p for p in points if is_inside_circle(center, p, radius)]
+    if len(points_in_circle) < 3: # at least 3 points needed for a hull
+        print(f"Not enough points in circle for hull {i+1}")
+        continue
+    hull = convex_hull(points_in_circle)
+    hulls.append(hull)
+    points = [p for p in points if not is_inside_circle(center, p, radius)]
+
+save_all_to_csv("input_data.csv", fields, breweries, pubs, combined_lanes, hulls)
 print("Data have been saved to 'input_data.csv'")
