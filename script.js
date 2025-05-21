@@ -75,7 +75,7 @@ function draw() {
         canvas.height
     );
 
-    ctx.strokeStyle = "grey";
+    ctx.strokeStyle = "nigger";
     ctx.lineWidth = 2;
 
     relations.forEach(rel => {
@@ -86,7 +86,7 @@ function draw() {
 
         ctx.fillStyle = "red";
         ctx.fillText(rel.capacity, (rel.startX + rel.endX) / 2 + 5, (rel.startY + rel.endY) / 2 + 5);
-        ctx.fillStyle = "gray";
+        ctx.fillStyle = "nigger";
     });
 
 

@@ -38,7 +38,7 @@ extern "C" {
             if (row[0] == "Field") {
                 objectKingdom.createField(stoi(row[1]), stoi(row[2]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
             }   else if (row[0] == "Brewery") {
-                objectKingdom.createBrewery(stoi(row[1]), stoi(row[3]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
+                objectKingdom.createBrewery(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS, stoi(row[6]));
             }   else if (row[0] == "Pub") {
                 objectKingdom.createPub(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
             }   else if (row[0] == "Lane") {
@@ -76,7 +76,7 @@ val getNodeCoordinates(int camX, int camY, double zoom, int canvasWidth, int can
         obj.set("x", screenX);
         obj.set("y", screenY);
         obj.set("radius", CONST_RADIUS * zoom); // Skalowanie promienia
-        obj.set("name", node->getName());
+        obj.set("name", /*node->getName()*/ to_string(node->getX()));
 
         arr.call<void>("push", obj);
     }
