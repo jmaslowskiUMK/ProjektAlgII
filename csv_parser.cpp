@@ -38,7 +38,7 @@ extern "C" {
             if (row[0] == "Field") {
                 objectKingdom.createField(stoi(row[1]), stoi(row[2]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
             }   else if (row[0] == "Brewery") {
-                objectKingdom.createBrewery(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS, stoi(row[6]));
+                objectKingdom.createBrewery(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS, stoi(row[3]));
             }   else if (row[0] == "Pub") {
                 objectKingdom.createPub(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
             }   else if (row[0] == "Lane") {
