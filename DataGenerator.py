@@ -121,5 +121,5 @@ lanes_brewery_to_pub = generate_lanes_brewery_to_pub(breweries, pubs, repair_pro
 
 combined_lanes = lanes_field_to_brewery + lanes_brewery_to_pub
 
-save_all_to_csv("data.csv", fields, breweries, pubs, combined_lanes)
-print("Data have been saved to 'data.csv'")
+save_all_to_csv("input_data.csv", fields, breweries, pubs, combined_lanes)
+print("Data have been saved to 'input_data.csv'")
