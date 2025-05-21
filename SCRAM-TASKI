@@ -12,7 +12,7 @@ Kacper:
   - usuń typ ścierzki (zbędny) <- wykonane
   - id rozwiązane jako inty (pola n+0, browary n+1, puby n+2, któe będziemy sortować) <- wykonane
   - otoczka wypukła i generator do niej (?) <- wykonane
-  - generowanie otoczek w pythonie (bazowy generator)
+  - generowanie otoczek w pythonie (bazowy generator) (piątek pls :) )
 KKuba:
   - Karp <- wykonane
   - algorytm Dynica lub + <- wykonane
@@ -20,8 +20,18 @@ KKuba:
   - 2 akapit wiju wiju
   - ALGORYTM Z KOSZTAMI
   - zmiana nazw "capacity"
+  - przechowywanie danych
 Milena:
   - Udokumentowanie stosu technologicznego
   - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra) 
   - analiza drugiego akapitu (koszty naprawy dróg) <- wykonane
   - DOkumentacja 
+  - algorytmy tekstowe <- wykonane
+  - kody Hoffmana
+
+TESTY:
+  - Algorytmy przepływu
+  - duże liczby
+  - przypadki graniczne (0 fieldow)
+  - cześć dane z generatora oraz dane ustawione
+  - czy otoczki dobrze wykrywają punkty
