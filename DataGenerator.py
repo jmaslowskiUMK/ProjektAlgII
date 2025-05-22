@@ -168,24 +168,36 @@ max_x = 1000
 max_y = 1000
 min_x = -1000
 min_y = -1000
-points = generate_points(min_x, max_x, min_y, max_y, 10000)
-radius = int(input("Enter the radius of the circles: "))
-number_of_hulls = int(input("Enter the number of hulls: "))
+points = generate_points(min_x, max_x, min_y, max_y, 1000)
+radius = int(input("Enter the radius of the circles (for visuals at least 150): "))
+#number_of_hulls = int(input("Enter the number of hulls: "))
 
 hulls = []
 
-for i in range(number_of_hulls):
-    if len(points) < 3:
-        print(f"Not enough points left to create hull {i+1}")
-        break
+#for i in range(number_of_hulls):
+ #   if len(points) < 3:
+  #      print(f"Not enough points left to create hull {i+1}")
+   #     break
+    #center = random_start_point(points)
+    #points_in_circle = [p for p in points if is_inside_circle(center, p, radius)]
+    #if len(points_in_circle) < 3: # at least 3 points needed for a hull
+     #   print(f"Not enough points in circle for hull {i+1}")
+      #  continue
+ #   hull = convex_hull(points_in_circle)
+  #  hulls.append(hull)
+   # points = [p for p in points if not is_inside_circle(center, p, radius)]
+while len(points) >= 3:
     center = random_start_point(points)
+    if len(points) < 3:
+        print("Not enough points left to create hull")
+        break
     points_in_circle = [p for p in points if is_inside_circle(center, p, radius)]
-    if len(points_in_circle) < 3: # at least 3 points needed for a hull
-        print(f"Not enough points in circle for hull {i+1}")
+    if len(points_in_circle) < 3:
+        print("Not enough points in circle for hull")
+        points = [p for p in points if not is_inside_circle(center, p, radius)]
         continue
     hull = convex_hull(points_in_circle)
     hulls.append(hull)
     points = [p for p in points if not is_inside_circle(center, p, radius)]
-
 save_all_to_csv("input_data.csv", fields, breweries, pubs, combined_lanes, hulls)
 print("Data have been saved to 'input_data.csv'")
