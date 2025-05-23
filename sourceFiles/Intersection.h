@@ -4,6 +4,8 @@
 
 class Intersection: public Node
 {
+private:
+	int x,y,flow;
 public:
 	Intersection(int x, int y, int flow);
 	Intersection(int x, int y);

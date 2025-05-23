@@ -4,8 +4,6 @@
 #include "Intersection.h"
 #include "Brewery.h"
 #include "Field.h"
-
-//chwilowo bo u mnie sie z tym nie chce kompilowac
 //#include <optional>
 //#include <variant>
 #include <memory>
@@ -13,9 +11,7 @@
 #include "Node.h"
 #include "Lane.h"
 #include <unordered_map>
-
-//vektor i funkcja find od przerobienia, będziemy indeksować n + 0 brewery, n + 1 fieldy itd. po czym portować żeby usprawnić wyszukiwanie
-// wyszukiwanie prawie na pewno się przyda szybkie
+#include "Hull.h"
 
 class Country
 {
@@ -25,7 +21,7 @@ public:
 	std::map<std::shared_ptr<Node>, std::vector<Lane> > adjList;
 	std::vector<std::shared_ptr<Node>> nodeVector;
 	std::unordered_map<std::shared_ptr<Node>, int> level;
-
+	std::vector<Hull> hulls;
 public:
 
 	Country();
