@@ -21,7 +21,7 @@ public:
 	std::map<std::shared_ptr<Node>, std::vector<Lane> > adjList;
 	std::vector<std::shared_ptr<Node>> nodeVector;
 	std::unordered_map<std::shared_ptr<Node>, int> level;
-	std::vector<Hull> hulls;
+	std::vector<std::shared_ptr<Hull>> hulls;
 public:
 
 	Country();
@@ -37,12 +37,14 @@ public:
 	std::shared_ptr<Intersection> createIntersection(int x,int y);
 	std::shared_ptr<Field> createField(int ID, int production,int xMiddle,int yMiddle,int radius);
 	std::shared_ptr<Node> find(int ID);
-	int edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec); 
+	int edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec);
 	int dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec);
 	void printContent();
 	// it is useless now
 	//void printBfs(std::shared_ptr<Node> startingNode);
 	int sendFlow(std::shared_ptr<Node> u, std::shared_ptr<Node> sink, int flow,std::map<std::shared_ptr<Node>, std::vector<Lane>>& adjListCopy, std::unordered_map<std::shared_ptr<Node>, int>& next); 
-	bool buildLevelGraph(std::shared_ptr<Node> source, std::shared_ptr<Node> sink,std::map<std::shared_ptr<Node>, std::vector<Lane>>& adjListCopy); 
+	bool buildLevelGraph(std::shared_ptr<Node> source, std::shared_ptr<Node> sink,std::map<std::shared_ptr<Node>, std::vector<Lane>>& adjListCopy);
+
+	void addHull();
 
 };

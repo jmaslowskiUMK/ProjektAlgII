@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     draw();
                 };
                 reader.readAsText(file);
-            }   else if (document.querySelector('input[type="radio"]').id == "borderMap") {
+            }/*   else if (document.querySelector('input[type="radio"]').id == "borderMap") {
 
                 //  wgrywanie otoczek
 
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     draw();
                 };
                 reader.readAsText(file);
-            }
+            }*/
         } else {
             alert('Wybierz plik CSV.');
         }
@@ -78,6 +78,7 @@ function draw() {
     ctx.strokeStyle = "nigger";
     ctx.lineWidth = 2;
 
+    // drawing relations
     relations.forEach(rel => {
         ctx.beginPath();
         ctx.moveTo(rel.startX, rel.startY);
@@ -98,22 +99,44 @@ function draw() {
         canvas.height
     );
 
+    // drawing nodes
     nodes.forEach(node => {
-        // czarny okrąg
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, 2 * Math.PI);
         ctx.fillStyle = "black";
         ctx.fill();
 
-        // białe wypełnienie
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius - 3, 0, 2 * Math.PI);
         ctx.fillStyle = "white";
         ctx.fill();
 
-        // name
         ctx.fillStyle = "black";
         ctx.fillText(node.name, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
+    });
+
+    // loading hulls
+    const hulls = parserInstance.getHulls(
+        Math.floor(camera.x),
+        Math.floor(camera.y),
+        camera.zoom,
+        canvas.width,
+        canvas.height
+    );
+
+    // drawing hulls
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 2;
+    ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+
+    hulls.forEach(hull => {
+        const points = hull.points;
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        points.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
     });
 
 }

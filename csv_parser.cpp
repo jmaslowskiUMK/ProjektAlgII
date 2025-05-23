@@ -8,6 +8,7 @@
 #include "./sourceFiles/Pub.h"
 #include "./sourceFiles/Field.h"
 #include "./sourceFiles/Brewery.h"
+#include "./sourceFiles/Hull.h"
 
 #define ROW_LENGTH 11
 #define CONST_RADIUS 10
@@ -23,30 +24,31 @@ extern "C" {
         stringstream ss(data);
         string line;
 
-        int HullCounter = 0;
+        int HullCounter = -1;
 
         while (getline(ss, line)) {
             stringstream lineStream(line);
             string * row = new string[ROW_LENGTH];
 
-            // ŹRÓDŁO
-            //objectKingdom.createField("Field", INT32_MAX, -1, -1, CONST_RADIUS);
-
             for (int i = 0; i < ROW_LENGTH; i++) {
                 getline(lineStream, row[i], ',');
             }
 
-            if (row[0] == "Hull " + to_string(HullCounter + 1)) {
-                // Function to create Hull object
+            if (row[0] == "Hull_" + to_string(HullCounter + 1)) {
+                // Function to create Hull object and add to vector
+                objectKingdom.addHull();
                 HullCounter += 1;
-            }
-            
-
-            if (row[0] == "Field") {
+            }   else if (row[0].find("HullPoint") != std::string::npos) {
+                // Function to add to Hull
+                objectKingdom.hulls[HullCounter]->addPoint(std::pair<int, int> (stoi(row[5]), stoi(row[6])));
+            }   else if (row[0] == "Field") {
+                // adding Field
                 objectKingdom.createField(stoi(row[1]), stoi(row[2]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
             }   else if (row[0] == "Brewery") {
+                // adding Brewery
                 objectKingdom.createBrewery(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS, stoi(row[3]));
             }   else if (row[0] == "Pub") {
+                // adding Pub
                 objectKingdom.createPub(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
             }   else if (row[0] == "Lane") {
                 auto from = objectKingdom.find(stoi(row[7]));
@@ -58,7 +60,8 @@ extern "C" {
                 }
             }
         }
-        objectKingdom.printContent();
+        cout << objectKingdom.edmondsKarpManyToMany() << endl;
+        //objectKingdom.printContent();
     }
 }
 
@@ -128,24 +131,46 @@ val getRelations(int camX, int camY, double zoom, int canvasWidth, int canvasHei
     return arr;
 }
 
-void processCSVBorder(string csvData) {
+val getHulls(int camX, int camY, double zoom, int canvasWidth, int canvasHeight) {
+    val hullArray = val::array();
 
-    //  tu się mają otoczki wczytywać
+    for (size_t i = 0; i < objectKingdom.hulls.size(); ++i) {
+        auto hull = objectKingdom.hulls[i];
+        val pointArray = val::array();
 
-    string data = csvData;
-    stringstream ss(data);
-    string line;
+        for (const auto& point : hull->points) {
+            double worldX = static_cast<double>(point.first);
+            double worldY = static_cast<double>(point.second);
 
-    while (getline(ss, line)) {
-        stringstream lineStream(line);
-        string * row = new string[ROW_LENGTH];
+            double screenX = (worldX - static_cast<double>(camX)) * zoom + static_cast<double>(canvasWidth) * 0.5;
+            double screenY = (worldY - static_cast<double>(camY)) * zoom + static_cast<double>(canvasHeight) * 0.5;
 
+            // Pomijanie punktów niewidocznych
+            if (screenX < 0 || screenX > canvasWidth || screenY < 0 || screenY > canvasHeight)
+                continue;
+
+            val pointObj = val::object();
+            pointObj.set("x", screenX);
+            pointObj.set("y", screenY);
+
+            pointArray.call<void>("push", pointObj);
+        }
+
+        // Dodajemy Hull tylko jeśli ma jakiekolwiek widoczne punkty
+        if (pointArray["length"].as<unsigned>() > 0) {
+            val hullObj = val::object();
+            hullObj.set("points", pointArray);
+            hullArray.call<void>("push", hullObj);
+        }
     }
+
+    return hullArray;
 }
+
 
 
 EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("getNodeCoordinates", &getNodeCoordinates);
     emscripten::function("getRelations", &getRelations);
-    emscripten::function("processCSVBorder", &processCSVBorder);
+    emscripten::function("getHulls", &getHulls);
 }

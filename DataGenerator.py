@@ -139,9 +139,9 @@ def save_all_to_csv(filename, fields, breweries, pubs, lanes, hulls=None):
             ])
         # save hulls
         for hull_idx, hull in enumerate(hulls):
-            writer.writerow([f"Hull {hull_idx+1}", "Array of Points"])
+            writer.writerow([f"Hull_{hull_idx}", "Array of Points"])
             for idx, p in enumerate(hull):
-                writer.writerow([f"HullPoint {hull_idx+1}", idx, "", "", "", p.x, p.y, "", "", "", ""])
+                writer.writerow([f"HullPoint_{hull_idx}", idx, "", "", "", p.x, p.y, "", "", "", ""])
         
 
 

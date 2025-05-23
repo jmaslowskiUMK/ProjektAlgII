@@ -349,3 +349,7 @@ int Country::sendFlow(std::shared_ptr<Node> source,std::shared_ptr<Node> sink, i
  
     return 0;
 }
+
+void Country::addHull() {
+    hulls.push_back(std::make_shared<Hull>());
+}

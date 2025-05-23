@@ -3,8 +3,9 @@
 #include <utility>
 
 class Hull{
-private:
-	std::vector<std::pair<int,int>> points;
 public:
+	std::vector<std::pair<int,int>> points;
+	Hull();
 	void addPoint(std::pair<int,int> auxPair);
+	void print();
 };

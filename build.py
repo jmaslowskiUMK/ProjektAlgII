@@ -12,6 +12,7 @@ def compile_and_run():
         "./sourceFiles/Brewery.cpp",
         "./sourceFiles/Pub.cpp",
         "./sourceFiles/Field.cpp",
+        "./sourceFiles/Hull.cpp",
         "-o", "csv_parser.js",
         "-s", "EXPORTED_FUNCTIONS=[\"_processCSVBuildings\"]",
         "-s", "MODULARIZE=1",
