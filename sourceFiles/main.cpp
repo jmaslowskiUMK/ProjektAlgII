@@ -2,98 +2,23 @@
 #include "Country.h"
 
 int main() {
-
-//examples in CSV_PARSER.CPP
-
-	Country polska;
-	//code creates shared_ptr to classes that derive from Node. setName() is a method defined in Node, holds a string with name
-
-	// ID is now an integer, name is separate string variable
-	auto pubMentzena = polska.createPub(1,1, 2, 4);
-	pubMentzena->setName("pubMentzena");
-	auto lysePole = polska.createField(2,1, 1, 4, 4);
-	lysePole->setName("lysePole");
-	auto pubULecha = polska.createPub(3,2, 3, 5);
-	pubULecha->setName("pubULecha");
-	auto pubPodKogutem = polska.createPub(4,4, 1, 4);
-	pubPodKogutem->setName("pubPodKogutem");
-	auto zlotePole = polska.createField(5,0, 0, 5, 5);
-	zlotePole->setName("zlotePole");
-	auto las = polska.createField(6,3, 2, 41, 5);
-	las->setName("las");
-	auto browarWarka = polska.createBrewery(7,1, 4, 5, 155);
-	browarWarka->setName("browarWarka");
-	auto browarZywiec = polska.createBrewery(8,5, 2, 1, 41);
-	browarZywiec->setName("browarZywiec");
-	auto browareczekLidla = polska.createBrewery(9,3, 3, 3, 3);
-	browareczekLidla->setName("browareczekLidla");
-	auto rondo = polska.createIntersection(3, 3);
-	rondo->setName("rondo");
-	auto rynek = polska.createIntersection(0, 0);
-	rynek->setName("rynek");
-	auto starowka = polska.createIntersection(9, 9);
-	starowka->setName("starowka");
-	auto ryneczekLidla = polska.createIntersection(0, 0);
-	ryneczekLidla->setName("ryneczekLidla");
-	auto browarBarka = polska.createBrewery(10,24, 24, 24,24);
-	ryneczekLidla->setName("browarBarka");
-	//example from: https://pl.wikipedia.org/wiki/Algorytm_Edmondsa-Karpa
-	//code is making instances of class Lane(shared_ptr from,shared_ptr to,int flow) and addsRelationship to adjacency list adjList(shared_ptr from, Lane)
-	//Source = las, pubPodKogutem Sink = ryneczekLidla,browarBarka
-	Lane lane1(las, zlotePole, 3, 10);
-	polska.addRelationship(lane1);//A B
-
-	Lane lane1_1(pubPodKogutem,zlotePole,3, 10);
-	polska.addRelationship(lane1_1);
-
-	Lane lane2(zlotePole, rynek, 4,10);
-	polska.addRelationship(lane2);//B C
-	
-	Lane lane3(rynek, las, 3,10);
-	polska.addRelationship(lane3);//C A
-	
-	Lane lane4(las, rondo, 3,10);
-	polska.addRelationship(lane4);// A D
-	
-	Lane lane5(rynek, rondo, 1,10);
-	polska.addRelationship(lane5);// C D
-	
-	Lane lane6(rynek, browarWarka, 2,10);
-	polska.addRelationship(lane6);// C E
-	
-	Lane lane7(rondo, pubULecha, 6,10);
-	polska.addRelationship(lane7);//D F
-	
-	Lane lane8(rondo, browarWarka, 2,10);
-	polska.addRelationship(lane8);//D E
-	
-	Lane lane9(browarWarka, ryneczekLidla, 1,10);
-	polska.addRelationship(lane9);// E G
-	
-	Lane lane10(browarWarka, zlotePole, 1,10);
-	polska.addRelationship(lane10);// E B
-	
-	Lane lane11(pubULecha, ryneczekLidla, 9,10);
-	polska.addRelationship(lane11);//F G
-	
-	Lane lane11_1(pubULecha,browarBarka,9,10 );
-	polska.addRelationship(lane11_1);
-
-
-//	std::cout<<polska.edmondsKarp(las,ryneczekLidla);
-	//multiSink and multiSource algorithm test
+	Country polska;	
 
 	std::vector<std::shared_ptr<Node>> sinks;
 	std::vector<std::shared_ptr<Node>> sources;
-	sinks.push_back(ryneczekLidla);
-	sinks.push_back(browarBarka);
-	sources.push_back(las);
-	sources.push_back(pubPodKogutem);
-	std::cout<<polska.edmondsKarpManyToMany(sources,sinks);
-	std::cout<<std::endl;
-	std::cout<<polska.dinic(sources,sinks)<<std::endl;
+	for(auto el:polska.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);	
+		}
+	}
+	for(auto el:polska.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+			sinks.push_back(el);	
+		}
+	}
 	
-	//g++ ./main.cpp ./Country.cpp ./Node.cpp ./Lane.cpp ./Brewery.cpp ./Pub.cpp ./Field.cpp ./Intersection.cpp
+	std::cout<<polska.edmondsKarpManyToMany(sources,sinks)<<std::endl;;
+	std::cout<<polska.dinic(sources,sinks)<<std::endl;
 	
 	return 0;
 }
