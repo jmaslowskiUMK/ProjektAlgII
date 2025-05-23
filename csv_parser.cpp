@@ -23,6 +23,8 @@ extern "C" {
         stringstream ss(data);
         string line;
 
+        int HullCounter = 0;
+
         while (getline(ss, line)) {
             stringstream lineStream(line);
             string * row = new string[ROW_LENGTH];
@@ -34,6 +36,11 @@ extern "C" {
                 getline(lineStream, row[i], ',');
             }
 
+            if (row[0] == "Hull " + to_string(HullCounter + 1)) {
+                // Function to create Hull object
+                HullCounter += 1;
+            }
+            
 
             if (row[0] == "Field") {
                 objectKingdom.createField(stoi(row[1]), stoi(row[2]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
