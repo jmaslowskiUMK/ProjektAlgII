@@ -60,8 +60,6 @@ extern "C" {
                 }
             }
         }
-        cout << objectKingdom.edmondsKarpManyToMany() << endl;
-        //objectKingdom.printContent();
     }
 }
 
@@ -167,10 +165,29 @@ val getHulls(int camX, int camY, double zoom, int canvasWidth, int canvasHeight)
     return hullArray;
 }
 
+void calculateFlow() {
+	        std::vector<std::shared_ptr<Node>> sinks;
+	        std::vector<std::shared_ptr<Node>> sources;
+	        for(auto el:objectKingdom.nodeVector){
+	        	if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+	        		sources.push_back(el);	
+	        	}
+	        }
+	        for(auto el:objectKingdom.nodeVector){
+	        	if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+	        		sinks.push_back(el);
+	        	}
+	        }
+
+	        cout<< "Karp" <<objectKingdom.edmondsKarpManyToMany(sources,sinks)<<endl;
+	        cout<< "Dinic" <<objectKingdom.dinic(sources,sinks)<<endl;
+}
+
 
 
 EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("getNodeCoordinates", &getNodeCoordinates);
     emscripten::function("getRelations", &getRelations);
     emscripten::function("getHulls", &getHulls);
+    emscripten::function("calculateFlow", &calculateFlow);
 }

@@ -12,6 +12,14 @@ const ctx = canvas.getContext("2d");
 
 let parserInstance = null;
 
+document.querySelector("#flowButton", () => {
+    if(parserInstance == null) {
+        alert("Nie wczytano pliku");
+    }
+
+    parserInstance.calculateFlow();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('csvFileInput');
     const processButton = document.getElementById('processButton');
