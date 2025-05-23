@@ -165,22 +165,26 @@ val getHulls(int camX, int camY, double zoom, int canvasWidth, int canvasHeight)
     return hullArray;
 }
 
-void calculateFlow() {
-	        std::vector<std::shared_ptr<Node>> sinks;
-	        std::vector<std::shared_ptr<Node>> sources;
-	        for(auto el:objectKingdom.nodeVector){
-	        	if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
-	        		sources.push_back(el);	
-	        	}
-	        }
-	        for(auto el:objectKingdom.nodeVector){
-	        	if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
-	        		sinks.push_back(el);
-	        	}
-	        }
+val calculateFlow() {
+	val resultsArr = val::array();
+    
+    std::vector<std::shared_ptr<Node>> sinks;
+	std::vector<std::shared_ptr<Node>> sources;
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);	
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+			sinks.push_back(el);
+		}
+	}
 
-	        cout<< "Karp" <<objectKingdom.edmondsKarpManyToMany(sources,sinks)<<endl;
-	        cout<< "Dinic" <<objectKingdom.dinic(sources,sinks)<<endl;
+    resultsArr.call<void>("push", objectKingdom.edmondsKarpManyToMany(sources,sinks));
+    resultsArr.call<void>("push", objectKingdom.dinic(sources,sinks));
+
+    return resultsArr;
 }
 
 

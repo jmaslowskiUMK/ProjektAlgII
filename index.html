@@ -44,6 +44,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            position: relative; /* potrzebne dla #flowInfo */
         }
 
         #Map {
@@ -76,6 +77,20 @@
         .radio-group label {
             font-size: 14px;
         }
+
+        #flowInfo {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
     </style>
 </head>
 <body>
@@ -102,6 +117,10 @@
 
 <div id="canvas-container">
     <canvas id="Map"></canvas>
+
+    <div id="flowInfo">
+        Maksymalny przepływ w grafie: <span id="maxFlowValue">-</span>
+    </div>
 </div>
 
 <script src="csv_parser.js"></script>

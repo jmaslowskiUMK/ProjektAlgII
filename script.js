@@ -12,12 +12,15 @@ const ctx = canvas.getContext("2d");
 
 let parserInstance = null;
 
-document.querySelector("#flowButton", () => {
+document.querySelector("#flowButton").addEventListener("click", () => {
     if(parserInstance == null) {
-        alert("Nie wczytano pliku");
+        alert("Wybierz plik CSV");
     }
 
-    parserInstance.calculateFlow();
+    let resultsArr = parserInstance.calculateFlow();
+
+    document.getElementById("maxFlowValue").textContent = resultsArr[0]; // for 0 you have edmonds-karp, for 1 you have Dinic algorithm
+
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -61,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 reader.readAsText(file);
             }*/
         } else {
-            alert('Wybierz plik CSV.');
+            alert('Wybierz plik CSV');
         }
     });
 });
