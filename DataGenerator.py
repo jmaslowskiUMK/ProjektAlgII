@@ -1,6 +1,10 @@
 import random
 import csv
 import math
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+from math import atan2
 
 
 class Point:
@@ -17,24 +21,30 @@ def random_start_point(points):
 def is_inside_circle(center, p, radius):
     return math.hypot(p.x - center.x, p.y - center.y) <= radius
 
-def det(p, q, r):
-    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y)
+def orientation(p, q, r):
+    #all changed to float64 for consistency
+    return (q[0] - p[0])*(r[1] - p[1]) - (q[1] - p[1])*(r[0] - p[0])
 
-# Graham's algorithm for convex hull
-def convex_hull(points):
+def graham_scan(points):
     if len(points) < 3:
-        return []
+        return points
 
-    hull = [points[0], points[1]]
-    for i in range(2, len(points)):
-        while len(hull) >= 2:
-            second = hull.pop()
-            first = hull[-1]
-            if det(first, second, points[i]) < 0:
-                hull.append(second)
-                break
-        hull.append(points[i])
-    return hull[::-1]  # reverse to match C++ stack pop order
+    start = min(points, key=lambda p: (p[1], p[0]))
+
+    def polar_angle(p):
+        return atan2(p[1] - start[1], p[0] - start[0])
+
+    def distance(p):
+        return (p[0] - start[0])**2 + (p[1] - start[1])**2
+
+    points = sorted(points, key=lambda p: (polar_angle(p), distance(p)))
+
+    hull = []
+    for point in points:
+        while len(hull) >= 2 and orientation(hull[-2], hull[-1], point) < 1e-14:  #epsilon for floating point precision
+            hull.pop()
+        hull.append(point)
+    return hull
 
 
 def generate_unique_coordinates(existing_coordinates, x_min, x_max, y_min, y_max):
@@ -108,41 +118,43 @@ def generate_lanes_brewery_to_pub(breweries, pubs, repair_probability):
             })
     return lanes
 
-def save_all_to_csv(filename, fields, breweries, pubs, lanes, hulls=None):
+hull_numbers = [random.randint(1, 6) for _ in range(10)]
+
+def save_all_to_csv(filename, fields, breweries, pubs, lanes, hulls=None, hull_numbers=None):
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow([
             "Category", "ID", "Yield (kg)", "Processed (kg)", "Beer (liters)", 
             "X Coordinate", "Y Coordinate", "Lane From", "Lane To", 
-            "Capacity (kg/liters)", "Repair Cost"
+            "Capacity (kg/liters)", "Repair Cost", "Ground Class"
         ])
         for field in fields:
             writer.writerow([
                 "Field", field["id"], field["yield"], "", "",
-                field["x"], field["y"], "", "", "", ""
+                field["x"], field["y"], "", "", "", "", ""
             ])
         for brewery in breweries:
             writer.writerow([
                 "Brewery", brewery["id"], "", brewery["processed"], "",
-                brewery["x"], brewery["y"], "", "", "", ""
+                brewery["x"], brewery["y"], "", "", "", "", ""
             ])
         for pub in pubs:
             writer.writerow([
                 "Pub", pub["id"], "", "", pub["beer"],
-                pub["x"], pub["y"], "", "", "", ""
+                pub["x"], pub["y"], "", "", "", "", ""
             ])
         for lane in lanes:
             writer.writerow([
                 "Lane", "", "", "", "",
                 "", "", lane["from"], lane["to"], 
-                lane["capacity"], lane["repair_cost"]
+                lane["capacity"], lane["repair_cost"], ""
             ])
-        # save hulls
-        for hull_idx, hull in enumerate(hulls):
-            writer.writerow([f"Hull_{hull_idx}", "Array of Points"])
-            for idx, p in enumerate(hull):
-                writer.writerow([f"HullPoint_{hull_idx}", idx, "", "", "", p.x, p.y, "", "", "", ""])
-        
+        # save hulls with numbers
+        if hulls and hull_numbers:
+            for hull_idx, (hull, hull_num) in enumerate(zip(hulls, hull_numbers)):
+                writer.writerow([f"Hull_{hull_idx}", "Array of Points", "", "", "", "", "", "", "", "", "", hull_num])
+                for idx, p in enumerate(hull):
+                    writer.writerow([f"HullPoint_{hull_idx}", idx, "", "", "", p.x, p.y, "", "", "", "", hull_num])
 
 
 number_of_fields = int(input("Enter the number of fields: "))
@@ -196,8 +208,31 @@ while len(points) >= 3:
         print("Not enough points in circle for hull")
         points = [p for p in points if not is_inside_circle(center, p, radius)]
         continue
-    hull = convex_hull(points_in_circle)
+    # Zamiana Point na tuple (x, y)
+    points_tuples = [(p.x, p.y) for p in points_in_circle]
+    hull_tuples = graham_scan(points_tuples)
+    # Zamiana z powrotem na Point
+    hull = [Point(x, y) for x, y in hull_tuples]
     hulls.append(hull)
     points = [p for p in points if not is_inside_circle(center, p, radius)]
-save_all_to_csv("input_data.csv", fields, breweries, pubs, combined_lanes, hulls)
+save_all_to_csv("input_data.csv", fields, breweries, pubs, combined_lanes, hulls, hull_numbers)
 print("Data have been saved to 'input_data.csv'")
+
+""""
+plt.figure(figsize=(10, 10))
+colors = plt.cm.get_cmap('tab20', len(hulls))
+
+for idx, hull in enumerate(hulls):
+    if len(hull) < 3:
+        continue
+    xs = [p.x for p in hull] + [hull[0].x]
+    ys = [p.y for p in hull] + [hull[0].y]
+    plt.plot(xs, ys, marker='o', label=f'Hull {idx+1}', color=colors(idx))
+
+plt.title("All Convex Hulls")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.legend()
+plt.grid(True)
+plt.show()
+"""
