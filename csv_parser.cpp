@@ -63,35 +63,7 @@ extern "C" {
     }
 }
 
-val getNodeCoordinates(int camX, int camY, double zoom, int canvasWidth, int canvasHeight) {
-    val arr = val::array();
-
-    for (size_t i = 0; i < objectKingdom.nodeVector.size(); ++i) {
-        auto node = objectKingdom.nodeVector[i];
-
-        double worldX = node->getX();
-        double worldY = node->getY();
-
-        // Translacja świata do ekranu
-        double screenX = (worldX - static_cast<double>(camX)) * zoom + static_cast<double>(canvasWidth) * 0.5;
-        double screenY = (worldY - static_cast<double>(camY)) * zoom + static_cast<double>(canvasHeight) * 0.5;
-
-        // Pomijanie punktów niewidocznych
-        if (screenX < 0 || screenX > canvasWidth || screenY < 0 || screenY > canvasHeight)
-            continue;
-
-        val obj = val::object();
-        obj.set("x", screenX);
-        obj.set("y", screenY);
-        obj.set("radius", CONST_RADIUS * zoom); // Skalowanie promienia
-        obj.set("name", node->getName());
-
-        arr.call<void>("push", obj);
-    }
-    return arr;
-}
-
-val getRelations(int camX, int camY, double zoom, int canvasWidth, int canvasHeight) {
+val getRelationsAndCoordinates(int camX, int camY, double zoom, int canvasWidth, int canvasHeight) {
     val arr = val::array();
 
     for (auto& pair : objectKingdom.adjList) {
@@ -121,6 +93,11 @@ val getRelations(int camX, int camY, double zoom, int canvasWidth, int canvasHei
             obj.set("endX", toScreenX);
             obj.set("endY", toScreenY);
             obj.set("capacity", to_string(lane.getCapacity()));
+            obj.set("startName", lane.getFromPtr()->getName());
+            obj.set("endName", lane.getToPtr()->getName());
+            obj.set("radius", CONST_RADIUS * zoom);
+
+
 
             arr.call<void>("push", obj);
         }
@@ -195,8 +172,7 @@ val calculateFlow() {
 
 
 EMSCRIPTEN_BINDINGS(my_module) {
-    emscripten::function("getNodeCoordinates", &getNodeCoordinates);
-    emscripten::function("getRelations", &getRelations);
+    emscripten::function("getRelationsAndCoordinates", &getRelationsAndCoordinates);
     emscripten::function("getHulls", &getHulls);
     emscripten::function("calculateFlow", &calculateFlow);
 }

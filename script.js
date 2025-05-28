@@ -104,7 +104,7 @@ function draw() {
 
     // RELATIONS
 
-    const relations = parserInstance.getRelations(
+    const relations = parserInstance.getRelationsAndCoordinates(
         Math.floor(camera.x),
         Math.floor(camera.y),
         camera.zoom,
@@ -128,9 +128,41 @@ function draw() {
         // capacity
         ctx.fillStyle = "black";
         ctx.fillText(rel.capacity, (rel.startX + rel.endX) / 2 + 5, (rel.startY + rel.endY) / 2 + 5);
+
+        // drawing verticies
+
+        //first pair
+        ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.arc(rel.startX, rel.startY, rel.radius, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.fillStyle = "white";
+        ctx.arc(rel.startX, rel.startY, rel.radius - 3, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // secound pair
+        ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.arc(rel.endX, rel.endY, rel.radius, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.fillStyle = "white";
+        ctx.arc(rel.endX, rel.endY, rel.radius - 3, 0, 2 * Math.PI);
+        ctx.fill();
+
+
+        // names
+        ctx.fillStyle = "black";
+        ctx.fillText(rel.startName, rel.startX + 10 * camera.zoom, rel.startY - 10 * camera.zoom);
+
+        ctx.fillStyle = "black";
+        ctx.fillText(rel.endName, rel.endX + 10 * camera.zoom, rel.endY - 10 * camera.zoom);
     });
 
-
+/*
     const nodes = parserInstance.getNodeCoordinates(
         Math.floor(camera.x),
         Math.floor(camera.y),
@@ -154,6 +186,8 @@ function draw() {
         ctx.fillStyle = "black";
         ctx.fillText(node.name, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
     });
+*/
+
 }
 
 document.addEventListener("keydown", key => {
