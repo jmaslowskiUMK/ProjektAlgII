@@ -44,6 +44,7 @@ def graham_scan(points):
         while len(hull) >= 2 and orientation(hull[-2], hull[-1], point) < 1e-14:  #epsilon for floating point precision
             hull.pop()
         hull.append(point)
+        print(point)
     return hull
 
 
@@ -153,8 +154,10 @@ def save_all_to_csv(filename, fields, breweries, pubs, lanes, hulls=None, hull_n
         if hulls and hull_numbers:
             for hull_idx, (hull, hull_num) in enumerate(zip(hulls, hull_numbers)):
                 writer.writerow([f"Hull_{hull_idx}", "Array of Points", "", "", "", "", "", "", "", "", "", hull_num])
-                for idx, p in enumerate(hull):
-                    writer.writerow([f"HullPoint_{hull_idx}", idx, "", "", "", p.x, p.y, "", "", "", "", hull_num])
+                """for idx, p in enumerate(hull):
+                    writer.writerow([f"HullPoint_{hull_idx}", idx, "", "", "", p.x, p.y, "", "", "", "", hull_num])"""
+                for idx, (x, y) in enumerate(hull):
+                    writer.writerow([f"HullPoint_{hull_idx}", idx, "", "", "", x, y, "", "", "", "", hull_num])
 
 
 number_of_fields = int(input("Enter the number of fields: "))
@@ -211,9 +214,12 @@ while len(points) >= 3:
     # Zamiana Point na tuple (x, y)
     points_tuples = [(p.x, p.y) for p in points_in_circle]
     hull_tuples = graham_scan(points_tuples)
+    #print(hull_tupls)
     # Zamiana z powrotem na Point
-    hull = [Point(x, y) for x, y in hull_tuples]
-    hulls.append(hull)
+    #hull = [ Point(x, y) for x, y in hull_tuples ]
+    #print(hull)
+    hulls.append([hull_tuples[i] for i in range(len(hull_tuples))])
+    #print(hulls)
     points = [p for p in points if not is_inside_circle(center, p, radius)]
 save_all_to_csv("input_data.csv", fields, breweries, pubs, combined_lanes, hulls, hull_numbers)
 print("Data have been saved to 'input_data.csv'")
@@ -225,8 +231,8 @@ colors = plt.cm.get_cmap('tab20', len(hulls))
 for idx, hull in enumerate(hulls):
     if len(hull) < 3:
         continue
-    xs = [p.x for p in hull] + [hull[0].x]
-    ys = [p.y for p in hull] + [hull[0].y]
+    xs = [p[0] for p in hull] + [hull[0][0]]
+    ys = [p[1] for p in hull] + [hull[0][1]]
     plt.plot(xs, ys, marker='o', label=f'Hull {idx+1}', color=colors(idx))
 
 plt.title("All Convex Hulls")
