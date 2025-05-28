@@ -227,35 +227,6 @@ void Country::printContent() {
     }
 }
 
-/*
-void Country::printBfs(std::shared_ptr<Node> startingNode) {
-    std::vector<std::shared_ptr<Node>> visited;
-    std::queue<std::shared_ptr<Node>> q;
-    q.push(startingNode);
-    std::shared_ptr<Node> curr;
-
-    while (!q.empty()) {
-    curr = q.front();  // Pobierz pierwszy element z kolejki
-    visited.push_back(curr);
-    q.pop();  // Usuwamy wierzchołek z kolejki po przetworzeniu
-
-    // Iteruj po krawędziach (relacjach) wierzchołka
-    for (auto& el : adjList[curr]) {
-        auto toNode = el.getToPtr();  // Wierzchołek docelowy
-        if (std::find(visited.begin(), visited.end(), toNode) == visited.end()) {  // Jeśli nie odwiedzony
-        q.push(toNode);  // Dodaj do kolejki
-        }
-
-        // Wyświetl relację w formie strzałki
-        curr->printName();  // Wypisz nazwę wierzchołka początkowego
-        std::cout << " -> "; // Strzałka
-        toNode->printName(); // Wypisz nazwę wierzchołka docelowego
-        std::cout << std::endl;
-    }
-    }
-}
-*/
-
 int Country::dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec){
  
 int max_flow = 0;
@@ -353,3 +324,143 @@ int Country::sendFlow(std::shared_ptr<Node> source,std::shared_ptr<Node> sink, i
 void Country::addHull() {
     hulls.push_back(std::make_shared<Hull>());
 }
+
+void Country::cycleCancelling(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec){
+    std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
+ 
+    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource. THEY ARE CONNECTED BY EGDES WITH INF FLOW.
+    auto superSource = std::make_shared<Field>(); 
+    auto superSink = std::make_shared<Pub>();    
+ 
+    for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
+        Lane lane(superSource, source, INT_MAX, 0);
+        addRelationship(adjListCopy, lane);
+    }
+ 
+    for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
+        Lane lane(sink, superSink, INT_MAX, 0);
+        addRelationship(adjListCopy, lane);
+    }
+
+    int nodeCounter = nodeVector.size();
+    while(true){
+       std::vector<std::shared_ptr<Node>>cycle = bellmanFord(superSource,superSink,nodeCounter, adjListCopy);
+
+        if (cycle.empty()) break;
+        
+       // Find min residual capacity in the cycle
+        int minCapacity = INT_MAX;
+        for (size_t i = 0; i < cycle.size() - 1; ++i) {
+            auto u = cycle[i];
+            auto v = cycle[i + 1];
+
+            for (auto& lane : adjListCopy[u]) {
+                if(lane.getToPtr() == v){
+                    minCapacity = std::min(minCapacity, lane.getCapacity()-lane.getFlow());
+                    break;
+                }
+            }
+        } 
+
+        // Update flow along the cycle
+        for(int i = 0; i < cycle.size() - 1; ++i){
+            auto u = cycle[i];
+            auto v = cycle[i + 1];
+
+            bool found = false;
+            for(auto& lane : adjListCopy[u]) {
+                if(lane.getToPtr() == v) {
+                    lane.setFlow(lane.getFlow() + minCapacity);
+                    // Update reverse edge
+                    for(auto& revLane : adjListCopy[v]) {
+                        if(revLane.getToPtr() == u){
+                            revLane.setFlow(revLane.getCapacity() - minCapacity);
+                            break;
+                        }
+                    }
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) break;
+        }   
+    }
+
+    for(auto el:nodeVector){
+        for(auto el2:adjListCopy[el]){
+            if(el2.getFlow()==0){
+                std::cout<<(*el2.getFromPtr()).getID()<<" "<<(*el2.getToPtr()).getID()<<std::endl;
+            }
+        }
+    }
+}
+
+std::vector<std::shared_ptr<Node>> Country::bellmanFord(std::shared_ptr<Node> superSource,
+                                                        std::shared_ptr<Node> superSink,int nodeCounter,
+                                                        std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy){ 
+    std::vector<int> dist(nodeCounter,INT_MAX);
+    std::vector<std::shared_ptr<Node>> parent(nodeCounter,nullptr);// will be used to find the result path
+    std::vector<std::shared_ptr<Node>> resultVec;//negative cost cycle, will be returned
+    
+    auto it = std::find(nodeVector.begin(), nodeVector.end(), superSource);
+    int sourceIndex = std::distance(nodeVector.begin(), it);
+    dist[sourceIndex] = 0;
+
+    for(int N=0;N<nodeCounter-1;++N){//we re going to iterate N-1 times and if in the Nth iteration array dist differs then there is a negative cost cycle  
+        for(int i=0;i<nodeCounter;++i){//inner loop iterating through every node
+           for(Lane& lane:adjListCopy[nodeVector[i]]){//taking each adjacent element (el)
+                auto it = std::find(nodeVector.begin(),nodeVector.end(),lane.getToPtr());
+                int toIndex = std::distance(nodeVector.begin(), it);
+                // i = iterator of node , it = iterator of nodes pointed by nodeVector[i]
+                if( dist[toIndex] > dist[i] + lane.getRepairCost()){
+                    dist[toIndex] = dist[i] + lane.getRepairCost();
+                    parent[toIndex] = nodeVector[i];   
+                }
+            }  
+        }
+    }
+
+    std::shared_ptr<Node> auxPtr;
+    std::vector<int> distCopy(dist);//copy constructor
+    for(int i=0;i<nodeCounter;++i){//inner loop iterating through every node
+           for(Lane& lane:adjListCopy[nodeVector[i]]){//taking each adjacent element (el)
+                auto it = std::find(nodeVector.begin(),nodeVector.end(),lane.getToPtr());
+                // i = iterator of node , it = iterator of nodes pointed by nodeVector[i]
+                int toIndex = std::distance(nodeVector.begin(), it);
+                if( dist[toIndex] > dist[i] + lane.getRepairCost() ){
+                    dist[toIndex] = dist[i] + lane.getRepairCost();
+                    parent[toIndex] = nodeVector[i];   
+                    auxPtr = nodeVector[toIndex];
+                }
+            } 
+    }
+
+    bool isCycle = false;
+    for(int i = 0;i<nodeCounter;++i){
+        if(dist[i] != distCopy[i]){
+            isCycle = true;
+            break;
+        }
+    }
+    
+    if(isCycle){
+        for(int i=0;i<nodeCounter;++i){//ensure that we are in the right cycle, length(cycle) < length(graph) 
+            auto it = std::find(nodeVector.begin(),nodeVector.end(),auxPtr);
+            sourceIndex = std::distance(nodeVector.begin(), it);
+            auxPtr = parent[sourceIndex];
+        }
+
+        for(auto itPtr = auxPtr;;itPtr = parent[sourceIndex]){//go through parent vector
+            auto it = std::find(nodeVector.begin(),nodeVector.end(),itPtr);
+            sourceIndex = std::distance(nodeVector.begin(), it);
+            resultVec.push_back(itPtr);
+            if(itPtr == auxPtr && resultVec.size() > 1) break;
+        }
+
+        reverse(resultVec.begin(),resultVec.end());//we were going back by using parent vector
+    }
+    
+    return resultVec;//either epmty or containing negative cost cycle constructed in if(isCycle)
+}
+
+
