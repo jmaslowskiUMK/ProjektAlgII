@@ -4,8 +4,8 @@
 Mateusz:
   - MERGE <- wykonane
   - integracja c++ (rozwiązania kuby) z GUI, formatowanie wejścia ogarnij <- wykonane
-  - dycznamiczny Canvas integrujący otoczkę wypukłą + integracji z MaxFlow. <-
-  - funkcje getCoordinates i getRelations połączyć
+  - dycznamiczny Canvas integrujący otoczkę wypukłą + integracji z MaxFlow. <- wykonane
+  - funkcje getCoordinates i getRelations połączyć <- wykonane
   - koszt naprawy drogi dodac do generatora <- wykonane
   - TESTY i dokumentacja testów
 Kacper:
