@@ -1,0 +1,3 @@
+# 1. Opis problemu
+
+Zadaniem projektu jest zaplanowanie logistyki transportu piwa w świecie Shire. Głównym celem było wyznaczenie maksymalnej ilości piwa, jaką można dostarczyć z browarów do karczm, biorąc pod uwagę ilość jęczmienia i piwa, którą można przewieźć pomiędzy poszczególnymi skrzyżowaniami. W kolejnym kroku należało uwzględnić minimalizację kosztów naprawy dróg przy jednoczesnym zachowaniu maksymalnego przepływu. Dodatkowo dla każdego pola jęczmienia należało określić, do której wypukłej ćwiartki należy, a następnie przypisać mu odpowiednią wydajność. Ostatnim zagadnieniem było zastosowanie algorytmów umożliwiających efektywne wyszukiwanie słów w tekście.
