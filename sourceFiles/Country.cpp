@@ -321,8 +321,8 @@ int Country::sendFlow(std::shared_ptr<Node> source,std::shared_ptr<Node> sink, i
     return 0;
 }
 
-void Country::addHull() {
-    hulls.push_back(std::make_shared<Hull>());
+void Country::addHull(int groundClass) {
+    hulls.push_back(std::make_shared<Hull>(groundClass));
 }
 
 void Country::cycleCancelling(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec){

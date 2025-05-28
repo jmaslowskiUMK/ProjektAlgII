@@ -30,39 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
     processButton.addEventListener('click', async () => {
         const file = fileInput.files[0];
         if (file) {
-            if (document.querySelector('input[type="radio"]').id == "buildingMap") {
+            //  wgrywanie budynków
 
-                //  wgrywanie budynków
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const csvData = event.target.result;
+                parserInstance = await CsvParser();
+                parserInstance.ccall('processCSVBuildings', null, ['string'], [csvData]);
 
-                const reader = new FileReader();
-                reader.onload = async (event) => {
-                    const csvData = event.target.result;
-
-                    parserInstance = await CsvParser();
-
-                    parserInstance.ccall('processCSVBuildings', null, ['string'], [csvData]);
-
-                    // wyrysowanie mapy
-                    draw();
-                };
-                reader.readAsText(file);
-            }/*   else if (document.querySelector('input[type="radio"]').id == "borderMap") {
-
-                //  wgrywanie otoczek
-
-                const reader = new FileReader();
-                reader.onload = async (event) => {
-                    const csvData = event.target.result;
-
-                    parserInstance = await CsvParser();
-
-                    parserInstance.ccall('processCSVBorder', null, ['string'], [csvData]);
-
-                    // wyrysowanie mapy
-                    draw();
-                };
-                reader.readAsText(file);
-            }*/
+                // drawing map
+                draw();
+            };
+            reader.readAsText(file);
         } else {
             alert('Wybierz plik CSV');
         }
@@ -75,8 +54,55 @@ function draw() {
         return;
     }
 
+    // canvas clearing
     camera.zoom = parseFloat(document.querySelector('input[type="range"]').value);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(10, 105, 1, 0.75)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    //font settings
+    ctx.fillStyle = "black";
+    ctx.font = 'bold 10px Century Gothic';
+
+    
+    // HULLS
+
+    // loading hulls
+    const hulls = parserInstance.getHulls(
+        Math.floor(camera.x),
+        Math.floor(camera.y),
+        camera.zoom,
+        canvas.width,
+        canvas.height
+    );
+
+    // Hull color palet
+    const colors = [
+        '',
+        'rgba(255, 0, 0, 0.8)',
+        'rgba(204, 51, 0, 0.8)',
+        'rgba(153, 102, 0, 0.8)',
+        'rgba(102, 153, 0, 0.8)',
+        'rgba(51, 204, 0, 0.8)',
+        'rgba(0, 255, 0, 0.8)'
+    ];
+
+    hulls.forEach(hull => {
+        // hull colors
+        ctx.fillStyle = colors[hull.groundClass];
+        ctx.strokeStyle = 'rgba(0,0,0,0)';
+
+        const points = hull.points;
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        points.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+    });
+
+
+    // RELATIONS
 
     const relations = parserInstance.getRelations(
         Math.floor(camera.x),
@@ -86,19 +112,22 @@ function draw() {
         canvas.height
     );
 
-    ctx.strokeStyle = "nigger";
+    ctx.strokeStyle = 'rgb(77, 44, 14)';
     ctx.lineWidth = 2;
 
     // drawing relations
+
     relations.forEach(rel => {
+
+        // line drawing
         ctx.beginPath();
         ctx.moveTo(rel.startX, rel.startY);
         ctx.lineTo(rel.endX, rel.endY);
         ctx.stroke();
 
-        ctx.fillStyle = "red";
+        // capacity
+        ctx.fillStyle = "black";
         ctx.fillText(rel.capacity, (rel.startX + rel.endX) / 2 + 5, (rel.startY + rel.endY) / 2 + 5);
-        ctx.fillStyle = "nigger";
     });
 
 
@@ -125,31 +154,6 @@ function draw() {
         ctx.fillStyle = "black";
         ctx.fillText(node.name, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
     });
-
-    // loading hulls
-    const hulls = parserInstance.getHulls(
-        Math.floor(camera.x),
-        Math.floor(camera.y),
-        camera.zoom,
-        canvas.width,
-        canvas.height
-    );
-
-    // drawing hulls
-    ctx.strokeStyle = 'red';
-    ctx.lineWidth = 2;
-    ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
-
-    hulls.forEach(hull => {
-        const points = hull.points;
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        points.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-    });
-
 }
 
 document.addEventListener("keydown", key => {
