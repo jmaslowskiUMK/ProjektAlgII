@@ -8,11 +8,14 @@ Mateusz:
   - funkcje getCoordinates i getRelations połączyć <- wykonane
   - koszt naprawy drogi dodac do generatora <- wykonane
   - TESTY i dokumentacja testów
+  - wprowadzanie danych przez użytkownika przez GUI
+  - zapis danych (wspólnie z Kubą)
 Kacper:
   - usuń typ ścierzki (zbędny) <- wykonane
   - id rozwiązane jako inty (pola n+0, browary n+1, puby n+2, któe będziemy sortować) <- wykonane
   - otoczka wypukła i generator do niej (?) <- wykonane
   - generowanie otoczek w pythonie (bazowy generator) (piątek pls :) ) <-
+  - dalsza praca z otoczkami (image processing distance map)
 KKuba:
   - Karp <- wykonane
   - algorytm Dynica lub + <- wykonane
@@ -27,6 +30,8 @@ Milena:
   - DOkumentacja 
   - algorytmy tekstowe <- wykonane
   - kody Hoffmana <- wykonane
+  - wykorzystanie kodów Hoffmana
+  - poprawienie funkcji Country.find()
 
 TESTY:
   - Algorytmy przepływu <- wykonane
