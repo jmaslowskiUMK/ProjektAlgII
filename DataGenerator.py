@@ -180,7 +180,7 @@ max_x = 1000
 max_y = 1000
 min_x = -1000
 min_y = -1000
-points = generate_points(min_x, max_x, min_y, max_y, 1000)
+points = generate_points(min_x, max_x, min_y, max_y, 10000)
 radius = int(input("Enter the radius of the circles (for visuals at least 150): "))
 #number_of_hulls = int(input("Enter the number of hulls: "))
 
