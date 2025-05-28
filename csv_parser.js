@@ -2160,32 +2160,6 @@ async function createWasm() {
       });
     };
 
-  
-  
-  
-  var requireRegisteredType = (rawType, humanName) => {
-      var impl = registeredTypes[rawType];
-      if (undefined === impl) {
-        throwBindingError(`${humanName} has unknown type ${getTypeName(rawType)}`);
-      }
-      return impl;
-    };
-  
-  var emval_returnValue = (returnType, destructorsRef, handle) => {
-      var destructors = [];
-      var result = returnType['toWireType'](destructors, handle);
-      if (destructors.length) {
-        // void, primitives and any other types w/o destructors don't need to allocate a handle
-        HEAPU32[((destructorsRef)>>2)] = Emval.toHandle(destructors);
-      }
-      return result;
-    };
-  var __emval_as = (handle, returnType, destructorsRef) => {
-      handle = Emval.toValue(handle);
-      returnType = requireRegisteredType(returnType, 'emval::as');
-      return emval_returnValue(returnType, destructorsRef, handle);
-    };
-
   var emval_symbols = {
   };
   
@@ -2213,6 +2187,15 @@ async function createWasm() {
       return id;
     };
   
+  
+  
+  var requireRegisteredType = (rawType, humanName) => {
+      var impl = registeredTypes[rawType];
+      if (undefined === impl) {
+        throwBindingError(`${humanName} has unknown type ${getTypeName(rawType)}`);
+      }
+      return impl;
+    };
   var emval_lookupTypes = (argCount, argTypes) => {
       var a = new Array(argCount);
       for (var i = 0; i < argCount; ++i) {
@@ -2223,6 +2206,15 @@ async function createWasm() {
     };
   
   
+  var emval_returnValue = (returnType, destructorsRef, handle) => {
+      var destructors = [];
+      var result = returnType['toWireType'](destructors, handle);
+      if (destructors.length) {
+        // void, primitives and any other types w/o destructors don't need to allocate a handle
+        HEAPU32[((destructorsRef)>>2)] = Emval.toHandle(destructors);
+      }
+      return result;
+    };
   var __emval_get_method_caller = (argCount, argTypes, kind) => {
       var types = emval_lookupTypes(argCount, argTypes);
       var retType = types.shift();
@@ -2261,12 +2253,6 @@ async function createWasm() {
       var invokerFunction = new Function(...params, functionBody)(...args);
       var functionName = `methodCaller<(${types.map(t => t.name).join(', ')}) => ${retType.name}>`;
       return emval_addMethodCaller(createNamedFunction(functionName, invokerFunction));
-    };
-
-  var __emval_get_property = (handle, key) => {
-      handle = Emval.toValue(handle);
-      key = Emval.toValue(key);
-      return Emval.toHandle(handle[key]);
     };
 
   var __emval_incref = (handle) => {
@@ -5245,15 +5231,11 @@ var wasmImports = {
   /** @export */
   _embind_register_void: __embind_register_void,
   /** @export */
-  _emval_as: __emval_as,
-  /** @export */
   _emval_call_method: __emval_call_method,
   /** @export */
   _emval_decref: __emval_decref,
   /** @export */
   _emval_get_method_caller: __emval_get_method_caller,
-  /** @export */
-  _emval_get_property: __emval_get_property,
   /** @export */
   _emval_incref: __emval_incref,
   /** @export */

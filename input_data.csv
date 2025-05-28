@@ -1,720 +1,177 @@
-Category,ID,Yield (kg),Processed (kg),Beer (liters),X Coordinate,Y Coordinate,Lane From,Lane To,Capacity (kg/liters),Repair Cost
-Field,0,3184,,,89,-911,,,,
-Field,3,6481,,,349,-88,,,,
-Brewery,1,,1654,,-780,952,,,,
-Brewery,4,,1654,,901,328,,,,
-Pub,2,,,5442,318,-579,,,,
-Pub,5,,,11098,-775,-477,,,,
-Lane,,,,,,,0,1,429,0
-Lane,,,,,,,0,4,599,0
-Lane,,,,,,,3,4,795,0
-Lane,,,,,,,3,1,433,0
-Lane,,,,,,,1,5,455,0
-Lane,,,,,,,4,5,4786,0
-Hull_0,Array of Points
-HullPoint_0,0,,,,713,-189,,,,
-HullPoint_0,1,,,,572,-110,,,,
-HullPoint_0,2,,,,658,-82,,,,
-HullPoint_0,3,,,,660,-83,,,,
-HullPoint_0,4,,,,737,-261,,,,
-HullPoint_0,5,,,,554,-115,,,,
-HullPoint_0,6,,,,782,-201,,,,
-HullPoint_0,7,,,,592,-316,,,,
-HullPoint_0,8,,,,508,-209,,,,
-HullPoint_0,9,,,,524,-160,,,,
-HullPoint_0,10,,,,688,-286,,,,
-HullPoint_0,11,,,,528,-248,,,,
-HullPoint_0,12,,,,557,-218,,,,
-Hull_1,Array of Points
-HullPoint_1,0,,,,846,-337,,,,
-HullPoint_1,1,,,,779,-422,,,,
-HullPoint_1,2,,,,686,-360,,,,
-HullPoint_1,3,,,,773,-293,,,,
-HullPoint_1,4,,,,825,-325,,,,
-HullPoint_1,5,,,,809,-376,,,,
-HullPoint_1,6,,,,764,-310,,,,
-HullPoint_1,7,,,,890,-235,,,,
-HullPoint_1,8,,,,834,-337,,,,
-Hull_2,Array of Points
-HullPoint_2,0,,,,410,171,,,,
-HullPoint_2,1,,,,572,200,,,,
-HullPoint_2,2,,,,389,65,,,,
-HullPoint_2,3,,,,390,191,,,,
-HullPoint_2,4,,,,537,141,,,,
-HullPoint_2,5,,,,602,90,,,,
-Hull_3,Array of Points
-HullPoint_3,0,,,,471,696,,,,
-HullPoint_3,1,,,,594,875,,,,
-HullPoint_3,2,,,,497,680,,,,
-HullPoint_3,3,,,,396,827,,,,
-HullPoint_3,4,,,,625,826,,,,
-HullPoint_3,5,,,,439,717,,,,
-HullPoint_3,6,,,,548,886,,,,
-Hull_4,Array of Points
-HullPoint_4,0,,,,748,416,,,,
-HullPoint_4,1,,,,795,270,,,,
-HullPoint_4,2,,,,751,216,,,,
-HullPoint_4,3,,,,549,284,,,,
-HullPoint_4,4,,,,596,351,,,,
-HullPoint_4,5,,,,795,308,,,,
-HullPoint_4,6,,,,652,238,,,,
-HullPoint_4,7,,,,670,356,,,,
-Hull_5,Array of Points
-HullPoint_5,0,,,,-454,-739,,,,
-HullPoint_5,1,,,,-498,-881,,,,
-HullPoint_5,2,,,,-539,-968,,,,
-HullPoint_5,3,,,,-510,-794,,,,
-HullPoint_5,4,,,,-469,-883,,,,
-HullPoint_5,5,,,,-551,-889,,,,
-HullPoint_5,6,,,,-406,-848,,,,
-HullPoint_5,7,,,,-375,-939,,,,
-HullPoint_5,8,,,,-371,-952,,,,
-HullPoint_5,9,,,,-470,-915,,,,
-HullPoint_5,10,,,,-498,-795,,,,
-HullPoint_5,11,,,,-413,-850,,,,
-HullPoint_5,12,,,,-424,-950,,,,
-HullPoint_5,13,,,,-507,-864,,,,
-HullPoint_5,14,,,,-504,-791,,,,
-HullPoint_5,15,,,,-488,-737,,,,
-Hull_6,Array of Points
-HullPoint_6,0,,,,327,86,,,,
-HullPoint_6,1,,,,290,-93,,,,
-HullPoint_6,2,,,,248,30,,,,
-HullPoint_6,3,,,,331,-26,,,,
-HullPoint_6,4,,,,204,45,,,,
-HullPoint_6,5,,,,318,33,,,,
-HullPoint_6,6,,,,342,-74,,,,
-HullPoint_6,7,,,,194,106,,,,
-HullPoint_6,8,,,,307,9,,,,
-HullPoint_6,9,,,,172,18,,,,
-HullPoint_6,10,,,,281,141,,,,
-HullPoint_6,11,,,,381,-29,,,,
-Hull_7,Array of Points
-HullPoint_7,0,,,,-850,547,,,,
-HullPoint_7,1,,,,-971,609,,,,
-HullPoint_7,2,,,,-916,647,,,,
-HullPoint_7,3,,,,-804,594,,,,
-HullPoint_7,4,,,,-798,429,,,,
-HullPoint_7,5,,,,-814,417,,,,
-HullPoint_7,6,,,,-866,612,,,,
-Hull_8,Array of Points
-HullPoint_8,0,,,,-685,377,,,,
-HullPoint_8,1,,,,-621,106,,,,
-HullPoint_8,2,,,,-691,315,,,,
-HullPoint_8,3,,,,-533,246,,,,
-HullPoint_8,4,,,,-603,162,,,,
-HullPoint_8,5,,,,-730,350,,,,
-HullPoint_8,6,,,,-663,338,,,,
-HullPoint_8,7,,,,-516,238,,,,
-HullPoint_8,8,,,,-674,214,,,,
-HullPoint_8,9,,,,-784,278,,,,
-HullPoint_8,10,,,,-540,322,,,,
-HullPoint_8,11,,,,-725,255,,,,
-HullPoint_8,12,,,,-575,324,,,,
-HullPoint_8,13,,,,-519,233,,,,
-HullPoint_8,14,,,,-713,188,,,,
-Hull_9,Array of Points
-HullPoint_9,0,,,,372,616,,,,
-HullPoint_9,1,,,,296,610,,,,
-HullPoint_9,2,,,,334,667,,,,
-HullPoint_9,3,,,,375,668,,,,
-HullPoint_9,4,,,,359,580,,,,
-HullPoint_9,5,,,,342,748,,,,
-HullPoint_9,6,,,,472,585,,,,
-HullPoint_9,7,,,,245,628,,,,
-HullPoint_9,8,,,,461,661,,,,
-HullPoint_9,9,,,,331,553,,,,
-HullPoint_9,10,,,,244,626,,,,
-HullPoint_9,11,,,,300,648,,,,
-Hull_10,Array of Points
-HullPoint_10,0,,,,739,496,,,,
-HullPoint_10,1,,,,779,469,,,,
-HullPoint_10,2,,,,600,507,,,,
-HullPoint_10,3,,,,711,551,,,,
-HullPoint_10,4,,,,804,476,,,,
-HullPoint_10,5,,,,729,474,,,,
-Hull_11,Array of Points
-HullPoint_11,0,,,,44,108,,,,
-HullPoint_11,1,,,,55,228,,,,
-HullPoint_11,2,,,,105,48,,,,
-HullPoint_11,3,,,,88,100,,,,
-HullPoint_11,4,,,,190,242,,,,
-HullPoint_11,5,,,,228,235,,,,
-HullPoint_11,6,,,,232,222,,,,
-HullPoint_11,7,,,,33,21,,,,
-HullPoint_11,8,,,,2,102,,,,
-HullPoint_11,9,,,,71,199,,,,
-HullPoint_11,10,,,,187,154,,,,
-Hull_12,Array of Points
-HullPoint_12,0,,,,-695,863,,,,
-HullPoint_12,1,,,,-663,882,,,,
-HullPoint_12,2,,,,-627,833,,,,
-HullPoint_12,3,,,,-812,856,,,,
-HullPoint_12,4,,,,-589,888,,,,
-HullPoint_12,5,,,,-683,854,,,,
-HullPoint_12,6,,,,-741,944,,,,
-HullPoint_12,7,,,,-715,946,,,,
-HullPoint_12,8,,,,-690,938,,,,
-HullPoint_12,9,,,,-593,880,,,,
-Hull_13,Array of Points
-HullPoint_13,0,,,,993,-668,,,,
-HullPoint_13,1,,,,923,-505,,,,
-HullPoint_13,2,,,,946,-521,,,,
-HullPoint_13,3,,,,935,-649,,,,
-HullPoint_13,4,,,,942,-442,,,,
-HullPoint_13,5,,,,986,-565,,,,
-HullPoint_13,6,,,,998,-690,,,,
-HullPoint_13,7,,,,890,-626,,,,
-HullPoint_13,8,,,,943,-607,,,,
-HullPoint_13,9,,,,937,-617,,,,
-HullPoint_13,10,,,,875,-602,,,,
-HullPoint_13,11,,,,936,-498,,,,
-HullPoint_13,12,,,,921,-695,,,,
-Hull_14,Array of Points
-HullPoint_14,0,,,,-348,-688,,,,
-HullPoint_14,1,,,,-309,-684,,,,
-HullPoint_14,2,,,,-247,-768,,,,
-HullPoint_14,3,,,,-413,-727,,,,
-HullPoint_14,4,,,,-376,-580,,,,
-HullPoint_14,5,,,,-182,-728,,,,
-HullPoint_14,6,,,,-398,-731,,,,
-HullPoint_14,7,,,,-231,-619,,,,
-HullPoint_14,8,,,,-292,-728,,,,
-HullPoint_14,9,,,,-356,-632,,,,
-HullPoint_14,10,,,,-305,-669,,,,
-Hull_15,Array of Points
-HullPoint_15,0,,,,-240,80,,,,
-HullPoint_15,1,,,,-456,-43,,,,
-HullPoint_15,2,,,,-435,35,,,,
-HullPoint_15,3,,,,-245,53,,,,
-HullPoint_15,4,,,,-272,-85,,,,
-HullPoint_15,5,,,,-425,63,,,,
-HullPoint_15,6,,,,-331,73,,,,
-HullPoint_15,7,,,,-303,-80,,,,
-HullPoint_15,8,,,,-412,-107,,,,
-HullPoint_15,9,,,,-444,122,,,,
-HullPoint_15,10,,,,-379,130,,,,
-HullPoint_15,11,,,,-319,99,,,,
-Hull_16,Array of Points
-HullPoint_16,0,,,,762,-921,,,,
-HullPoint_16,1,,,,980,-880,,,,
-HullPoint_16,2,,,,734,-950,,,,
-HullPoint_16,3,,,,945,-761,,,,
-HullPoint_16,4,,,,828,-971,,,,
-HullPoint_16,5,,,,774,-779,,,,
-HullPoint_16,6,,,,932,-987,,,,
-HullPoint_16,7,,,,734,-947,,,,
-HullPoint_16,8,,,,785,-884,,,,
-Hull_17,Array of Points
-HullPoint_17,0,,,,-537,817,,,,
-HullPoint_17,1,,,,-382,994,,,,
-HullPoint_17,2,,,,-337,831,,,,
-HullPoint_17,3,,,,-396,807,,,,
-HullPoint_17,4,,,,-448,867,,,,
-HullPoint_17,5,,,,-382,901,,,,
-HullPoint_17,6,,,,-307,904,,,,
-HullPoint_17,7,,,,-425,807,,,,
-HullPoint_17,8,,,,-407,930,,,,
-HullPoint_17,9,,,,-281,866,,,,
-HullPoint_17,10,,,,-501,806,,,,
-HullPoint_17,11,,,,-526,805,,,,
-HullPoint_17,12,,,,-434,968,,,,
-Hull_18,Array of Points
-HullPoint_18,0,,,,420,-462,,,,
-HullPoint_18,1,,,,336,-521,,,,
-HullPoint_18,2,,,,300,-522,,,,
-HullPoint_18,3,,,,508,-353,,,,
-HullPoint_18,4,,,,364,-486,,,,
-HullPoint_18,5,,,,310,-449,,,,
-HullPoint_18,6,,,,517,-452,,,,
-HullPoint_18,7,,,,279,-501,,,,
-HullPoint_18,8,,,,497,-368,,,,
-HullPoint_18,9,,,,489,-447,,,,
-Hull_19,Array of Points
-HullPoint_19,0,,,,823,187,,,,
-HullPoint_19,1,,,,870,182,,,,
-HullPoint_19,2,,,,674,-3,,,,
-HullPoint_19,3,,,,686,59,,,,
-HullPoint_19,4,,,,736,95,,,,
-HullPoint_19,5,,,,878,-33,,,,
-HullPoint_19,6,,,,871,-49,,,,
-HullPoint_19,7,,,,761,116,,,,
-Hull_20,Array of Points
-HullPoint_20,0,,,,-118,622,,,,
-HullPoint_20,1,,,,-47,633,,,,
-HullPoint_20,2,,,,-50,508,,,,
-HullPoint_20,3,,,,-73,605,,,,
-HullPoint_20,4,,,,-74,611,,,,
-HullPoint_20,5,,,,-46,629,,,,
-HullPoint_20,6,,,,0,642,,,,
-HullPoint_20,7,,,,29,508,,,,
-HullPoint_20,8,,,,-142,578,,,,
-HullPoint_20,9,,,,-33,751,,,,
-HullPoint_20,10,,,,58,526,,,,
-HullPoint_20,11,,,,-2,651,,,,
-HullPoint_20,12,,,,90,612,,,,
-HullPoint_20,13,,,,-8,594,,,,
-HullPoint_20,14,,,,-166,658,,,,
-HullPoint_20,15,,,,36,699,,,,
-HullPoint_20,16,,,,-6,640,,,,
-HullPoint_20,17,,,,-107,501,,,,
-Hull_21,Array of Points
-HullPoint_21,0,,,,-845,-937,,,,
-HullPoint_21,1,,,,-844,-817,,,,
-HullPoint_21,2,,,,-800,-848,,,,
-HullPoint_21,3,,,,-786,-874,,,,
-HullPoint_21,4,,,,-879,-946,,,,
-Hull_22,Array of Points
-HullPoint_22,0,,,,955,99,,,,
-HullPoint_22,1,,,,978,319,,,,
-HullPoint_22,2,,,,993,184,,,,
-HullPoint_22,3,,,,979,214,,,,
-HullPoint_22,4,,,,958,322,,,,
-Hull_23,Array of Points
-HullPoint_23,0,,,,-645,635,,,,
-HullPoint_23,1,,,,-732,786,,,,
-HullPoint_23,2,,,,-504,771,,,,
-HullPoint_23,3,,,,-532,691,,,,
-HullPoint_23,4,,,,-546,681,,,,
-HullPoint_23,5,,,,-623,769,,,,
-HullPoint_23,6,,,,-610,787,,,,
-HullPoint_23,7,,,,-604,792,,,,
-HullPoint_23,8,,,,-568,777,,,,
-Hull_24,Array of Points
-HullPoint_24,0,,,,-104,-939,,,,
-HullPoint_24,1,,,,117,-967,,,,
-HullPoint_24,2,,,,-127,-973,,,,
-HullPoint_24,3,,,,-166,-897,,,,
-HullPoint_24,4,,,,80,-948,,,,
-HullPoint_24,5,,,,-10,-942,,,,
-Hull_25,Array of Points
-HullPoint_25,0,,,,-972,749,,,,
-HullPoint_25,1,,,,-988,799,,,,
-Hull_26,Array of Points
-HullPoint_26,0,,,,931,-172,,,,
-HullPoint_26,1,,,,942,-54,,,,
-HullPoint_26,2,,,,970,-9,,,,
-Hull_27,Array of Points
-HullPoint_27,0,,,,-177,-891,,,,
-HullPoint_27,1,,,,-238,-894,,,,
-HullPoint_27,2,,,,-276,-835,,,,
-HullPoint_27,3,,,,-53,-739,,,,
-Hull_28,Array of Points
-HullPoint_28,0,,,,817,947,,,,
-HullPoint_28,1,,,,718,754,,,,
-HullPoint_28,2,,,,719,974,,,,
-HullPoint_28,3,,,,791,967,,,,
-HullPoint_28,4,,,,733,886,,,,
-HullPoint_28,5,,,,783,960,,,,
-HullPoint_28,6,,,,827,759,,,,
-HullPoint_28,7,,,,671,877,,,,
-HullPoint_28,8,,,,805,940,,,,
-HullPoint_28,9,,,,757,889,,,,
-HullPoint_28,10,,,,664,946,,,,
-Hull_29,Array of Points
-HullPoint_29,0,,,,-484,148,,,,
-HullPoint_29,1,,,,-525,-18,,,,
-Hull_30,Array of Points
-HullPoint_30,0,,,,451,342,,,,
-HullPoint_30,1,,,,403,417,,,,
-HullPoint_30,2,,,,428,470,,,,
-HullPoint_30,3,,,,491,592,,,,
-HullPoint_30,4,,,,535,434,,,,
-HullPoint_30,5,,,,417,485,,,,
-HullPoint_30,6,,,,515,493,,,,
-HullPoint_30,7,,,,471,372,,,,
-HullPoint_30,8,,,,446,347,,,,
-Hull_31,Array of Points
-HullPoint_31,0,,,,-427,424,,,,
-HullPoint_31,1,,,,-528,365,,,,
-HullPoint_31,2,,,,-497,429,,,,
-HullPoint_31,3,,,,-450,347,,,,
-HullPoint_31,4,,,,-485,270,,,,
-HullPoint_31,5,,,,-562,416,,,,
-HullPoint_31,6,,,,-416,282,,,,
-HullPoint_31,7,,,,-427,277,,,,
-HullPoint_31,8,,,,-425,483,,,,
-Hull_32,Array of Points
-HullPoint_32,0,,,,-131,220,,,,
-HullPoint_32,1,,,,-105,29,,,,
-HullPoint_32,2,,,,-199,74,,,,
-HullPoint_32,3,,,,-178,128,,,,
-HullPoint_32,4,,,,-92,246,,,,
-Hull_33,Array of Points
-HullPoint_33,0,,,,23,-74,,,,
-HullPoint_33,1,,,,21,-94,,,,
-HullPoint_33,2,,,,-68,-61,,,,
-HullPoint_33,3,,,,-71,2,,,,
-HullPoint_33,4,,,,72,-24,,,,
-HullPoint_33,5,,,,148,-61,,,,
-Hull_34,Array of Points
-HullPoint_34,0,,,,-812,-230,,,,
-HullPoint_34,1,,,,-859,-156,,,,
-HullPoint_34,2,,,,-818,-171,,,,
-HullPoint_34,3,,,,-987,-385,,,,
-HullPoint_34,4,,,,-971,-315,,,,
-HullPoint_34,5,,,,-921,-221,,,,
-HullPoint_34,6,,,,-864,-164,,,,
-HullPoint_34,7,,,,-854,-285,,,,
-Hull_35,Array of Points
-HullPoint_35,0,,,,583,-451,,,,
-HullPoint_35,1,,,,534,-326,,,,
-HullPoint_35,2,,,,599,-354,,,,
-Hull_36,Array of Points
-HullPoint_36,0,,,,-195,-209,,,,
-HullPoint_36,1,,,,-362,-222,,,,
-HullPoint_36,2,,,,-378,-184,,,,
-HullPoint_36,3,,,,-194,-167,,,,
-HullPoint_36,4,,,,-247,-211,,,,
-HullPoint_36,5,,,,-338,-237,,,,
-HullPoint_36,6,,,,-458,-154,,,,
-HullPoint_36,7,,,,-215,-118,,,,
-HullPoint_36,8,,,,-257,-180,,,,
-HullPoint_36,9,,,,-308,-251,,,,
-HullPoint_36,10,,,,-426,-125,,,,
-HullPoint_36,11,,,,-248,-141,,,,
-HullPoint_36,12,,,,-425,-244,,,,
-Hull_37,Array of Points
-HullPoint_37,0,,,,-788,47,,,,
-HullPoint_37,1,,,,-933,-87,,,,
-HullPoint_37,2,,,,-956,-48,,,,
-HullPoint_37,3,,,,-964,-31,,,,
-HullPoint_37,4,,,,-969,98,,,,
-HullPoint_37,5,,,,-882,-16,,,,
-HullPoint_37,6,,,,-1000,-23,,,,
-HullPoint_37,7,,,,-871,100,,,,
-HullPoint_37,8,,,,-916,-39,,,,
-HullPoint_37,9,,,,-974,-88,,,,
-Hull_38,Array of Points
-HullPoint_38,0,,,,135,693,,,,
-HullPoint_38,1,,,,150,586,,,,
-HullPoint_38,2,,,,110,633,,,,
-HullPoint_38,3,,,,186,730,,,,
-HullPoint_38,4,,,,188,540,,,,
-HullPoint_38,5,,,,105,725,,,,
-Hull_39,Array of Points
-HullPoint_39,0,,,,-867,910,,,,
-HullPoint_39,1,,,,-996,942,,,,
-HullPoint_39,2,,,,-935,989,,,,
-HullPoint_39,3,,,,-999,892,,,,
-HullPoint_39,4,,,,-976,930,,,,
-Hull_40,Array of Points
-HullPoint_40,0,,,,426,-648,,,,
-HullPoint_40,1,,,,623,-550,,,,
-HullPoint_40,2,,,,506,-768,,,,
-HullPoint_40,3,,,,514,-711,,,,
-HullPoint_40,4,,,,601,-568,,,,
-HullPoint_40,5,,,,691,-633,,,,
-HullPoint_40,6,,,,645,-720,,,,
-HullPoint_40,7,,,,544,-761,,,,
-HullPoint_40,8,,,,469,-714,,,,
-HullPoint_40,9,,,,563,-574,,,,
-HullPoint_40,10,,,,584,-754,,,,
-HullPoint_40,11,,,,475,-637,,,,
-HullPoint_40,12,,,,567,-683,,,,
-HullPoint_40,13,,,,677,-770,,,,
-Hull_41,Array of Points
-HullPoint_41,0,,,,-372,626,,,,
-HullPoint_41,1,,,,-368,720,,,,
-HullPoint_41,2,,,,-261,804,,,,
-HullPoint_41,3,,,,-206,614,,,,
-HullPoint_41,4,,,,-366,670,,,,
-HullPoint_41,5,,,,-359,767,,,,
-HullPoint_41,6,,,,-173,758,,,,
-Hull_42,Array of Points
-HullPoint_42,0,,,,-650,-963,,,,
-HullPoint_42,1,,,,-636,-898,,,,
-HullPoint_42,2,,,,-639,-917,,,,
-HullPoint_42,3,,,,-710,-839,,,,
-HullPoint_42,4,,,,-675,-865,,,,
-Hull_43,Array of Points
-HullPoint_43,0,,,,-896,294,,,,
-HullPoint_43,1,,,,-926,340,,,,
-HullPoint_43,2,,,,-844,310,,,,
-HullPoint_43,3,,,,-813,202,,,,
-HullPoint_43,4,,,,-824,188,,,,
-HullPoint_43,5,,,,-902,146,,,,
-HullPoint_43,6,,,,-913,364,,,,
-HullPoint_43,7,,,,-887,213,,,,
-HullPoint_43,8,,,,-961,153,,,,
-Hull_44,Array of Points
-HullPoint_44,0,,,,17,-456,,,,
-HullPoint_44,1,,,,-102,-384,,,,
-HullPoint_44,2,,,,-3,-335,,,,
-HullPoint_44,3,,,,37,-337,,,,
-HullPoint_44,4,,,,96,-362,,,,
-HullPoint_44,5,,,,156,-507,,,,
-HullPoint_44,6,,,,63,-499,,,,
-Hull_45,Array of Points
-HullPoint_45,0,,,,366,-826,,,,
-HullPoint_45,1,,,,305,-729,,,,
-HullPoint_45,2,,,,398,-728,,,,
-HullPoint_45,3,,,,372,-772,,,,
-HullPoint_45,4,,,,282,-652,,,,
-HullPoint_45,5,,,,388,-708,,,,
-HullPoint_45,6,,,,411,-774,,,,
-HullPoint_45,7,,,,372,-712,,,,
-HullPoint_45,8,,,,386,-664,,,,
-HullPoint_45,9,,,,444,-812,,,,
-HullPoint_45,10,,,,333,-805,,,,
-Hull_46,Array of Points
-HullPoint_46,0,,,,798,239,,,,
-HullPoint_46,1,,,,638,62,,,,
-HullPoint_46,2,,,,629,145,,,,
-Hull_47,Array of Points
-HullPoint_47,0,,,,272,-408,,,,
-HullPoint_47,1,,,,180,-318,,,,
-HullPoint_47,2,,,,181,-290,,,,
-HullPoint_47,3,,,,213,-301,,,,
-HullPoint_47,4,,,,256,-319,,,,
-HullPoint_47,5,,,,224,-400,,,,
-Hull_48,Array of Points
-HullPoint_48,0,,,,337,-124,,,,
-HullPoint_48,1,,,,450,-120,,,,
-HullPoint_48,2,,,,377,-280,,,,
-HullPoint_48,3,,,,281,-251,,,,
-HullPoint_48,4,,,,271,-189,,,,
-Hull_49,Array of Points
-HullPoint_49,0,,,,948,435,,,,
-HullPoint_49,1,,,,900,439,,,,
-HullPoint_49,2,,,,933,538,,,,
-HullPoint_49,3,,,,979,530,,,,
-HullPoint_49,4,,,,853,384,,,,
-Hull_50,Array of Points
-HullPoint_50,0,,,,126,421,,,,
-HullPoint_50,1,,,,29,471,,,,
-HullPoint_50,2,,,,266,406,,,,
-HullPoint_50,3,,,,171,299,,,,
-HullPoint_50,4,,,,62,317,,,,
-HullPoint_50,5,,,,86,430,,,,
-HullPoint_50,6,,,,169,425,,,,
-HullPoint_50,7,,,,119,288,,,,
-HullPoint_50,8,,,,57,328,,,,
-HullPoint_50,9,,,,27,451,,,,
-HullPoint_50,10,,,,162,409,,,,
-HullPoint_50,11,,,,206,392,,,,
-Hull_51,Array of Points
-HullPoint_51,0,,,,176,-890,,,,
-HullPoint_51,1,,,,313,-977,,,,
-HullPoint_51,2,,,,270,-995,,,,
-HullPoint_51,3,,,,267,-901,,,,
-Hull_52,Array of Points
-HullPoint_52,0,,,,333,900,,,,
-HullPoint_52,1,,,,227,835,,,,
-HullPoint_52,2,,,,306,911,,,,
-HullPoint_52,3,,,,303,817,,,,
-HullPoint_52,4,,,,133,925,,,,
-HullPoint_52,5,,,,237,911,,,,
-Hull_53,Array of Points
-HullPoint_53,0,,,,243,-720,,,,
-HullPoint_53,1,,,,320,-837,,,,
-Hull_54,Array of Points
-HullPoint_54,0,,,,-140,902,,,,
-HullPoint_54,1,,,,-192,919,,,,
-HullPoint_54,2,,,,-242,944,,,,
-HullPoint_54,3,,,,-182,992,,,,
-HullPoint_54,4,,,,-44,874,,,,
-HullPoint_54,5,,,,-192,868,,,,
-Hull_55,Array of Points
-HullPoint_55,0,,,,-72,-95,,,,
-HullPoint_55,1,,,,-8,-300,,,,
-HullPoint_55,2,,,,-129,-163,,,,
-HullPoint_55,3,,,,-167,-91,,,,
-HullPoint_55,4,,,,77,-209,,,,
-HullPoint_55,5,,,,-48,-237,,,,
-HullPoint_55,6,,,,-79,-162,,,,
-HullPoint_55,7,,,,70,-192,,,,
-HullPoint_55,8,,,,-79,-232,,,,
-Hull_56,Array of Points
-HullPoint_56,0,,,,-590,-333,,,,
-HullPoint_56,1,,,,-613,-432,,,,
-HullPoint_56,2,,,,-651,-363,,,,
-HullPoint_56,3,,,,-596,-386,,,,
-HullPoint_56,4,,,,-609,-387,,,,
-HullPoint_56,5,,,,-690,-368,,,,
-HullPoint_56,6,,,,-653,-311,,,,
-HullPoint_56,7,,,,-587,-391,,,,
-HullPoint_56,8,,,,-714,-430,,,,
-HullPoint_56,9,,,,-573,-347,,,,
-HullPoint_56,10,,,,-552,-360,,,,
-HullPoint_56,11,,,,-741,-451,,,,
-HullPoint_56,12,,,,-764,-445,,,,
-HullPoint_56,13,,,,-696,-344,,,,
-HullPoint_56,14,,,,-626,-280,,,,
-Hull_57,Array of Points
-HullPoint_57,0,,,,-334,-344,,,,
-HullPoint_57,1,,,,-403,-446,,,,
-HullPoint_57,2,,,,-520,-372,,,,
-HullPoint_57,3,,,,-448,-313,,,,
-Hull_58,Array of Points
-HullPoint_58,0,,,,-256,263,,,,
-HullPoint_58,1,,,,-220,436,,,,
-HullPoint_58,2,,,,-139,411,,,,
-HullPoint_58,3,,,,-156,298,,,,
-HullPoint_58,4,,,,-289,269,,,,
-HullPoint_58,5,,,,-306,391,,,,
-HullPoint_58,6,,,,-253,438,,,,
-Hull_59,Array of Points
-HullPoint_59,0,,,,-564,603,,,,
-HullPoint_59,1,,,,-548,595,,,,
-HullPoint_59,2,,,,-567,582,,,,
-HullPoint_59,3,,,,-474,738,,,,
-Hull_60,Array of Points
-HullPoint_60,0,,,,-950,-407,,,,
-HullPoint_60,1,,,,-838,-418,,,,
-HullPoint_60,2,,,,-833,-487,,,,
-HullPoint_60,3,,,,-903,-503,,,,
-HullPoint_60,4,,,,-955,-405,,,,
-HullPoint_60,5,,,,-840,-468,,,,
-HullPoint_60,6,,,,-915,-527,,,,
-Hull_61,Array of Points
-HullPoint_61,0,,,,-260,-419,,,,
-HullPoint_61,1,,,,-314,-532,,,,
-HullPoint_61,2,,,,-319,-423,,,,
-HullPoint_61,3,,,,-314,-512,,,,
-HullPoint_61,4,,,,-392,-458,,,,
-HullPoint_61,5,,,,-330,-422,,,,
-HullPoint_61,6,,,,-331,-527,,,,
-Hull_62,Array of Points
-HullPoint_62,0,,,,-933,-800,,,,
-HullPoint_62,1,,,,-984,-953,,,,
-HullPoint_62,2,,,,-990,-914,,,,
-HullPoint_62,3,,,,-948,-801,,,,
-Hull_63,Array of Points
-HullPoint_63,0,,,,442,287,,,,
-HullPoint_63,1,,,,375,320,,,,
-HullPoint_63,2,,,,518,331,,,,
-HullPoint_63,3,,,,521,294,,,,
-HullPoint_63,4,,,,372,311,,,,
-Hull_64,Array of Points
-HullPoint_64,0,,,,607,-9,,,,
-HullPoint_64,1,,,,552,-77,,,,
-Hull_65,Array of Points
-HullPoint_65,0,,,,-607,-113,,,,
-HullPoint_65,1,,,,-533,-98,,,,
-HullPoint_65,2,,,,-542,-117,,,,
-HullPoint_65,3,,,,-587,-171,,,,
-HullPoint_65,4,,,,-652,-147,,,,
-HullPoint_65,5,,,,-620,-113,,,,
-Hull_66,Array of Points
-HullPoint_66,0,,,,-511,-729,,,,
-HullPoint_66,1,,,,-618,-785,,,,
-HullPoint_66,2,,,,-669,-671,,,,
-HullPoint_66,3,,,,-621,-637,,,,
-HullPoint_66,4,,,,-605,-634,,,,
-HullPoint_66,5,,,,-582,-635,,,,
-HullPoint_66,6,,,,-554,-735,,,,
-HullPoint_66,7,,,,-660,-729,,,,
-Hull_67,Array of Points
-HullPoint_67,0,,,,-49,267,,,,
-HullPoint_67,1,,,,-11,312,,,,
-HullPoint_67,2,,,,33,316,,,,
-HullPoint_67,3,,,,77,270,,,,
-HullPoint_67,4,,,,-16,189,,,,
-HullPoint_67,5,,,,-68,279,,,,
-Hull_68,Array of Points
-HullPoint_68,0,,,,919,759,,,,
-HullPoint_68,1,,,,930,923,,,,
-HullPoint_68,2,,,,962,803,,,,
-HullPoint_68,3,,,,911,718,,,,
-HullPoint_68,4,,,,888,736,,,,
-HullPoint_68,5,,,,910,889,,,,
-Hull_69,Array of Points
-HullPoint_69,0,,,,985,-267,,,,
-HullPoint_69,1,,,,987,-365,,,,
-HullPoint_69,2,,,,937,-322,,,,
-Hull_70,Array of Points
-HullPoint_70,0,,,,-476,-591,,,,
-HullPoint_70,1,,,,-669,-605,,,,
-HullPoint_70,2,,,,-646,-520,,,,
-HullPoint_70,3,,,,-509,-519,,,,
-HullPoint_70,4,,,,-513,-555,,,,
-HullPoint_70,5,,,,-614,-498,,,,
-Hull_71,Array of Points
-HullPoint_71,0,,,,361,282,,,,
-HullPoint_71,1,,,,297,271,,,,
-HullPoint_71,2,,,,282,273,,,,
-HullPoint_71,3,,,,368,272,,,,
-HullPoint_71,4,,,,363,209,,,,
-HullPoint_71,5,,,,285,212,,,,
-Hull_72,Array of Points
-HullPoint_72,0,,,,-856,-677,,,,
-HullPoint_72,1,,,,-775,-509,,,,
-HullPoint_72,2,,,,-756,-629,,,,
-Hull_73,Array of Points
-HullPoint_73,0,,,,50,-768,,,,
-HullPoint_73,1,,,,122,-746,,,,
-HullPoint_73,2,,,,95,-851,,,,
-HullPoint_73,3,,,,33,-811,,,,
-Hull_74,Array of Points
-HullPoint_74,0,,,,-23,897,,,,
-HullPoint_74,1,,,,5,902,,,,
-HullPoint_74,2,,,,57,783,,,,
-Hull_75,Array of Points
-HullPoint_75,0,,,,-172,-333,,,,
-HullPoint_75,1,,,,-133,-380,,,,
-HullPoint_75,2,,,,-147,-555,,,,
-Hull_76,Array of Points
-HullPoint_76,0,,,,241,-674,,,,
-HullPoint_76,1,,,,137,-663,,,,
-HullPoint_76,2,,,,160,-634,,,,
-HullPoint_76,3,,,,232,-560,,,,
-HullPoint_76,4,,,,234,-573,,,,
-HullPoint_76,5,,,,217,-637,,,,
-HullPoint_76,6,,,,91,-598,,,,
-Hull_77,Array of Points
-HullPoint_77,0,,,,617,592,,,,
-HullPoint_77,1,,,,587,618,,,,
-HullPoint_77,2,,,,659,703,,,,
-HullPoint_77,3,,,,733,688,,,,
-HullPoint_77,4,,,,691,662,,,,
-Hull_78,Array of Points
-HullPoint_78,0,,,,579,-938,,,,
-HullPoint_78,1,,,,465,-940,,,,
-HullPoint_78,2,,,,571,-854,,,,
-HullPoint_78,3,,,,561,-915,,,,
-HullPoint_78,4,,,,520,-914,,,,
-HullPoint_78,5,,,,459,-903,,,,
-HullPoint_78,6,,,,519,-870,,,,
-HullPoint_78,7,,,,621,-994,,,,
-Hull_79,Array of Points
-HullPoint_79,0,,,,-698,503,,,,
-HullPoint_79,1,,,,-675,563,,,,
-Hull_80,Array of Points
-HullPoint_80,0,,,,-421,204,,,,
-HullPoint_80,1,,,,-465,236,,,,
-HullPoint_80,2,,,,-380,278,,,,
-Hull_81,Array of Points
-HullPoint_81,0,,,,679,-536,,,,
-HullPoint_81,1,,,,687,-481,,,,
-HullPoint_81,2,,,,807,-547,,,,
-Hull_82,Array of Points
-HullPoint_82,0,,,,3,924,,,,
-HullPoint_82,1,,,,-65,976,,,,
-HullPoint_82,2,,,,-46,984,,,,
-Hull_83,Array of Points
-HullPoint_83,0,,,,783,659,,,,
-HullPoint_83,1,,,,902,661,,,,
-HullPoint_83,2,,,,885,615,,,,
-HullPoint_83,3,,,,806,730,,,,
-Hull_84,Array of Points
-HullPoint_84,0,,,,-89,-598,,,,
-HullPoint_84,1,,,,-208,-568,,,,
-HullPoint_84,2,,,,-226,-543,,,,
-HullPoint_84,3,,,,-108,-567,,,,
-HullPoint_84,4,,,,-101,-616,,,,
-HullPoint_84,5,,,,-156,-631,,,,
-Hull_85,Array of Points
-HullPoint_85,0,,,,178,-214,,,,
-HullPoint_85,1,,,,106,-245,,,,
-Hull_86,Array of Points
-HullPoint_86,0,,,,-691,-5,,,,
-HullPoint_86,1,,,,-758,83,,,,
-HullPoint_86,2,,,,-760,119,,,,
-HullPoint_86,3,,,,-717,8,,,,
-Hull_87,Array of Points
-HullPoint_87,0,,,,671,-801,,,,
-HullPoint_87,1,,,,700,-755,,,,
-Hull_88,Array of Points
-HullPoint_88,0,,,,446,944,,,,
-HullPoint_88,1,,,,407,934,,,,
+Category,ID,Yield (kg),Processed (kg),Beer (liters),X Coordinate,Y Coordinate,Lane From,Lane To,Capacity (kg/liters),Repair Cost,Ground Class
+Field,0,5058,,,-864,562,,,,,
+Field,3,3311,,,-337,667,,,,,
+Field,6,7329,,,-801,-832,,,,,
+Field,9,5120,,,-880,-281,,,,,
+Field,12,3923,,,742,-362,,,,,
+Brewery,1,,2027,,505,-265,,,,,
+Brewery,4,,2027,,-441,375,,,,,
+Brewery,7,,2027,,355,-954,,,,,
+Brewery,10,,2027,,424,312,,,,,
+Brewery,13,,2027,,824,751,,,,,
+Pub,2,,,17562,-766,877,,,,,
+Pub,5,,,5144,951,-629,,,,,
+Pub,8,,,20428,964,-460,,,,,
+Pub,11,,,14724,466,-709,,,,,
+Pub,14,,,33357,-946,-663,,,,,
+Lane,,,,,,,0,7,222,0,
+Lane,,,,,,,0,10,888,0,
+Lane,,,,,,,0,1,855,0,
+Lane,,,,,,,0,4,987,0,
+Lane,,,,,,,0,13,569,0,
+Lane,,,,,,,3,7,968,0,
+Lane,,,,,,,6,1,604,0,
+Lane,,,,,,,6,13,546,0,
+Lane,,,,,,,6,7,597,0,
+Lane,,,,,,,9,13,582,0,
+Lane,,,,,,,9,10,655,0,
+Lane,,,,,,,9,4,756,0,
+Lane,,,,,,,12,13,283,0,
+Lane,,,,,,,12,10,919,0,
+Lane,,,,,,,1,14,275,0,
+Lane,,,,,,,1,2,1414,0,
+Lane,,,,,,,1,11,2542,0,
+Lane,,,,,,,1,5,3111,0,
+Lane,,,,,,,4,11,2610,0,
+Lane,,,,,,,4,8,1911,0,
+Lane,,,,,,,4,2,3208,0,
+Lane,,,,,,,4,14,2980,0,
+Lane,,,,,,,4,5,2290,0,
+Lane,,,,,,,7,11,3786,0,
+Lane,,,,,,,7,2,2361,0,
+Lane,,,,,,,10,2,2972,0,
+Lane,,,,,,,10,11,3621,0,
+Lane,,,,,,,10,14,585,0,
+Lane,,,,,,,10,8,1000,0,
+Lane,,,,,,,10,5,505,0,
+Lane,,,,,,,13,2,4628,0,
+Lane,,,,,,,13,11,663,0,
+Lane,,,,,,,13,8,4974,0,
+Hull_0,Array of Points,,,,,,,,,,5
+HullPoint_0,0,,,,570,135,,,,,5
+HullPoint_0,1,,,,719,234,,,,,5
+HullPoint_0,2,,,,832,318,,,,,5
+HullPoint_0,3,,,,863,462,,,,,5
+HullPoint_0,4,,,,816,655,,,,,5
+HullPoint_0,5,,,,752,728,,,,,5
+HullPoint_0,6,,,,617,767,,,,,5
+HullPoint_0,7,,,,520,791,,,,,5
+HullPoint_0,8,,,,381,771,,,,,5
+HullPoint_0,9,,,,360,766,,,,,5
+HullPoint_0,10,,,,351,763,,,,,5
+HullPoint_0,11,,,,241,679,,,,,5
+HullPoint_0,12,,,,182,476,,,,,5
+HullPoint_0,13,,,,198,376,,,,,5
+HullPoint_0,14,,,,215,315,,,,,5
+HullPoint_0,15,,,,338,194,,,,,5
+HullPoint_0,16,,,,371,165,,,,,5
+HullPoint_0,17,,,,499,140,,,,,5
+Hull_1,Array of Points,,,,,,,,,,2
+HullPoint_1,0,,,,-927,-622,,,,,2
+HullPoint_1,1,,,,-826,-595,,,,,2
+HullPoint_1,2,,,,-761,-561,,,,,2
+HullPoint_1,3,,,,-743,-545,,,,,2
+HullPoint_1,4,,,,-654,-417,,,,,2
+HullPoint_1,5,,,,-666,-212,,,,,2
+HullPoint_1,6,,,,-693,-140,,,,,2
+HullPoint_1,7,,,,-734,-85,,,,,2
+HullPoint_1,8,,,,-846,-2,,,,,2
+HullPoint_1,9,,,,-973,25,,,,,2
+HullPoint_1,10,,,,-984,-84,,,,,2
+HullPoint_1,11,,,,-999,-574,,,,,2
+Hull_2,Array of Points,,,,,,,,,,3
+HullPoint_2,0,,,,31,-459,,,,,3
+HullPoint_2,1,,,,103,-397,,,,,3
+HullPoint_2,2,,,,107,-392,,,,,3
+HullPoint_2,3,,,,181,-130,,,,,3
+HullPoint_2,4,,,,166,-64,,,,,3
+HullPoint_2,5,,,,161,-54,,,,,3
+HullPoint_2,6,,,,111,19,,,,,3
+HullPoint_2,7,,,,-48,155,,,,,3
+HullPoint_2,8,,,,-158,164,,,,,3
+HullPoint_2,9,,,,-366,92,,,,,3
+HullPoint_2,10,,,,-500,-106,,,,,3
+HullPoint_2,11,,,,-506,-179,,,,,3
+HullPoint_2,12,,,,-403,-416,,,,,3
+HullPoint_2,13,,,,-288,-435,,,,,3
+Hull_3,Array of Points,,,,,,,,,,5
+HullPoint_3,0,,,,-342,-990,,,,,5
+HullPoint_3,1,,,,-96,-971,,,,,5
+HullPoint_3,2,,,,-50,-952,,,,,5
+HullPoint_3,3,,,,40,-895,,,,,5
+HullPoint_3,4,,,,86,-841,,,,,5
+HullPoint_3,5,,,,96,-562,,,,,5
+HullPoint_3,6,,,,10,-539,,,,,5
+HullPoint_3,7,,,,-447,-435,,,,,5
+HullPoint_3,8,,,,-514,-506,,,,,5
+HullPoint_3,9,,,,-564,-630,,,,,5
+HullPoint_3,10,,,,-557,-698,,,,,5
+HullPoint_3,11,,,,-527,-812,,,,,5
+HullPoint_3,12,,,,-497,-865,,,,,5
+Hull_4,Array of Points,,,,,,,,,,6
+HullPoint_4,0,,,,143,460,,,,,6
+HullPoint_4,1,,,,512,879,,,,,6
+HullPoint_4,2,,,,513,895,,,,,6
+HullPoint_4,3,,,,512,919,,,,,6
+HullPoint_4,4,,,,487,960,,,,,6
+HullPoint_4,5,,,,365,988,,,,,6
+HullPoint_4,6,,,,96,989,,,,,6
+HullPoint_4,7,,,,-48,984,,,,,6
+HullPoint_4,8,,,,-74,931,,,,,6
+HullPoint_4,9,,,,-102,795,,,,,6
+HullPoint_4,10,,,,-109,715,,,,,6
+HullPoint_4,11,,,,-66,571,,,,,6
+Hull_5,Array of Points,,,,,,,,,,2
+HullPoint_5,0,,,,-17,177,,,,,2
+HullPoint_5,1,,,,82,186,,,,,2
+HullPoint_5,2,,,,133,262,,,,,2
+HullPoint_5,3,,,,179,347,,,,,2
+HullPoint_5,4,,,,-159,761,,,,,2
+HullPoint_5,5,,,,-324,718,,,,,2
+HullPoint_5,6,,,,-381,669,,,,,2
+HullPoint_5,7,,,,-456,508,,,,,2
+HullPoint_5,8,,,,-454,379,,,,,2
+HullPoint_5,9,,,,-337,205,,,,,2
+HullPoint_5,10,,,,-229,179,,,,,2
+Hull_6,Array of Points,,,,,,,,,,3
+HullPoint_6,0,,,,-658,174,,,,,3
+HullPoint_6,1,,,,-512,271,,,,,3
+HullPoint_6,2,,,,-456,655,,,,,3
+HullPoint_6,3,,,,-520,726,,,,,3
+HullPoint_6,4,,,,-617,812,,,,,3
+HullPoint_6,5,,,,-738,851,,,,,3
+HullPoint_6,6,,,,-947,772,,,,,3
+HullPoint_6,7,,,,-973,731,,,,,3
+HullPoint_6,8,,,,-982,488,,,,,3
+HullPoint_6,9,,,,-964,433,,,,,3
+HullPoint_6,10,,,,-920,303,,,,,3
+HullPoint_6,11,,,,-901,269,,,,,3
+HullPoint_6,12,,,,-832,241,,,,,3
+Hull_7,Array of Points,,,,,,,,,,2
+HullPoint_7,0,,,,-18,-982,,,,,2
+HullPoint_7,1,,,,549,-975,,,,,2
+HullPoint_7,2,,,,556,-973,,,,,2
+HullPoint_7,3,,,,540,-849,,,,,2
+HullPoint_7,4,,,,337,-638,,,,,2
+HullPoint_7,5,,,,291,-611,,,,,2
+HullPoint_7,6,,,,226,-607,,,,,2
+HullPoint_7,7,,,,132,-662,,,,,2
+Hull_8,Array of Points,,,,,,,,,,4
+HullPoint_8,0,,,,-839,-984,,,,,4
+HullPoint_8,1,,,,-807,-965,,,,,4
+HullPoint_8,2,,,,-654,-830,,,,,4
+HullPoint_8,3,,,,-646,-781,,,,,4
+HullPoint_8,4,,,,-618,-554,,,,,4
+HullPoint_8,5,,,,-728,-569,,,,,4
+HullPoint_8,6,,,,-934,-671,,,,,4
+HullPoint_8,7,,,,-970,-720,,,,,4
+HullPoint_8,8,,,,-989,-812,,,,,4
+HullPoint_8,9,,,,-963,-949,,,,,4
+Hull_9,Array of Points,,,,,,,,,,6
+HullPoint_9,0,,,,-515,-149,,,,,6
+HullPoint_9,1,,,,-360,190,,,,,6
+HullPoint_9,2,,,,-446,300,,,,,6
+HullPoint_9,3,,,,-881,142,,,,,6
+HullPoint_9,4,,,,-808,5,,,,,6
+HullPoint_9,5,,,,-789,-18,,,,,6
+HullPoint_9,6,,,,-713,-71,,,,,6

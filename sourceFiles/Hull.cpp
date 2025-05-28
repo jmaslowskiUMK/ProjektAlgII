@@ -1,7 +1,9 @@
 #include "Hull.h"
 #include <iostream>
 
-Hull::Hull() {}
+Hull::Hull(int groundClass) {
+	this->groundClass = groundClass;
+}
 
 void Hull::addPoint(std::pair<int,int> auxPair){
 	Hull::points.push_back(auxPair);

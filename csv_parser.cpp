@@ -10,7 +10,7 @@
 #include "./sourceFiles/Brewery.h"
 #include "./sourceFiles/Hull.h"
 
-#define ROW_LENGTH 11
+#define ROW_LENGTH 12
 #define CONST_RADIUS 10
 
 using namespace emscripten;
@@ -36,7 +36,7 @@ extern "C" {
 
             if (row[0] == "Hull_" + to_string(HullCounter + 1)) {
                 // Function to create Hull object and add to vector
-                objectKingdom.addHull();
+                objectKingdom.addHull(stoi(row[11]));
                 HullCounter += 1;
             }   else if (row[0].find("HullPoint") != std::string::npos) {
                 // Function to add to Hull
@@ -84,7 +84,7 @@ val getNodeCoordinates(int camX, int camY, double zoom, int canvasWidth, int can
         obj.set("x", screenX);
         obj.set("y", screenY);
         obj.set("radius", CONST_RADIUS * zoom); // Skalowanie promienia
-        obj.set("name", /*node->getName()*/ to_string(node->getX()));
+        obj.set("name", node->getName());
 
         arr.call<void>("push", obj);
     }
@@ -120,7 +120,7 @@ val getRelations(int camX, int camY, double zoom, int canvasWidth, int canvasHei
             obj.set("startY", fromScreenY);
             obj.set("endX", toScreenX);
             obj.set("endY", toScreenY);
-            obj.set("capacity", to_string(lane.getFlow()));
+            obj.set("capacity", to_string(lane.getCapacity()));
 
             arr.call<void>("push", obj);
         }
@@ -135,7 +135,9 @@ val getHulls(int camX, int camY, double zoom, int canvasWidth, int canvasHeight)
     for (size_t i = 0; i < objectKingdom.hulls.size(); ++i) {
         auto hull = objectKingdom.hulls[i];
         val pointArray = val::array();
+        bool hasVisiblePoint = false;
 
+        int index = 0;
         for (const auto& point : hull->points) {
             double worldX = static_cast<double>(point.first);
             double worldY = static_cast<double>(point.second);
@@ -143,27 +145,30 @@ val getHulls(int camX, int camY, double zoom, int canvasWidth, int canvasHeight)
             double screenX = (worldX - static_cast<double>(camX)) * zoom + static_cast<double>(canvasWidth) * 0.5;
             double screenY = (worldY - static_cast<double>(camY)) * zoom + static_cast<double>(canvasHeight) * 0.5;
 
-            // Pomijanie punktów niewidocznych
-            if (screenX < 0 || screenX > canvasWidth || screenY < 0 || screenY > canvasHeight)
-                continue;
-
+            // Tworzymy punkt zawsze
             val pointObj = val::object();
             pointObj.set("x", screenX);
             pointObj.set("y", screenY);
+            pointArray.set(index++, pointObj);
 
-            pointArray.call<void>("push", pointObj);
+            // Sprawdzamy widoczność
+            if (screenX >= 0 && screenX <= canvasWidth && screenY >= 0 && screenY <= canvasHeight) {
+                hasVisiblePoint = true;
+            }
         }
 
-        // Dodajemy Hull tylko jeśli ma jakiekolwiek widoczne punkty
-        if (pointArray["length"].as<unsigned>() > 0) {
+        // Dodajemy tylko jeśli przynajmniej jeden punkt był widoczny
+        if (hasVisiblePoint) {
             val hullObj = val::object();
             hullObj.set("points", pointArray);
+            hullObj.set("groundClass", hull->groundClass);
             hullArray.call<void>("push", hullObj);
         }
     }
 
     return hullArray;
 }
+
 
 val calculateFlow() {
 	val resultsArr = val::array();
