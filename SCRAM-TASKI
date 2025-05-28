@@ -4,7 +4,7 @@
 Mateusz:
   - MERGE <- wykonane
   - integracja c++ (rozwiązania kuby) z GUI, formatowanie wejścia ogarnij <- wykonane
-  - dycznamiczny Canvas integrujący otoczkę wypukłą, narazie bez integracji z MaxFlow.
+  - dycznamiczny Canvas integrujący otoczkę wypukłą + integracji z MaxFlow. <-
   - funkcje getCoordinates i getRelations połączyć
   - koszt naprawy drogi dodac do generatora <- wykonane
   - TESTY i dokumentacja testów
@@ -12,26 +12,28 @@ Kacper:
   - usuń typ ścierzki (zbędny) <- wykonane
   - id rozwiązane jako inty (pola n+0, browary n+1, puby n+2, któe będziemy sortować) <- wykonane
   - otoczka wypukła i generator do niej (?) <- wykonane
-  - generowanie otoczek w pythonie (bazowy generator) (piątek pls :) )
+  - generowanie otoczek w pythonie (bazowy generator) (piątek pls :) ) <-
 KKuba:
   - Karp <- wykonane
   - algorytm Dynica lub + <- wykonane
-  - USTAL KONKRETNE ŹRÓDŁO I ZLEW <- wykonane      
-  - 2 akapit wiju wiju
+  - USTAL KONKRETNE ŹRÓDŁO I ZLEW <- wykonane
   - ALGORYTM Z KOSZTAMI
   - zmiana nazw "capacity"
-  - przechowywanie danych
+  - przechowywanie danych (?)
 Milena:
   - Udokumentowanie stosu technologicznego
-  - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra) 
+  - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra) <- wykonane
   - analiza drugiego akapitu (koszty naprawy dróg) <- wykonane
   - DOkumentacja 
   - algorytmy tekstowe <- wykonane
-  - kody Hoffmana
+  - kody Hoffmana <- wykonane
 
 TESTY:
-  - Algorytmy przepływu
-  - duże liczby
+  - Algorytmy przepływu <- wykonane
+  - duże liczby - NA RAZIE ZA MAŁE
   - przypadki graniczne (0 fieldow)
-  - cześć dane z generatora oraz dane ustawione
+  - cześć dane z generatora oraz dane ustawione <- wykonane
   - czy otoczki dobrze wykrywają punkty
+
+
+Hasło do naprawy otoczek: distance map image processing
