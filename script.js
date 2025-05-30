@@ -9,11 +9,11 @@ let camera = {
 }
 
 const ctx = canvas.getContext("2d");
-
 let parserInstance = null;
+let fileLoaded = false;
 
 document.querySelector("#flowButton").addEventListener("click", () => {
-    if(parserInstance == null) {
+    if(!fileLoaded) {
         alert("Wybierz plik CSV");
     }
 
@@ -23,11 +23,17 @@ document.querySelector("#flowButton").addEventListener("click", () => {
 
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const fileInput = document.getElementById('csvFileInput');
     const processButton = document.getElementById('processButton');
+    parserInstance = await CsvParser();
 
     processButton.addEventListener('click', async () => {
+
+        if (!confirm('Czy na pewno chcesz wczytać plik? Wprowadzone wcześniej dane zostaną usunięte')) {
+            return;
+        }
+
         const file = fileInput.files[0];
         if (file) {
             //  wgrywanie budynków
@@ -35,11 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const reader = new FileReader();
             reader.onload = async (event) => {
                 const csvData = event.target.result;
-                parserInstance = await CsvParser();
                 parserInstance.ccall('processCSVBuildings', null, ['string'], [csvData]);
 
-                // drawing map
-                draw();
+                // fileLoaded BOOL
+                fileLoaded = true;
             };
             reader.readAsText(file);
         } else {
@@ -48,11 +53,181 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function draw() {
-    if (!parserInstance) {
+
+// draw button listener
+document.querySelector("#drawButton").addEventListener('click', () => {
+    if (!fileLoaded) {
         alert('Żaden plik nie został wczytany!');
         return;
     }
+
+    draw();
+});
+
+// MANUAL CREATION
+
+// manual field creation
+document.querySelector("#addFieldButton").addEventListener('click', async () => {
+    const canvas = document.getElementById("Map");
+
+    // zmieniamy kursor na "celownik"
+    canvas.style.cursor = "crosshair";
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Kliknij bezpośrednio w mapę (canvas), aby dodać pole.");
+            return;
+        }
+
+        const position = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
+        parserInstance.createField(position.x, position.y);
+
+        canvas.removeEventListener('click', handleClick);
+
+        canvas.style.cursor = "default";
+        fileLoaded = true;
+
+        // draw
+        draw();
+    };
+
+    canvas.addEventListener('click', handleClick);
+});
+
+// manual brewerie creation
+document.querySelector("#addBreweryButton").addEventListener('click', async () => {
+    const canvas = document.getElementById("Map");
+    canvas.style.cursor = "crosshair";
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Kliknij bezpośrednio w mapę (canvas), aby dodać browar.");
+            return;
+        }
+
+        const position = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
+        parserInstance.createBrewery(position.x, position.y);
+
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
+        fileLoaded = true;
+        draw();
+    };
+
+    canvas.addEventListener('click', handleClick);
+});
+
+// manual pub creation
+document.querySelector("#addPubButton").addEventListener('click', async () => {
+    const canvas = document.getElementById("Map");
+    canvas.style.cursor = "crosshair";
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Kliknij bezpośrednio w mapę (canvas), aby dodać pub.");
+            return;
+        }
+
+        const position = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
+        parserInstance.createPub(position.x, position.y);
+
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
+        fileLoaded = true;
+        draw();
+    };
+
+    canvas.addEventListener('click', handleClick);
+});
+
+
+// function to calculate coordinates saved in memory
+function getWorldCoordinatesFromMouse(event, canvas, camX, camY, zoom) {
+    const rect = canvas.getBoundingClientRect();
+
+    const screenX = event.clientX - rect.left;
+    const screenY = event.clientY - rect.top;
+
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
+
+    const worldX = (screenX - canvasWidth * 0.5) / zoom + camX;
+    const worldY = (screenY - canvasHeight * 0.5) / zoom + camY;
+
+    return {
+        x: Math.round(worldX),
+        y: Math.round(worldY)
+    };
+}
+
+
+// manual relation creation
+document.querySelector("#addRelationButton").addEventListener('click', () => {
+    const canvas = document.getElementById("Map");
+    canvas.style.cursor = "crosshair";
+
+    let firstID = null;
+
+    const nodes = parserInstance.getNoRelationsCoordinates(
+        Math.floor(camera.x),
+        Math.floor(camera.y),
+        camera.zoom,
+        canvas.width,
+        canvas.height
+    );
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Kliknij bezpośrednio w mapę (canvas), aby stworzyć relację.");
+            return;
+        }
+
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        const hit = nodes.find(node => {
+            const dx = node.x - x;
+            const dy = node.y - y;
+            return Math.sqrt(dx * dx + dy * dy) <= 20;
+        });
+
+        if (!hit) {
+            alert("Kliknij bliżej węzła.");
+            return;
+        }
+
+        if (firstID === null) {
+            firstID = hit.ID;
+            console.log(`Pierwszy węzeł: ${firstID}`);
+            return;
+        }
+
+        if (hit.ID === firstID) {
+            alert("Nie można połączyć węzła z samym sobą.");
+            return;
+        }
+
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
+
+        console.log(`Drugi węzeł: ${hit.ID}`);
+        parserInstance.createRelation(firstID, hit.ID);
+        draw();
+    };
+
+    canvas.addEventListener('click', handleClick);
+});
+
+
+
+
+
+function draw() {
+    if (!fileLoaded) {
+        alert('Żaden plik nie został wczytany!');
+        return;
+    }
+
 
     // canvas clearing
     camera.zoom = parseFloat(document.querySelector('input[type="range"]').value);
@@ -64,7 +239,6 @@ function draw() {
     ctx.fillStyle = "black";
     ctx.font = 'bold 10px Century Gothic';
 
-    
     // HULLS
 
     // loading hulls
@@ -162,8 +336,13 @@ function draw() {
         ctx.fillText(rel.endName, rel.endX + 10 * camera.zoom, rel.endY - 10 * camera.zoom);
     });
 
-/*
-    const nodes = parserInstance.getNodeCoordinates(
+    // drawing separated elements
+
+
+    // IT NEEDS TO BE REBUILD, for now it's doubling elements
+
+
+    const nodes = parserInstance.getNoRelationsCoordinates(
         Math.floor(camera.x),
         Math.floor(camera.y),
         camera.zoom,
@@ -171,23 +350,24 @@ function draw() {
         canvas.height
     );
 
-    // drawing nodes
+    // drawing verticies
     nodes.forEach(node => {
+
+        //first pair
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius, 0, 2 * Math.PI);
         ctx.fillStyle = "black";
+        ctx.arc(node.x, node.y, node.radius, 0, 2 * Math.PI);
         ctx.fill();
 
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius - 3, 0, 2 * Math.PI);
         ctx.fillStyle = "white";
+        ctx.arc(node.x, node.y, node.radius - 3, 0, 2 * Math.PI);
         ctx.fill();
 
+        // name
         ctx.fillStyle = "black";
         ctx.fillText(node.name, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
     });
-*/
-
 }
 
 document.addEventListener("keydown", key => {

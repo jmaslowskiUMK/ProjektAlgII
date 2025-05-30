@@ -91,20 +91,41 @@
             font-weight: bold;
             color: #2c3e50;
         }
+
+        #addOptions button {
+            background-color: #1abc9c;
+            color: white;
+            margin-top: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #addOptions button:hover {
+            background-color: #16a085;
+        }
     </style>
 </head>
 <body>
 
 <div id="sidebar">
     <h2>Manu Akcji</h2>
-    
+
     <input type="file" id="csvFileInput" accept=".csv">
-    
+
     <button id="processButton">Przetwórz</button>
+    <button id="drawButton">Rysuj</button>
     <button id="flowButton">Oblicz przepływ</button>
-    
+
     <h2>Zoom</h2>
     <input type="range" value="1" max="4" min="0.25" step="0.05">
+
+    <h2>Dodaj element</h2>
+    <div id="addOptions">
+        <button id="addFieldButton">Dodaj Pole</button>
+        <button id="addBreweryButton">Dodaj Browar</button>
+        <button id="addPubButton">Dodaj Pub</button>
+        <button id="addRelationButton">Stwórz Relację</button>
+    </div>
 </div>
 
 <div id="canvas-container">

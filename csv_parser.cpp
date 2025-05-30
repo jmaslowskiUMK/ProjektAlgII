@@ -20,6 +20,11 @@ Country objectKingdom;
 
 extern "C" {
     void processCSVBuildings(const char* csvData) {
+
+        // destruction of manually created kingdom
+        objectKingdom.~Country(); // destruct
+        new(&objectKingdom) Country(); // reconstruct
+
         string data(csvData);
         stringstream ss(data);
         string line;
@@ -102,9 +107,37 @@ val getRelationsAndCoordinates(int camX, int camY, double zoom, int canvasWidth,
             arr.call<void>("push", obj);
         }
     }
+    return arr;
+}
+
+val getNoRelationsCoordinates(int camX, int camY, double zoom, int canvasWidth, int canvasHeight) {
+    val arr = val::array();
+
+    for (const auto& node : objectKingdom.nodeVector) {
+        double worldX = node->getX();
+        double worldY = node->getY();
+
+        double screenX = (worldX - static_cast<double>(camX)) * zoom + static_cast<double>(canvasWidth) * 0.5;
+        double screenY = (worldY - static_cast<double>(camY)) * zoom + static_cast<double>(canvasHeight) * 0.5;
+
+        // opcjonalne: pomiń niewidoczne elementy
+        if (screenX < 0 || screenX > canvasWidth || screenY < 0 || screenY > canvasHeight)
+            continue;
+
+        val obj = val::object();
+        obj.set("x", screenX);
+        obj.set("y", screenY);
+        obj.set("name", node->getName());
+        obj.set("ID", node->getID());
+        obj.set("radius", CONST_RADIUS * zoom);
+
+        arr.call<void>("push", obj);
+    }
 
     return arr;
 }
+
+
 
 val getHulls(int camX, int camY, double zoom, int canvasWidth, int canvasHeight) {
     val hullArray = val::array();
@@ -170,9 +203,65 @@ val calculateFlow() {
 }
 
 
+// counters for manual creation
+int fieldsCounter = 0;
+int breweriesCounter = 0;
+int pubsCounter = 0;
+
+
+void createField(int xMiddle, int yMiddle) {
+    // production, for now - default
+    int production = 2137;
+
+    objectKingdom.createField(fieldsCounter * 3 + 0, production, xMiddle, yMiddle, CONST_RADIUS);
+    fieldsCounter += 1;
+
+    cout << "field creation succesfull: " << objectKingdom.nodeVector[0]->getName() << endl;
+}
+
+void createBrewery(int xMiddle, int yMiddle) {
+    // barley, for now - default
+    int barleyAmount = 2137;
+
+    objectKingdom.createBrewery(breweriesCounter * 3 + 1, xMiddle, yMiddle, CONST_RADIUS, barleyAmount);
+    breweriesCounter += 1;
+
+    cout << "brewery creation succesfull: " << objectKingdom.nodeVector[0]->getName() << endl;
+}
+
+void createPub(int xMiddle, int yMiddle) {
+    objectKingdom.createPub(pubsCounter * 3 + 2, xMiddle, yMiddle, CONST_RADIUS);
+    pubsCounter += 1;
+
+    cout << "pub creation succesfull: " << objectKingdom.nodeVector[0]->getName() << endl;
+}
+
+void createRelation(int firstID, int secoundID) {
+    // for now capacity and repair cost are default
+    int capacity = 2137;
+    int repairCost = 2137;
+
+    auto from = objectKingdom.find(firstID);
+    auto to = objectKingdom.find(secoundID);
+
+    if (from && to) {
+        Lane lane(from, to, capacity, repairCost);
+        objectKingdom.addRelationship(lane);
+    }
+}
+
 
 EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("getRelationsAndCoordinates", &getRelationsAndCoordinates);
     emscripten::function("getHulls", &getHulls);
     emscripten::function("calculateFlow", &calculateFlow);
+
+    // create object functions
+    emscripten::function("createField", &createField);
+    emscripten::function("createBrewery", &createBrewery);
+    emscripten::function("createPub", &createPub);
+    emscripten::function("createRelation", &createRelation);
+
+    // helper functions
+    emscripten::function("getNoRelationsCoordinates", &getNoRelationsCoordinates);
 }
