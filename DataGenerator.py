@@ -44,7 +44,6 @@ def graham_scan(points):
         while len(hull) >= 2 and orientation(hull[-2], hull[-1], point) < 1e-14:  #epsilon for floating point precision
             hull.pop()
         hull.append(point)
-        print(point)
     return hull
 
 
@@ -118,8 +117,6 @@ def generate_lanes_brewery_to_pub(breweries, pubs, repair_probability):
                 "repair_cost": repair_cost
             })
     return lanes
-
-hull_numbers = [random.randint(1, 6) for _ in range(10)]
 
 def save_all_to_csv(filename, fields, breweries, pubs, lanes, hulls=None, hull_numbers=None):
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
@@ -219,6 +216,7 @@ while len(points) >= 3:
     #hull = [ Point(x, y) for x, y in hull_tuples ]
     #print(hull)
     hulls.append([hull_tuples[i] for i in range(len(hull_tuples))])
+    hull_numbers = [random.randint(1, 6) for _ in range(len(hulls))]
     #print(hulls)
     points = [p for p in points if not is_inside_circle(center, p, radius)]
 save_all_to_csv("input_data.csv", fields, breweries, pubs, combined_lanes, hulls, hull_numbers)
