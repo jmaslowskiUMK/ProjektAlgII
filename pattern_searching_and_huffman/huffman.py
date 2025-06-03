@@ -9,14 +9,6 @@ class Node(): # nodes for huffman tree
         self.right = None
 
 
-def read_data(plik):  # read data from txt file
-
-    text = []
-    with open(plik, 'r') as file:
-        for line in file:
-            text.append(line.strip().lower()) # change to lowercase 
-    return text
-
 def prepare_data(text):
 
     letters = []
@@ -81,11 +73,4 @@ def huffman(text):
         encoded.append(line.translate(hc_translate))
 
     return encoded
-
-
-if __name__ == "__main__":
-
-    data = read_data('text_for_huffman_example.txt') # read data from txt file
-    print(data)
-    print(huffman(data))
 
