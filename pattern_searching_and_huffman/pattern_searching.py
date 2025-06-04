@@ -43,7 +43,7 @@ def rabin_karp(pattern, text, q, huff=False):
         
         if same: # if pattern and text fragment are the same 
             found_patterns_id.append(i) # append the starting index of the found pattern 
-            print('Found!')
+            #print('Found!')
             return True # pattern found in text
             #same = False # change to false to continue searching  
 
@@ -94,7 +94,7 @@ def kmp(pattern, text):
             #print('q+1: ', q)
         if (q == m):
             #print("wzorzec wystepuje z przesunieciem ", i-m)
-            print('Found!')
+            #print('Found!')
             return True
             q = pi[q -1]
             #print('pi[q]: ', q)
