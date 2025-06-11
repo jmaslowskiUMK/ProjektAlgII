@@ -10,12 +10,20 @@ Mateusz:
   - TESTY i dokumentacja testów
   - wprowadzanie danych przez użytkownika przez GUI
   - zapis danych (wspólnie z Kubą)
+
+  - GUI do końca - wygodny wybór elementów
+  - GUI otoczek
+  - zapis do pliku danych
+
+  - TESTY
 Kacper:
   - usuń typ ścierzki (zbędny) <- wykonane
   - id rozwiązane jako inty (pola n+0, browary n+1, puby n+2, któe będziemy sortować) <- wykonane
   - otoczka wypukła i generator do niej (?) <- wykonane
   - generowanie otoczek w pythonie (bazowy generator) (piątek pls :) ) <-
   - dalsza praca z otoczkami (image processing distance map)
+  
+  - poprawność i złożoność naszych metod()
 KKuba:
   - Karp <- wykonane
   - algorytm Dynica lub + <- wykonane
@@ -23,6 +31,9 @@ KKuba:
   - ALGORYTM Z KOSZTAMI
   - zmiana nazw "capacity"
   - przechowywanie danych (?)
+
+  - ReyCasting
+  - TESTY
 Milena:
   - Udokumentowanie stosu technologicznego
   - opisanie generatora (przyjmujemy demokratycznie wybrany generator Kacpra) <- wykonane
@@ -33,6 +44,7 @@ Milena:
   - wykorzystanie kodów Hoffmana
   - poprawienie funkcji Country.find()
 
+  - metody szukania i dokumentacja
 TESTY:
   - Algorytmy przepływu <- wykonane
   - duże liczby - NA RAZIE ZA MAŁE
