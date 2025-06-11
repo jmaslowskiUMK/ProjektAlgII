@@ -1,0 +1,101 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <utility>
+
+auto compareByX = [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
+    return a.first < b.first;
+};
+
+int crosses(std::pair<int,int> point1,std::pair<int,int> point2,std::pair<int,int> point3,std::pair<int,int> point4,std::pair<int,int> pointI2,std::pair<int,int> pointI_1){
+    //d1 - det p1 p2 p3  d2 - det p1 p2 p4  d3 - det p3 p4 p1 - det p3 p4 p2
+    int d1 = (point2.first-point1.first)*(point3.second - point1.second) - (point3.first-point1.first)*(point2.second-point1.second);
+    int d2 = (point2.first-point1.first)*(point4.second - point1.second) - (point4.first-point1.first)*(point2.second-point1.second);
+    int d3 = (point4.first-point3.first)*(point1.second - point3.second) - (point1.first-point3.first)*(point4.second-point3.second);
+    int d4 = (point4.first-point3.first)*(point2.second - point3.second) - (point2.first-point3.first)*(point4.second-point3.second);
+
+    if(d1*d2< 0 && d3*d4 < 0){//eśli D1 = 0, D2 = 0, D3 = 0 lub D4 = 0, to sprawdzamy warunki przynależności punktów do odcinków
+        return 1;
+    }
+    else if(d3==0){// check if THE point is in the edge
+        if(std::min(point3.first, point4.first) <= point1.first && point1.first<=std::max(point3.first, point4.first) && std::min(point3.second, point4.second) <= point1.second && point1.second<=std::max(point3.second, point4.second)  )
+        {
+            return 2;
+        }else{
+            //d5 - p q pointI2 d6 - p q pointI_1
+            int d5 = (point2.first-point1.first)*(pointI2.second - point1.second) - (pointI2.first-point1.first)*(point2.second-point1.second);
+            int d6 = (point2.first-point1.first)*(pointI_1.second - point1.second) - (pointI_1.first-point1.first)*(point2.second-point1.second);
+            if(d5*d6<0) return 1;
+            if(d5*d6>0)return 0;
+
+        }
+    }
+    else if(d1==0){
+        // d7 to p pi p pi+1 point 1 point 3 point4
+        // d8 to p pi p pi-1 point 1 point 3 pointI_1
+        int d7 = ( point3.first-point1.first)*(point4.second - point1.second) - (point4.first-point1.first)*(point3.second-point1.second);
+        int d8 = ( point3.first-point1.first)*(pointI_1.second - point1.second) - (pointI_1.first-point1.first)*(point3.second-point1.second);
+
+        if(d7*d8<0)return 1;
+        if(d7*d8>0)return 0;
+
+    }
+    else return 0;
+
+}
+
+
+bool rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,int> point){
+    std::pair<int,int> tempPair1 = *std::min_element( pointVec.begin(),pointVec.end(), compareByX);
+    std::pair<int,int> tempPair2 = *std::max_element( pointVec.begin(),pointVec.end(), compareByX);
+
+    int minX = tempPair1.first;
+    int maxX = tempPair2.first;
+
+    if(point.first > maxX || point.first < minX ){//point is not in the polygon
+        return false;
+    }
+
+    std::pair<int,int> q;//create "ray" that is represented by a line segment as maxX+1 is a value of x outside of the polygon
+    q.first = maxX+1;
+    q.second = point.second;
+
+    int crossCounter = 0;
+    for(int i=0;i<pointVec.size();++i){//for each side of the polygon, check if q crosses and add to crossCounter how many times it crosses
+        if(crosses(point,q,pointVec[i],pointVec[ (i+1)%pointVec.size() ],pointVec[ (i+2)%pointVec.size() ],pointVec[i-1])  ==2 ) return true;
+        else{
+            crossCounter+=crosses(point,q,pointVec[i],pointVec[ (i+1)%pointVec.size() ],pointVec[ (i+2)%pointVec.size() ],pointVec[i-1] );
+        }
+    }
+
+    crossCounter+=crosses(point,q,pointVec[pointVec.size()-1],pointVec[0],pointVec[1],pointVec[pointVec.size()-2]);
+
+    if(crossCounter%2==1){//odd means that its inside otherwise its outside
+        return true;
+    }
+    else{
+        return false;
+    }
+
+}
+
+
+
+int main(){
+    std::vector<std::pair<int,int>> pointVec;
+    pointVec.push_back({1,1});
+    pointVec.push_back({10,1});
+    pointVec.push_back({1,10});
+    pointVec.push_back({10,10});
+
+    std::pair<int,int> point;
+    point.first=0;
+    point.second=1;
+
+    std::cout<<rayCasting(pointVec,point);
+
+
+    return 0;
+}
+
+
