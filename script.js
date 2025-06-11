@@ -68,6 +68,16 @@ document.querySelector("#drawButton").addEventListener('click', () => {
 
 // MANUAL CREATION
 
+
+// cancel manual creation
+document.onkeydown = e => {
+    if (e.key = "Escape") {
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
+        CREATION_OCCUPIED = false;
+    }
+};
+
 // manual field creation
 document.querySelector("#addFieldButton").addEventListener('click', async () => {
     if (CREATION_OCCUPIED) {
@@ -250,6 +260,19 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
             alert("Nie można połączyć węzła z samym sobą.");
             return;
         }
+
+
+        
+        // to prevent fields and pubs connections
+        if (
+            ((firstID % 3) == (hit.ID % 3)) ||
+            (firstID % 3 == 0 && hit.ID % 3 != 1) ||
+            (firstID % 3 == 2 && hit.ID % 3 != 1)
+        ) {
+            alert("Łączysz nieodpowiednie elementy");
+            return;
+        }
+
 
         canvas.removeEventListener('click', handleClick);
         canvas.style.cursor = "default";
