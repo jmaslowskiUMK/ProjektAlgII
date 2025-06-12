@@ -511,6 +511,8 @@ int Country::crosses(std::pair<int,int> point,std::pair<int,int> q,std::pair<int
 
 bool Country::rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,int> point){
 
+    //ORDER OF POINTS IN POINTVEC MATTERS!!!//
+
     ////////////////Creating ray pq where q=(maxX+1,y), by finding max value of x int polygon/////////////////////////////////////////////
     ////////////////Simultaneously we are checking whether we can easily see that point is out of maximal bounds of polygon///////////////
     ////////////////If point is inside the maximal bounds of polygon that does not mean its inside the polygon////////////////////////////
