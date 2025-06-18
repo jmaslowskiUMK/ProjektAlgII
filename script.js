@@ -56,6 +56,52 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+// listener to test reyCast with hulls
+document.addEventListener('click', e => {
+    const position = getWorldCoordinatesFromMouse(e, canvas, camera.x, camera.y, camera.zoom);
+    console.log(position);
+    console.log(parserInstance.isInAnyHull(position.x, position.y));
+    if (parserInstance.isInAnyHull(position.x, position.y)) {
+        ctx.fillStyle = 'red'; // ustaw kolor wypełnienia na czerwony
+        ctx.beginPath();
+        ctx.rect(e.offsetX, e.offsetY, 2, 2); // offsetX/Y = współrzędne względem canvas
+        ctx.fill();
+    }
+});
+
+document.addEventListener('keypress', e => {
+    if (e.key === "i") {
+        console.log("Rozpoczynam skanowanie...");
+
+        const rect = canvas.getBoundingClientRect();
+
+        for (let x = 0; x < canvas.width; x += 3) {
+            for (let y = 0; y < canvas.height; y += 3) {
+
+                // symulujemy event.clientX / clientY przez dodanie położenia canvasu w oknie
+                const fakeClickEvent = {
+                    clientX: rect.left + x,
+                    clientY: rect.top + y
+                };
+
+                const worldPos = getWorldCoordinatesFromMouse(fakeClickEvent, canvas, camera.x, camera.y, camera.zoom);
+
+                if (parserInstance.isInAnyHull(worldPos.x, worldPos.y)) {
+                    ctx.fillStyle = 'red';
+                    ctx.beginPath();
+                    ctx.rect(x, y, 2, 2); // rysujemy dokładnie w canvasowych współrzędnych
+                    ctx.fill();
+                }
+            }
+        }
+
+        console.log("Skanowanie zakończone.");
+    }
+});
+
+
+
+
 // draw button listener
 document.querySelector("#drawButton").addEventListener('click', () => {
     if (!fileLoaded) {

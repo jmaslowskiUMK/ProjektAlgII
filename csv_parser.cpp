@@ -249,6 +249,15 @@ void createRelation(int firstID, int secoundID, int capacity, int repair_cost) {
     }
 }
 
+bool isInAnyHull(int x, int y) {
+    for (int i = 0; i < objectKingdom.hulls.size(); ++i) {
+        if (objectKingdom.rayCasting(objectKingdom.hulls[i]->points, std::make_pair(x, y))) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("getRelationsAndCoordinates", &getRelationsAndCoordinates);
@@ -263,4 +272,5 @@ EMSCRIPTEN_BINDINGS(my_module) {
 
     // helper functions
     emscripten::function("getNoRelationsCoordinates", &getNoRelationsCoordinates);
+    emscripten::function("isInAnyHull", &isInAnyHull);
 }
