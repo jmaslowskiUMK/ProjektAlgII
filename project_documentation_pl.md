@@ -169,15 +169,12 @@ Projekt składa się z dwóch głównych części: aplikacji webowej do wizualiz
   ```
   4. Otwórz przeglądarkę internetową i przejdź pod adres http://localhost:8000.
   5. Testuj aplikację:
-
     ![web_img1](./images/web1.png)
 
     - W interfejsie aplikacji webowej, za pomocą przycisku "Wybierz plik CSV do przetworzenia", wybierz odpowiedni plik danych CSV (np. input_data.csv z repozytorium projektu) Następnie kliknij przycisk "Przetwórz". 
-
     ![web_img2](./images/web2.png)
 
     - Możesz korzystać z dostępnych funkcji, takich jak "Rysuj" (wizualizacja elementów), "Oblicz przepływ" (wywołanie algorytmów przepływu sieciowego), lub "Dodaj element" (manualne dodawanie pól, browarów, pubów, tworzenie relacji).
-    
     ![web_img3](./images/web3.png)
 
 ### 5.2. Uruchomienie aplikacji desktopowej
