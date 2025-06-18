@@ -389,8 +389,8 @@ bool Country::rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,
     
     int minX = tempPair1.first;
     int maxX = tempPair2.first;
-    int minY = tempPair3.first;
-    int maxY= tempPair4.first;
+    int minY = tempPair3.second;
+    int maxY= tempPair4.second;
     
     if(point.first > maxX || point.first < minX ){//point is not in the polygon
         return false;
