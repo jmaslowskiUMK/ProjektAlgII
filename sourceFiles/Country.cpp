@@ -384,12 +384,22 @@ bool Country::rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,
     std::pair<int,int> tempPair1 = *std::min_element( pointVec.begin(),pointVec.end(), CompareByX());
     std::pair<int,int> tempPair2 = *std::max_element( pointVec.begin(),pointVec.end(), CompareByX());
 
+    std::pair<int,int> tempPair3 = *std::min_element( pointVec.begin(),pointVec.end(), CompareByY());
+    std::pair<int,int> tempPair4 = *std::max_element( pointVec.begin(),pointVec.end(), CompareByY());
+    
     int minX = tempPair1.first;
     int maxX = tempPair2.first;
-
+    int minY = tempPair3.first;
+    int maxY= tempPair4.first;
+    
     if(point.first > maxX || point.first < minX ){//point is not in the polygon
         return false;
     }
+
+    if(point.second > maxY || point.second < minY ){//point is not in the polygon
+        return false;
+    }
+    
     std::pair<int,int> q;//create "ray" that is represented by a line segment as maxX+1 is a value of x outside of the polygon
     q.first = maxX+1;
     q.second = point.second;
