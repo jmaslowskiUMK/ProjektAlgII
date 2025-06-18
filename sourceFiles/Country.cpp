@@ -300,7 +300,7 @@ int Country::sendFlow(std::shared_ptr<Node> source,std::shared_ptr<Node> sink, i
             if (tempFlow > 0) {
             lane.setFlow(lane.getFlow() + tempFlow);
 
-            // dodaj/przywróæ odwrotn¹ krawêdŸ
+            
             bool reverseFound = false;
             for (auto& revLane : adjListCopy[v]) {
                 if (revLane.getToPtr() == source) {
@@ -323,144 +323,6 @@ int Country::sendFlow(std::shared_ptr<Node> source,std::shared_ptr<Node> sink, i
 
 void Country::addHull(int groundClass) {
     hulls.push_back(std::make_shared<Hull>(groundClass));
-}
-
-void Country::cycleCancelling(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec){
-    std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
-
-    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource. THEY ARE CONNECTED BY EGDES WITH INF FLOW.
-    auto superSource = std::make_shared<Field>();
-    auto superSink = std::make_shared<Pub>();
-
-    for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
-        Lane lane(superSource, source, INT_MAX, 0);
-        addRelationship(adjListCopy, lane);
-    }
-
-    for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-        Lane lane(sink, superSink, INT_MAX, 0);
-        addRelationship(adjListCopy, lane);
-    }
-
-    int nodeCounter = nodeVector.size();
-    while(true){
-       std::vector<std::shared_ptr<Node>>cycle = bellmanFord(superSource,superSink,nodeCounter, adjListCopy);
-
-        if (cycle.empty()) break;
-
-       // Find min residual capacity in the cycle
-        int minCapacity = INT_MAX;
-        for (size_t i = 0; i < cycle.size() - 1; ++i) {
-            auto u = cycle[i];
-            auto v = cycle[i + 1];
-
-            for (auto& lane : adjListCopy[u]) {
-                if(lane.getToPtr() == v){
-                    minCapacity = std::min(minCapacity, lane.getCapacity()-lane.getFlow());
-                    break;
-                }
-            }
-        }
-
-        // Update flow along the cycle
-        for(int i = 0; i < cycle.size() - 1; ++i){
-            auto u = cycle[i];
-            auto v = cycle[i + 1];
-
-            bool found = false;
-            for(auto& lane : adjListCopy[u]) {
-                if(lane.getToPtr() == v) {
-                    lane.setFlow(lane.getFlow() + minCapacity);
-                    // Update reverse edge
-                    for(auto& revLane : adjListCopy[v]) {
-                        if(revLane.getToPtr() == u){
-                            revLane.setFlow(revLane.getCapacity() - minCapacity);
-                            break;
-                        }
-                    }
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) break;
-        }
-    }
-
-    for(auto el:nodeVector){
-        for(auto el2:adjListCopy[el]){
-            if(el2.getFlow()==0){
-                std::cout<<(*el2.getFromPtr()).getID()<<" "<<(*el2.getToPtr()).getID()<<std::endl;
-            }
-        }
-    }
-}
-
-std::vector<std::shared_ptr<Node>> Country::bellmanFord(std::shared_ptr<Node> superSource,
-                                                        std::shared_ptr<Node> superSink,int nodeCounter,
-                                                        std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy){
-    std::vector<int> dist(nodeCounter,INT_MAX);
-    std::vector<std::shared_ptr<Node>> parent(nodeCounter,nullptr);// will be used to find the result path
-    std::vector<std::shared_ptr<Node>> resultVec;//negative cost cycle, will be returned
-
-    auto it = std::find(nodeVector.begin(), nodeVector.end(), superSource);
-    int sourceIndex = std::distance(nodeVector.begin(), it);
-    dist[sourceIndex] = 0;
-
-    for(int N=0;N<nodeCounter-1;++N){//we re going to iterate N-1 times and if in the Nth iteration array dist differs then there is a negative cost cycle
-        for(int i=0;i<nodeCounter;++i){//inner loop iterating through every node
-           for(Lane& lane:adjListCopy[nodeVector[i]]){//taking each adjacent element (el)
-                auto it = std::find(nodeVector.begin(),nodeVector.end(),lane.getToPtr());
-                int toIndex = std::distance(nodeVector.begin(), it);
-                // i = iterator of node , it = iterator of nodes pointed by nodeVector[i]
-                if( dist[toIndex] > dist[i] + lane.getRepairCost()){
-                    dist[toIndex] = dist[i] + lane.getRepairCost();
-                    parent[toIndex] = nodeVector[i];
-                }
-            }
-        }
-    }
-
-    std::shared_ptr<Node> auxPtr;
-    std::vector<int> distCopy(dist);//copy constructor
-    for(int i=0;i<nodeCounter;++i){//inner loop iterating through every node
-           for(Lane& lane:adjListCopy[nodeVector[i]]){//taking each adjacent element (el)
-                auto it = std::find(nodeVector.begin(),nodeVector.end(),lane.getToPtr());
-                // i = iterator of node , it = iterator of nodes pointed by nodeVector[i]
-                int toIndex = std::distance(nodeVector.begin(), it);
-                if( dist[toIndex] > dist[i] + lane.getRepairCost() ){
-                    dist[toIndex] = dist[i] + lane.getRepairCost();
-                    parent[toIndex] = nodeVector[i];
-                    auxPtr = nodeVector[toIndex];
-                }
-            }
-    }
-
-    bool isCycle = false;
-    for(int i = 0;i<nodeCounter;++i){
-        if(dist[i] != distCopy[i]){
-            isCycle = true;
-            break;
-        }
-    }
-
-    if(isCycle){
-        for(int i=0;i<nodeCounter;++i){//ensure that we are in the right cycle, length(cycle) < length(graph)
-            auto it = std::find(nodeVector.begin(),nodeVector.end(),auxPtr);
-            sourceIndex = std::distance(nodeVector.begin(), it);
-            auxPtr = parent[sourceIndex];
-        }
-
-        for(auto itPtr = auxPtr;;itPtr = parent[sourceIndex]){//go through parent vector
-            auto it = std::find(nodeVector.begin(),nodeVector.end(),itPtr);
-            sourceIndex = std::distance(nodeVector.begin(), it);
-            resultVec.push_back(itPtr);
-            if(itPtr == auxPtr && resultVec.size() > 1) break;
-        }
-
-        reverse(resultVec.begin(),resultVec.end());//we were going back by using parent vector
-    }
-
-    return resultVec;//either epmty or containing negative cost cycle constructed in if(isCycle)
 }
 
 int Country::det(std::pair<int,int> a,std::pair<int,int> b, std::pair<int,int> c){
@@ -504,8 +366,11 @@ int Country::crosses(std::pair<int,int> point,std::pair<int,int> q,std::pair<int
         if(d7*d8>0)return 0;
 
     }
-    else return 0;
-
+    else{
+        return 0;
+    }
+   
+    return 0;
 }
 
 
@@ -516,8 +381,8 @@ bool Country::rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,
     ////////////////Creating ray pq where q=(maxX+1,y), by finding max value of x int polygon/////////////////////////////////////////////
     ////////////////Simultaneously we are checking whether we can easily see that point is out of maximal bounds of polygon///////////////
     ////////////////If point is inside the maximal bounds of polygon that does not mean its inside the polygon////////////////////////////
-    std::pair<int,int> tempPair1 = *std::min_element( pointVec.begin(),pointVec.end(), compareByX);
-    std::pair<int,int> tempPair2 = *std::max_element( pointVec.begin(),pointVec.end(), compareByX);
+    std::pair<int,int> tempPair1 = *std::min_element( pointVec.begin(),pointVec.end(), CompareByX());
+    std::pair<int,int> tempPair2 = *std::max_element( pointVec.begin(),pointVec.end(), CompareByX());
 
     int minX = tempPair1.first;
     int maxX = tempPair2.first;
@@ -557,4 +422,129 @@ bool Country::rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
+
+int Country::mcmf(std::vector<std::shared_ptr<Node>> sourceVec, std::vector<std::shared_ptr<Node>> sinkVec){
+
+    std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;
+    
+    // Create super source and super sink
+    std::shared_ptr<Node> superSource = std::make_shared<Field>();
+    std::shared_ptr<Node> superSink = std::make_shared<Pub>();
+
+    //Connect super source to all sources with infinite capacity
+    for(auto& source : sourceVec) {
+        adjListCopy[superSource].emplace_back(superSource, source, INT_MAX, 0);
+        //Reverse edge with 0 capacity
+        adjListCopy[source].emplace_back(source, superSource, 0, 0);
+    }
+
+    //Connect super sink to all sinks with infinite capacity
+    for(auto& sink : sinkVec){
+        adjListCopy[sink].emplace_back(sink, superSink, INT_MAX, 0);
+        //Reverse edge with 0 capacity
+        adjListCopy[superSink].emplace_back(superSink, sink, 0, 0);
+    }
+
+    int total_cost = 0;
+    
+    //Potential function for reduced costs potential ensures that there are no negative cycles
+    std::unordered_map<std::shared_ptr<Node>, int> potential;
+    for(auto& node : adjListCopy){
+        potential[node.first] = 0;
+    }
+
+    while(true){
+        //Dijkstra algorithm
+        //unordered_map should be faster than map as it uses hash not RB tree. But because it uses hash func its not ordered
+        std::unordered_map<std::shared_ptr<Node>, int> dist;
+        std::unordered_map<std::shared_ptr<Node>, std::shared_ptr<Node>> parent;
+        std::unordered_map<std::shared_ptr<Node>, Lane*> parent_lane;
+        
+        //Priority queue with el(distance, node) and greater that makes nodes with the shortest dist(cost) be put on top 
+        //Note that we store int only because of the fact that its priority_queue that looks for the shortest dist(cost) 
+        std::priority_queue<std::pair<int, std::shared_ptr<Node>>, std::vector<std::pair<int, std::shared_ptr<Node>>>, 
+                          std::greater<std::pair<int, std::shared_ptr<Node>>>> pq;
+
+        // Initialize distances to INF and dist[source] to 0
+        for(auto& node : adjListCopy){
+            dist[node.first] = INT_MAX;
+        }
+        dist[superSource] = 0;
+        
+        pq.emplace(0, superSource);//add superSource to queue
+
+        while (!pq.empty()){
+            auto current_dist = pq.top().first;
+            auto curr = pq.top().second;
+            pq.pop();
+
+            if(current_dist > dist[curr]) continue;
+
+            for (auto& lane : adjListCopy[curr]){//check all the nodes that current(curr) node goes to
+                auto currNext = lane.getToPtr();
+
+                //check res_cap(cap-flow)
+                int res_capacity = lane.getCapacity() - lane.getFlow();
+                if (res_capacity <= 0) continue;
+
+                //reduced cost with potential
+                int reduced_cost = lane.getRepairCost() + potential[curr] - potential[currNext];
+                if (dist[currNext] > dist[curr] + reduced_cost) {
+                    dist[currNext] = dist[curr] + reduced_cost;
+                    parent[currNext] = curr;
+                    parent_lane[currNext] = &lane;
+                    pq.emplace(dist[currNext], currNext);
+                }
+            }
+        }
+
+        //No path found
+        if(dist[superSink] == INT_MAX){
+            break;
+        }
+
+        //update potentials
+        for(auto& node : adjListCopy){
+            if(dist[node.first] < INT_MAX){
+                potential[node.first] += dist[node.first];
+            }
+        }
+
+        // Find minimum residual capacity along the path
+        int path_flow = INT_MAX;
+        std::vector<Lane*> path;
+        auto current = superSink;
+        while(current != superSource){
+            path.push_back(parent_lane[current]);
+            path_flow = std::min(path_flow, 
+                               parent_lane[current]->getCapacity() - parent_lane[current]->getFlow());
+            current = parent[current];
+        }
+
+        // Augment flow along the path
+        for(auto* lane : path){
+            lane->setFlow(lane->getFlow() + path_flow);
+            total_cost += path_flow * lane->getRepairCost();
+
+            // Update reverse edge
+            bool found = false;
+            for (auto& rev_lane : adjListCopy[lane->getToPtr()]) {
+                if (rev_lane.getToPtr() == lane->getFromPtr()) {
+                    rev_lane.setFlow(rev_lane.getFlow() - path_flow);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                adjListCopy[lane->getToPtr()].emplace_back(
+                    lane->getToPtr(), lane->getFromPtr(), 0, -lane->getRepairCost());
+                adjListCopy[lane->getToPtr()].back().setFlow(-path_flow);
+            }
+        }
+
+    }
+
+    return total_cost;
+}
+
 
