@@ -180,14 +180,15 @@ val getHulls(int camX, int camY, double zoom, int canvasWidth, int canvasHeight)
 }
 
 
+
 val calculateFlow() {
 	val resultsArr = val::array();
-    
+
     std::vector<std::shared_ptr<Node>> sinks;
 	std::vector<std::shared_ptr<Node>> sources;
 	for(auto el:objectKingdom.nodeVector){
 		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
-			sources.push_back(el);	
+			sources.push_back(el);
 		}
 	}
 	for(auto el:objectKingdom.nodeVector){
