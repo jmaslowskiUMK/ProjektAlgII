@@ -28,29 +28,29 @@ int main() {
 	pubULecha->setName("pubULecha"); 
 	auto pubPodKogutem = polska.createPub(4,4, 1, 4);//D
 	pubPodKogutem->setName("pubPodKogutem");
-	auto zlotePole = polska.createField(5,0, 0, 5, 5);//E
+	/*auto zlotePole = polska.createField(5,0, 0, 5, 5);//E
 	zlotePole->setName("zlotePole");
 	auto las = polska.createField(6,3, 2, 41, 5);//F
 	las->setName("las");
 	auto browarWarka = polska.createBrewery(7,1, 4, 5, 155);//G
 	browarWarka->setName("browarWarka");
-
-	Lane lane1(pubMentzena, lysePole, 10, 1);
+*/
+	Lane lane1(pubMentzena, lysePole, 2, 1);
 	polska.addRelationship(lane1);//A B
 
-	Lane lane2(lysePole, pubULecha,10,1);
-	polska.addRelationship(lane2);//B C
+	Lane lane2(pubMentzena, pubULecha,4,1);
+	polska.addRelationship(lane2);//A C
 	
-	Lane lane3(lysePole, pubPodKogutem, 5,1);
-	polska.addRelationship(lane3);//B D 
+	Lane lane3(lysePole, pubULecha, 3,1);
+	polska.addRelationship(lane3);//B C 
 	
-	Lane lane4(pubULecha, zlotePole, 7,4);
-	polska.addRelationship(lane4);//C E 
+	Lane lane4(lysePole, pubPodKogutem, 1,4);
+	polska.addRelationship(lane4);//B D 
 	
-	Lane lane5(lysePole, zlotePole, 5,3);
-	polska.addRelationship(lane5);//D E 
-	
-	Lane lane6(zlotePole,las,15,1);
+	Lane lane5(pubULecha, pubPodKogutem, 6,1);
+	polska.addRelationship(lane5);//C D 
+/*	
+	Lane lane6(pubULecha,las,15,1);
 	polska.addRelationship(lane6);//E F
 
 	Lane lane7(pubULecha,browarWarka, 10,1);
@@ -61,14 +61,16 @@ int main() {
 	
 	Lane lane9(browarWarka, zlotePole, 10,1);
 	polska.addRelationship(lane9);//G E
-	
+*/	
 	sources.push_back(pubMentzena);
-	sinks.push_back(las);
+	sinks.push_back(pubPodKogutem);
 
-	std::cout<<polska.edmondsKarpManyToMany(sources,sinks)<<std::endl;;
-	std::cout<<polska.dinic(sources,sinks)<<std::endl;
-	polska.cycleCancelling(sinks,sources);
-	std::cout<<"peax";
+//	std::cout<<polska.edmondsKarpManyToMany(sources,sinks)<<std::endl;;
+//	std::cout<<polska.dinic(sources,sinks)<<std::endl;
+//	polska.cycleCancelling(sinks,sources);
+
+	std::cout<<polska.mcmf(sources,sinks);
+
 	return 0;
 }
 

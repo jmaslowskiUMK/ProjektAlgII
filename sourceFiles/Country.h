@@ -18,6 +18,12 @@ class Country
 private:
 	int breweryEfficiency;
 public:
+	struct CompareByX {
+	    bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
+		return a.first < b.first;
+	    }
+	};
+
 	std::map<std::shared_ptr<Node>, std::vector<Lane> > adjList;
 	std::vector<std::shared_ptr<Node>> nodeVector;
 	std::unordered_map<std::shared_ptr<Node>, int> level;
@@ -45,4 +51,8 @@ public:
 	void addHull(int groundClass);
 	std::vector<std::shared_ptr<Node>> bellmanFord(std::shared_ptr<Node> superSource,std::shared_ptr<Node> superSink,int nodeCounter, std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy);
 	void cycleCancelling(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec);
+	int crosses(std::pair<int,int> point,std::pair<int,int> q,std::pair<int,int> pi,std::pair<int,int> pi1,std::pair<int,int> pi2,std::pair<int,int> pi_1);
+	int det(std::pair<int,int> a,std::pair<int,int> b, std::pair<int,int> c);
+	bool rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,int> point);
+	int mcmf(std::vector<std::shared_ptr<Node>> sourceVec,std::vector<std::shared_ptr<Node>> sinkVec) ;
 };

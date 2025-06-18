@@ -237,16 +237,14 @@ void createPub(int xMiddle, int yMiddle) {
     cout << "pub creation succesfull: " << objectKingdom.nodeVector[0]->getName() << endl;
 }
 
-void createRelation(int firstID, int secoundID) {
+void createRelation(int firstID, int secoundID, int capacity, int repair_cost) {
     // for now capacity and repair cost are default
-    int capacity = 2137;
-    int repairCost = 2137;
 
     auto from = objectKingdom.find(firstID);
     auto to = objectKingdom.find(secoundID);
 
     if (from && to) {
-        Lane lane(from, to, capacity, repairCost);
+        Lane lane(from, to, capacity, repair_cost);
         objectKingdom.addRelationship(lane);
     }
 }

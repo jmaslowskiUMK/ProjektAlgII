@@ -11,6 +11,8 @@ let camera = {
 const ctx = canvas.getContext("2d");
 let parserInstance = null;
 let fileLoaded = false;
+let CREATION_OCCUPIED = false;
+
 
 document.querySelector("#flowButton").addEventListener("click", () => {
     if(!fileLoaded) {
@@ -66,12 +68,31 @@ document.querySelector("#drawButton").addEventListener('click', () => {
 
 // MANUAL CREATION
 
+
+// cancel manual creation
+document.onkeydown = e => {
+    if (e.key = "Escape") {
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
+        CREATION_OCCUPIED = false;
+    }
+};
+
 // manual field creation
 document.querySelector("#addFieldButton").addEventListener('click', async () => {
+    if (CREATION_OCCUPIED) {
+        alert("Narzędzie kreacji jest już wybrane wybrane !");
+        return;
+    }
+
+
     const canvas = document.getElementById("Map");
 
     // zmieniamy kursor na "celownik"
     canvas.style.cursor = "crosshair";
+
+    // set creation occupied
+    CREATION_OCCUPIED = true;
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
@@ -89,6 +110,9 @@ document.querySelector("#addFieldButton").addEventListener('click', async () => 
 
         // draw
         draw();
+
+        // free manual creation
+        CREATION_OCCUPIED = false;
     };
 
     canvas.addEventListener('click', handleClick);
@@ -96,8 +120,16 @@ document.querySelector("#addFieldButton").addEventListener('click', async () => 
 
 // manual brewerie creation
 document.querySelector("#addBreweryButton").addEventListener('click', async () => {
+    if (CREATION_OCCUPIED) {
+        alert("Narzędzie kreacji jest już wybrane wybrane !");
+        return;
+    }
+    
     const canvas = document.getElementById("Map");
     canvas.style.cursor = "crosshair";
+
+    // set creation occupied
+    CREATION_OCCUPIED = true;
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
@@ -112,6 +144,9 @@ document.querySelector("#addBreweryButton").addEventListener('click', async () =
         canvas.style.cursor = "default";
         fileLoaded = true;
         draw();
+
+        // free manual creation
+        CREATION_OCCUPIED = false;
     };
 
     canvas.addEventListener('click', handleClick);
@@ -119,8 +154,16 @@ document.querySelector("#addBreweryButton").addEventListener('click', async () =
 
 // manual pub creation
 document.querySelector("#addPubButton").addEventListener('click', async () => {
+    if (CREATION_OCCUPIED) {
+        alert("Narzędzie kreacji jest już wybrane wybrane !");
+        return;
+    }
+
     const canvas = document.getElementById("Map");
     canvas.style.cursor = "crosshair";
+
+    // set creation occupied
+    CREATION_OCCUPIED = true;
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
@@ -135,6 +178,9 @@ document.querySelector("#addPubButton").addEventListener('click', async () => {
         canvas.style.cursor = "default";
         fileLoaded = true;
         draw();
+
+        // free manual creation
+        CREATION_OCCUPIED = false;
     };
 
     canvas.addEventListener('click', handleClick);
@@ -163,6 +209,11 @@ function getWorldCoordinatesFromMouse(event, canvas, camX, camY, zoom) {
 
 // manual relation creation
 document.querySelector("#addRelationButton").addEventListener('click', () => {
+    if (CREATION_OCCUPIED) {
+        alert("Narzędzie kreacji jest już wybrane wybrane !");
+        return;
+    }
+
     const canvas = document.getElementById("Map");
     canvas.style.cursor = "crosshair";
 
@@ -175,6 +226,9 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
         canvas.width,
         canvas.height
     );
+
+    // set creation occupied
+    CREATION_OCCUPIED = true;
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
@@ -207,12 +261,42 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
             return;
         }
 
+
+        
+        // to prevent fields and pubs connections
+        if (
+            ((firstID % 3) == (hit.ID % 3)) ||
+            (firstID % 3 == 0 && hit.ID % 3 != 1) ||
+            (firstID % 3 == 2 && hit.ID % 3 != 1)
+        ) {
+            alert("Łączysz nieodpowiednie elementy");
+            return;
+        }
+
+
         canvas.removeEventListener('click', handleClick);
         canvas.style.cursor = "default";
 
+        // capacity popup
+        let capacity = parseInt(prompt("Wprowadz przepustowosc drogi", "0"));
+        if (capacity == null || capacity == "" || isNaN(capacity)) {
+            alert("Wprowadzono niewłaściwą przepustowość !");
+            return;
+        }
+
+        // repair_cost popup
+        let repair_cost = parseInt(prompt("Wprowadz koszt naprawy drogi", "0"));
+        if (repair_cost == null || repair_cost == "" || isNaN(repair_cost)) {
+            alert("Wprowadzono niewłaściwy koszt !");
+            return;
+        }
+
         console.log(`Drugi węzeł: ${hit.ID}`);
-        parserInstance.createRelation(firstID, hit.ID);
+        parserInstance.createRelation(firstID, hit.ID, capacity, repair_cost);
         draw();
+
+        // free manual creation
+        CREATION_OCCUPIED = false;
     };
 
     canvas.addEventListener('click', handleClick);
