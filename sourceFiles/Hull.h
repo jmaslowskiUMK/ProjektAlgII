@@ -8,6 +8,7 @@ public:
 
 	std::vector<std::pair<int,int>> points;
 	Hull(int groundClass);
+	~Hull();
 	void addPoint(std::pair<int,int> auxPair);
 	void print();
 };

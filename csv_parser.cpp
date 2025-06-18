@@ -18,12 +18,25 @@ using namespace std;
 
 Country objectKingdom;
 
+
+// counters for manual creation
+int fieldsCounter = 0;
+int breweriesCounter = 0;
+int pubsCounter = 0;
+
+
 extern "C" {
     void processCSVBuildings(const char* csvData) {
 
         // destruction of manually created kingdom
-        objectKingdom.~Country(); // destruct
-        new(&objectKingdom) Country(); // reconstruct
+        //objectKingdom.~Country(); // destruct
+        //new(&objectKingdom) Country(); // reconstruct
+
+        objectKingdom.reset();
+        fieldsCounter = 0;
+        pubsCounter = 0;
+        breweriesCounter = 0;
+
 
         string data(csvData);
         stringstream ss(data);
@@ -33,7 +46,8 @@ extern "C" {
 
         while (getline(ss, line)) {
             stringstream lineStream(line);
-            string * row = new string[ROW_LENGTH];
+            //string * row = new string[ROW_LENGTH];
+            vector <string> row(ROW_LENGTH);
 
             for (int i = 0; i < ROW_LENGTH; i++) {
                 getline(lineStream, row[i], ',');
@@ -202,12 +216,6 @@ val calculateFlow() {
 
     return resultsArr;
 }
-
-
-// counters for manual creation
-int fieldsCounter = 0;
-int breweriesCounter = 0;
-int pubsCounter = 0;
 
 
 void createField(int xMiddle, int yMiddle) {

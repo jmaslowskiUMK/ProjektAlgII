@@ -18,6 +18,9 @@ def compile_and_run():
         "-s", "MODULARIZE=1",
         "-s", "EXPORT_NAME=\"CsvParser\"",
         "-s", "EXPORTED_RUNTIME_METHODS=[\"ccall\"]",
+        "-g",
+        "-s ASSERTIONS=1",
+        "-fsanitize=address",
         "--bind"
     ]
 

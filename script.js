@@ -423,6 +423,9 @@ function draw() {
 
     relations.forEach(rel => {
 
+        if (rel.radius < 3)
+            rel.radius = 3.1;
+
         // line drawing
         ctx.beginPath();
         ctx.moveTo(rel.startX, rel.startY);
@@ -482,6 +485,8 @@ function draw() {
 
     // drawing verticies
     nodes.forEach(node => {
+        if (node.radius < 3)
+            node.radius = 3.1;
 
         //first pair
         ctx.beginPath();
