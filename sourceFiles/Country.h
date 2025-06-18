@@ -23,6 +23,12 @@ public:
 		return a.first < b.first;
 	    }
 	};
+	
+	struct CompareByY {
+	    bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
+		return a.second < b.second;
+	    }
+	};
 
 	std::map<std::shared_ptr<Node>, std::vector<Lane> > adjList;
 	std::vector<std::shared_ptr<Node>> nodeVector;
