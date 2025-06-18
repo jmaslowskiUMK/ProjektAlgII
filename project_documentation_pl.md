@@ -169,10 +169,15 @@ Projekt składa się z dwóch głównych części: aplikacji webowej do wizualiz
   ```
   4. Otwórz przeglądarkę internetową i przejdź pod adres http://localhost:8000.
   5. Testuj aplikację:
+
     ![web_img1](./images/web1.png)
+
     - W interfejsie aplikacji webowej, za pomocą przycisku "Wybierz plik CSV do przetworzenia", wybierz odpowiedni plik danych CSV (np. input_data.csv z repozytorium projektu) Następnie kliknij przycisk "Przetwórz". 
+
     ![web_img2](./images/web2.png)
+
     - Możesz korzystać z dostępnych funkcji, takich jak "Rysuj" (wizualizacja elementów), "Oblicz przepływ" (wywołanie algorytmów przepływu sieciowego), lub "Dodaj element" (manualne dodawanie pól, browarów, pubów, tworzenie relacji).
+    
     ![web_img3](./images/web3.png)
 
 ### 5.2. Uruchomienie aplikacji desktopowej
@@ -186,7 +191,9 @@ Projekt składa się z dwóch głównych części: aplikacji webowej do wizualiz
   python3 search_gui.py
   ```
   4. W interfejsie graficznym aplikacji: 
+
   ![desk_img1](./images/desk1.png)
+
   - wprowadź wzorzec tekstowy, który chcesz wyszukać,
   - wybierz algorytm wyszukiwania, który ma zostać użyty (Rabin-Karp lub KMP),
   - aby teksty zostały zakodowane za pomocą algorytmu Huffmana przed wyszukiwaniem, zaznacz opcję użycia kodowania Huffmana,
