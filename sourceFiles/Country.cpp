@@ -10,16 +10,11 @@
 #include <unordered_set>
 #include <iostream>
 
-Country::Country() {}
+Country::Country() {
+}
 
-Country::~Country() {}
+Country::~Country() {
 
-void Country::reset() {
-    adjList.clear();
-    level.clear();
-    hulls.clear();
-    nodeVector.clear();
-    breweryEfficiency = -1;
 }
 
 void Country::bfs(std::shared_ptr<Node> startingNode) {
@@ -190,7 +185,7 @@ void Country::addRelationship(  std::map<std::shared_ptr<Node>, std::vector<Lane
 //create shared_ptr of each derived from Node class add to adjList
 
 std::shared_ptr<Pub> Country::createPub(int ID, int xMiiddle, int yMiddle, int radius){
-    auto pub = std::make_shared<Pub>(ID, xMiiddle, yMiddle, radius);
+    auto pub = std::make_shared<Pub>(ID, xMiiddle,yMiddle,radius);
     adjList[pub] = {};
     this->nodeVector.push_back(pub);
     return pub;
@@ -335,7 +330,8 @@ int Country::det(std::pair<int,int> a,std::pair<int,int> b, std::pair<int,int> c
     return result;
 }
 
-int Country::crosses(std::pair<int,int> point,std::pair<int,int> q,std::pair<int,int> pi,std::pair<int,int> pi1,std::pair<int,int> pi2,std::pair<int,int> pi_1){
+int Country::crosses(std::pair<int,int> point,std::pair<int,int> q,std::pair<int,int> pi,std::pair<int,int> pi1,
+                     std::pair<int,int> pi2,std::pair<int,int> pi_1){
 
     ////////////////////////////////for D=det(a,b,c) if D>0 c is on the left hand-side of vec(a,b)////////////////////////////////////////////
     ////////////////////////////////for D=det(a,b,c) if D<0 c is on the right hand-side of vec(a,b)///////////////////////////////////////////
@@ -347,36 +343,39 @@ int Country::crosses(std::pair<int,int> point,std::pair<int,int> q,std::pair<int
     int d4 = det(pi,pi1,q);
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if(d1*d2< 0 && d3*d4 < 0){//by definition p-q and pi-pi1 cross
+    // check if the lines cross
+    
+    if(((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && 
+        ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
         return 1;
     }
 
-    else if(d3==0){// check if THE point is in the edge
-        if(std::min(pi.first, pi1.first) <= point.first && point.first<=std::max(pi.first, pi1.first) && std::min(pi.second, pi1.second) <= point.second && point.second<=std::max(pi.second, pi1.second)  )
+    if(d3==0){// check if THE point is in the edge
+        //case 0
+        if(std::min(pi.first, pi1.first) <= point.first && 
+            point.first<=std::max(pi.first, pi1.first) 
+            && std::min(pi.second, pi1.second) <= point.second 
+            && point.second<=std::max(pi.second, pi1.second)  )
         {
             return 2;//2 is returned because in the rayCasting func we are checking whether we returned 2 which means that point is inside the polygon
-        }else{
-            int d5 = det(point,q,pi2);
-            int d6 = det(point,q,pi_1);
-            if(d5*d6<0)return 1;
-            if(d5*d6>0)return 0;
-
         }
     }
-    else if(d1==0 && pi.first>=point.first && pi.first<=q.first ){//d1==0 means that point-q and pi are on the same line, BUT we have to ensure that its inside RAY not the line
-        int d7 = det(point,pi,pi1);
-        int d8 = det(point,pi,pi_1);
-
-        if(d7*d8<0)return 1;
-        if(d7*d8>0)return 0;
-
-    }
-    else{
-        return 0;
-    }
-   
+    if(d1 == 0){
+        if(pi.first >= point.first && 
+            std::min(pi.second, pi1.second) <= point.second && 
+            point.second <= std::max(pi.second, pi1.second)) {
+            int d5 = det(point, q, pi2);
+            int d6 = det(point, q, pi_1);
+            if ((d5 > 0 && d6 < 0) || (d5 < 0 && d6 > 0)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }   
     return 0;
 }
+
 
 
 bool Country::rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,int> point){
@@ -412,22 +411,21 @@ bool Country::rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,
 
     /////////////////////////////////////iterate through each side//////////////////////////////////////////////////////////////////////////
     int crossCounter = 0;
-    int auxCrosses;
     int vecLen = pointVec.size();
+    
+    for(int i=0;i<vecLen;++i){//for each side of the polygon, check if q crosses and add to crossCounter how many times it crosses
+       std::pair<int,int> pi = pointVec[i];
+        std::pair<int,int> pi1 = pointVec[(i+1)%vecLen];
+        std::pair<int,int> pi2 = pointVec[(i+2)%vecLen];
+        std::pair<int,int> pi_1 = pointVec[(i-1+vecLen)%vecLen];
+        int result = crosses(point, q, pi, pi1, pi2, pi_1);
 
-    auxCrosses = crosses( point, q, pointVec[0], pointVec[1], pointVec[2],pointVec[vecLen-1]);
-    if(auxCrosses==2)return true;
-    crossCounter += auxCrosses;
-    for(int i=1;i<vecLen;++i){//for each side of the polygon, check if q crosses and add to crossCounter how many times it crosses
-        auxCrosses = crosses( point, q, pointVec[i], pointVec[ (i+1)%vecLen ], pointVec[ (i+2)%vecLen ],pointVec[i-1] );
-        if(auxCrosses==2)return true;
-        crossCounter += auxCrosses;
+        if(result==2){
+            return true;
+        }
+        crossCounter+=result;
+        
     }
-
-    //crossCounter+=crosses(point,q,pointVec[pointVec.size()-1],pointVec[0],pointVec[1],pointVec[pointVec.size()-2]);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
     //////////////////////odd number of crosses means that its inside otherwise its outside///////////////////////////////////////////////////
     if(crossCounter%2==1){
         return true;

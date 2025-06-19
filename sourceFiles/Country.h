@@ -37,7 +37,6 @@ public:
 
 	Country();
 	~Country();
-	void reset();
 
 	void bfs(std::shared_ptr<Node> startingNode);
 	void addRelationship(std::map<std::shared_ptr<Node>, std::vector<Lane> > &adjList,Lane lane);
@@ -61,5 +60,6 @@ public:
 	int crosses(std::pair<int,int> point,std::pair<int,int> q,std::pair<int,int> pi,std::pair<int,int> pi1,std::pair<int,int> pi2,std::pair<int,int> pi_1);
 	int det(std::pair<int,int> a,std::pair<int,int> b, std::pair<int,int> c);
 	bool rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,int> point);
-	int mcmf(std::vector<std::shared_ptr<Node>> sourceVec,std::vector<std::shared_ptr<Node>> sinkVec) ;
+	int mcmf(std::vector<std::shared_ptr<Node>> sourceVec,std::vector<std::shared_ptr<Node>> sinkVec);
+	
 };
