@@ -274,31 +274,27 @@ val calculateFlow() {
 }
 
 
-void createField(int xMiddle, int yMiddle) {
-    // production, for now - default
-    int production = 2137;
+void createField(int xMiddle, int yMiddle, int production) {
 
     objectKingdom.createField(fieldsCounter * 3 + 0, production, xMiddle, yMiddle, CONST_RADIUS);
     fieldsCounter += 1;
 
-    cout << "field creation succesfull: " << objectKingdom.nodeVector[0]->getName() << endl;
+    cout << "field creation succesfull: " << endl;
 }
 
-void createBrewery(int xMiddle, int yMiddle) {
-    // barley, for now - default
-    int barleyAmount = 2137;
+void createBrewery(int xMiddle, int yMiddle, int barleyAmount) {
 
     objectKingdom.createBrewery(breweriesCounter * 3 + 1, xMiddle, yMiddle, CONST_RADIUS, barleyAmount);
     breweriesCounter += 1;
 
-    cout << "brewery creation succesfull: " << objectKingdom.nodeVector[0]->getName() << endl;
+    cout << "brewery creation succesfull: " << endl;
 }
 
 void createPub(int xMiddle, int yMiddle) {
     objectKingdom.createPub(pubsCounter * 3 + 2, xMiddle, yMiddle, CONST_RADIUS);
     pubsCounter += 1;
 
-    cout << "pub creation succesfull: " << objectKingdom.nodeVector[0]->getName() << endl;
+    cout << "pub creation succesfull: " << endl;
 }
 
 void createRelation(int firstID, int secoundID, int capacity, int repair_cost) {

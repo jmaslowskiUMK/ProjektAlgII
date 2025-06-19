@@ -115,17 +115,11 @@ document.querySelector("#drawButton").addEventListener('click', () => {
     draw();
 });
 
+
+
+
 // MANUAL CREATION
 
-
-// cancel manual creation
-document.onkeydown = e => {
-    if (e.key = "Escape") {
-        canvas.removeEventListener('click', handleClick);
-        canvas.style.cursor = "default";
-        CREATION_OCCUPIED = false;
-    }
-};
 
 // manual field creation
 document.querySelector("#addFieldButton").addEventListener('click', async () => {
@@ -149,8 +143,15 @@ document.querySelector("#addFieldButton").addEventListener('click', async () => 
             return;
         }
 
+        // production
+        let production = parseInt(prompt("Wprowadz produkcję jęczmienia", "0"));
+        if (production == null || production == "" || isNaN(production) || production <= 0) {
+            alert("Wprowadzono niewłaściwą ilość produkowanego jęczmienia !");
+            return;
+        }
+
         const position = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
-        parserInstance.createField(position.x, position.y);
+        parserInstance.createField(position.x, position.y, production);
 
         canvas.removeEventListener('click', handleClick);
 
@@ -165,6 +166,17 @@ document.querySelector("#addFieldButton").addEventListener('click', async () => 
     };
 
     canvas.addEventListener('click', handleClick);
+
+    //Escape to cancel manual creation
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+            console.log("Escapeeeeee");
+        }
+    }, { once: true });
+
 });
 
 // manual brewerie creation
@@ -173,7 +185,7 @@ document.querySelector("#addBreweryButton").addEventListener('click', async () =
         alert("Narzędzie kreacji jest już wybrane wybrane !");
         return;
     }
-    
+
     const canvas = document.getElementById("Map");
     canvas.style.cursor = "crosshair";
 
@@ -186,8 +198,15 @@ document.querySelector("#addBreweryButton").addEventListener('click', async () =
             return;
         }
 
+        // barley
+        let barley = parseInt(prompt("Wprowadz wydajność browaru", "0"));
+        if (barley == null || barley == "" || isNaN(barley) || barley <= 0) {
+            alert("Wprowadzono niewłaściwą wydajnośc !");
+            return;
+        }
+
         const position = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
-        parserInstance.createBrewery(position.x, position.y);
+        parserInstance.createBrewery(position.x, position.y, barley);
 
         canvas.removeEventListener('click', handleClick);
         canvas.style.cursor = "default";
@@ -199,6 +218,17 @@ document.querySelector("#addBreweryButton").addEventListener('click', async () =
     };
 
     canvas.addEventListener('click', handleClick);
+
+    //Escape to cancel manual creation
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+            console.log("Escapeeeeee");
+        }
+    }, { once: true });
+
 });
 
 // manual pub creation
@@ -233,6 +263,17 @@ document.querySelector("#addPubButton").addEventListener('click', async () => {
     };
 
     canvas.addEventListener('click', handleClick);
+
+    //Escape to cancel manual creation
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+            console.log("Escapeeeeee");
+        }
+    }, { once: true });
+
 });
 
 
@@ -350,6 +391,16 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
     };
 
     canvas.addEventListener('click', handleClick);
+
+    //Escape to cancel manual creation
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+            console.log("Escapeeeeee");
+        }
+    }, { once: true });
 });
 
 

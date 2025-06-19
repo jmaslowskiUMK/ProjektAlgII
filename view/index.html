@@ -15,27 +15,29 @@
         }
 
         #sidebar {
-            width: 320px;
+            width: 230px;
             background-color: #2c3e50;
             color: white;
             display: flex;
             flex-direction: column;
-            padding: 40px;
+            padding: 10px;
             box-sizing: border-box;
-            height: 100vh;
+            height: 100vh; /* Pozostaje 100vh */
+            /* overflow-y: auto; - USUNIĘTO! */
         }
 
         #sidebar input, #sidebar button {
-            margin-bottom: 15px;
-            padding: 10px;
-            font-size: 16px;
+            margin-bottom: 6px;
+            padding: 5px;
+            font-size: 12px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 3px;
             width: 100%;
+            box-sizing: border-box;
         }
 
         #sidebar input[type="range"] {
-            margin-top: 10px;
+            margin-top: 6px;
         }
 
         #canvas-container {
@@ -44,7 +46,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            position: relative; /* potrzebne dla #flowInfo */
+            position: relative;
         }
 
         #Map {
@@ -55,17 +57,22 @@
         }
 
         h2 {
-            font-size: 18px;
+            font-size: 14px;
             text-align: center;
+            margin-bottom: 8px;
+            margin-top: 12px;
+        }
+        h2:first-of-type {
+            margin-top: 0;
         }
 
-        #processButton {
+        #processButton, #drawButton, #flowButton {
             background-color: #3498db;
             color: white;
             cursor: pointer;
         }
 
-        #processButton:hover {
+        #processButton:hover, #drawButton:hover, #flowButton:hover {
             background-color: #2980b9;
         }
 
@@ -75,40 +82,86 @@
         }
 
         .radio-group label {
-            font-size: 14px;
+            font-size: 10px;
         }
 
         #flowInfo {
             position: absolute;
-            bottom: 20px;
+            bottom: 20px; /* Zwiększony odstęp od dołu */
             left: 50%;
             transform: translateX(-50%);
             background-color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            font-size: 18px;
+            padding: 15px 25px; /* Zwiększony padding */
+            border-radius: 8px; /* Nieco większy border-radius */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Wyraźniejszy cień */
+            font-size: 20px; /* Znacznie większa czcionka */
             font-weight: bold;
             color: #2c3e50;
         }
 
-        #addOptions button {
-            background-color: #1abc9c;
-            color: white;
-            margin-top: 10px;
-            font-weight: bold;
-            cursor: pointer;
+        /* --- Style dla podziału przycisków --- */
+        #addOptions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 6px;
+            margin-top: 6px;
         }
 
-        #addOptions button:hover {
-            background-color: #16a085;
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 4px;
+            background-color: #34495e;
+            border-radius: 3px;
+        }
+
+        .button-group button {
+            margin-bottom: 0;
+            flex-grow: 1;
+            background-color: #1abc9c; /* Domyślny zielony */
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            width: auto;
+            padding: 3px;
+            font-size: 11px;
+            line-height: 1.1;
+        }
+
+        .button-group button:hover {
+            background-color: #16a085; /* Ciemniejszy zielony */
+        }
+
+        /* --- Specyficzne kolory dla grup przycisków --- */
+        #addOptions > div:nth-child(2) button {
+            background-color: #3498db; /* Niebieski */
+        }
+        #addOptions > div:nth-child(2) button:hover {
+            background-color: #2980b9;
+        }
+
+        #addOptions > div:nth-child(3) button {
+            background-color: #f1c40f; /* Żółty */
+            color: #333;
+        }
+        #addOptions > div:nth-child(3) button:hover {
+            background-color: #f39c12;
+        }
+
+        #addOptions > div:nth-child(4) button {
+            background-color: #e74c3c; /* Czerwony */
+        }
+        #addOptions > div:nth-child(4) button:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
 <body>
 
 <div id="sidebar">
-    <h2>Manu Akcji</h2>
+    <h2>Menu Akcji</h2>
 
     <input type="file" id="csvFileInput" accept=".csv">
 
@@ -119,12 +172,31 @@
     <h2>Zoom</h2>
     <input type="range" value="1" max="4" min="0.25" step="0.05">
 
-    <h2>Dodaj element</h2>
+    <h2>Narzędzia</h2>
     <div id="addOptions">
-        <button id="addFieldButton">Dodaj Pole</button>
-        <button id="addBreweryButton">Dodaj Browar</button>
-        <button id="addPubButton">Dodaj Pub</button>
-        <button id="addRelationButton">Stwórz Relację</button>
+        <div class="button-group">
+            <button id="addFieldButton">Dodaj Pole</button>
+            <button id="addBreweryButton">Dodaj Browar</button>
+            <button id="addPubButton">Dodaj Pub</button>
+            <button id="addRelationButton">Stwórz Relację</button>
+        </div>
+
+        <div class="button-group">
+            <button id="movePropertyButton">Przesuń Nieruchomość</button>
+            <button id="moveHullPointButton">Przesuń Punkt Otoczki</button>
+        </div>
+
+        <div class="button-group">
+            <button id="createHullButton">Stwórz Otoczkę</button>
+            <button id="addPointToHullButton">Dodaj Punkt do Otoczki</button>
+        </div>
+
+        <div class="button-group">
+            <button id="deletePropertyButton">Usuń Nieruchomość</button>
+            <button id="deleteRelationButton">Usuń Relację</button>
+            <button id="deleteHullPointButton">Usuń Punkt Otoczki</button>
+            <button id="deleteHullButton">Usuń Otoczkę</button>
+        </div>
     </div>
 </div>
 

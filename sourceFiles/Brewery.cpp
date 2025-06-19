@@ -10,7 +10,9 @@ Brewery::Brewery(int ID, int xMiddle, int yMiddle, int radius, int barleyAmount)
 	this->xMiddle = xMiddle;
 	this->yMiddle = yMiddle;
 	this->radius = radius;
+	// ???
 	this->barleyAmount = barleyAmount;
+	this->beerAmount = barleyAmount;
 }
 
 int Brewery::getBeerAmount() {
