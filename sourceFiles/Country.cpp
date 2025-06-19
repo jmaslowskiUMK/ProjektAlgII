@@ -561,5 +561,3 @@ int Country::mcmf(std::vector<std::shared_ptr<Node>> sourceVec, std::vector<std:
 
     return total_cost;
 }
-
-

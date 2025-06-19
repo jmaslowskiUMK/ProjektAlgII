@@ -96,6 +96,9 @@ document.addEventListener('keypress', e => {
         }
 
         console.log("Skanowanie zakończone.");
+    }   else if (e.key === "o") {
+        besierSwitch = !(besierSwitch);
+        draw();
     }
 });
 
@@ -265,7 +268,7 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
 
     let firstID = null;
 
-    const nodes = parserInstance.getNoRelationsCoordinates(
+    const nodes = parserInstance.getNodesCoordinates(
         Math.floor(camera.x),
         Math.floor(camera.y),
         camera.zoom,
@@ -308,7 +311,7 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
         }
 
 
-        
+
         // to prevent fields and pubs connections
         if (
             ((firstID % 3) == (hit.ID % 3)) ||
@@ -320,8 +323,6 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
         }
 
 
-        canvas.removeEventListener('click', handleClick);
-        canvas.style.cursor = "default";
 
         // capacity popup
         let capacity = parseInt(prompt("Wprowadz przepustowosc drogi", "0"));
@@ -339,6 +340,9 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
 
         console.log(`Drugi węzeł: ${hit.ID}`);
         parserInstance.createRelation(firstID, hit.ID, capacity, repair_cost);
+
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
         draw();
 
         // free manual creation
@@ -348,162 +352,6 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
     canvas.addEventListener('click', handleClick);
 });
 
-
-
-let counter = 0;
-
-function draw() {
-    if (!fileLoaded) {
-        alert('Żaden plik nie został wczytany!');
-        return;
-    }
-
-
-    // canvas clearing
-    camera.zoom = parseFloat(document.querySelector('input[type="range"]').value);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(10, 105, 1, 0.75)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    //font settings
-    ctx.fillStyle = "black";
-    ctx.font = 'bold 10px Century Gothic';
-
-    // HULLS
-
-    // loading hulls
-    const hulls = parserInstance.getHulls(
-        Math.floor(camera.x),
-        Math.floor(camera.y),
-        camera.zoom,
-        canvas.width,
-        canvas.height
-    );
-
-    // Hull color palet
-    const colors = [
-        '',
-        'rgba(255, 0, 0, 0.8)',
-        'rgba(204, 51, 0, 0.8)',
-        'rgba(153, 102, 0, 0.8)',
-        'rgba(102, 153, 0, 0.8)',
-        'rgba(51, 204, 0, 0.8)',
-        'rgba(0, 255, 0, 0.8)'
-    ];
-
-    hulls.forEach(hull => {
-        // hull colors
-        ctx.fillStyle = colors[hull.groundClass];
-        ctx.strokeStyle = 'rgba(0,0,0,0)';
-
-        const points = hull.points;
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        points.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-    });
-
-
-    // RELATIONS
-
-    const relations = parserInstance.getRelationsAndCoordinates(
-        Math.floor(camera.x),
-        Math.floor(camera.y),
-        camera.zoom,
-        canvas.width,
-        canvas.height
-    );
-
-    ctx.strokeStyle = 'rgb(77, 44, 14)';
-    ctx.lineWidth = 2;
-
-    // drawing relations and conected elements
-
-    relations.forEach(rel => {
-
-        if (rel.radius < 3)
-            rel.radius = 3.1;
-
-        // line drawing
-        ctx.beginPath();
-        ctx.moveTo(rel.startX, rel.startY);
-        ctx.lineTo(rel.endX, rel.endY);
-        ctx.stroke();
-
-        // capacity
-        ctx.fillStyle = "black";
-        ctx.fillText(rel.capacity, (rel.startX + rel.endX) / 2 + 5, (rel.startY + rel.endY) / 2 + 5);
-
-        // drawing verticies
-
-        //first pair
-        ctx.beginPath();
-        ctx.fillStyle = "black";
-        ctx.arc(rel.startX, rel.startY, rel.radius, 0, 2 * Math.PI);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.arc(rel.startX, rel.startY, rel.radius - 3, 0, 2 * Math.PI);
-        ctx.fill();
-
-        // secound pair
-        ctx.beginPath();
-        ctx.fillStyle = "black";
-        ctx.arc(rel.endX, rel.endY, rel.radius, 0, 2 * Math.PI);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.arc(rel.endX, rel.endY, rel.radius - 3, 0, 2 * Math.PI);
-        ctx.fill();
-
-
-        // names
-        ctx.fillStyle = "black";
-        ctx.fillText(rel.startName, rel.startX + 10 * camera.zoom, rel.startY - 10 * camera.zoom);
-
-        ctx.fillStyle = "black";
-        ctx.fillText(rel.endName, rel.endX + 10 * camera.zoom, rel.endY - 10 * camera.zoom);
-    });
-
-    // drawing separated elements
-
-    const nodes = parserInstance.getNoRelationsCoordinates(
-        Math.floor(camera.x),
-        Math.floor(camera.y),
-        camera.zoom,
-        canvas.width,
-        canvas.height
-    );
-
-    // drawing verticies
-    nodes.forEach(node => {
-        console.log(counter);
-        counter++;
-        if (node.radius < 3)
-            node.radius = 3.1;
-
-        //first pair
-        ctx.beginPath();
-        ctx.fillStyle = "black";
-        ctx.arc(node.x, node.y, node.radius, 0, 2 * Math.PI);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.arc(node.x, node.y, node.radius - 3, 0, 2 * Math.PI);
-        ctx.fill();
-
-        // name
-        ctx.fillStyle = "black";
-        ctx.fillText(node.name, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
-    });
-
-    counter = 0;
-}
 
 document.addEventListener("keydown", key => {
     if (key.keyCode == 38 || key.keyCode == 87) {

@@ -2,8 +2,8 @@
 #include <string>
 
 class Node {
-private:
 public:
+    int production;
     int xMiddle, yMiddle, radius;
     int ID;
     std::string name;

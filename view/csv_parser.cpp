@@ -79,6 +79,30 @@ extern "C" {
                 }
             }
         }
+
+        std::sort(objectKingdom.nodeVector.begin(), objectKingdom.nodeVector.end(),
+        [](const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) {
+
+            return a->getID() < b->getID();
+
+        });
+
+
+        // process to determine field production
+        for (int i = 0; i < objectKingdom.nodeVector.size(); i += 3) {
+            for (int j = 0; j < objectKingdom.hulls.size(); j++) {
+                if (objectKingdom.rayCasting(objectKingdom.hulls[j]->points, std::make_pair(objectKingdom.nodeVector[i]->getX(), objectKingdom.nodeVector[i]->getY()))) {
+                    shared_ptr<Field> derived = std::dynamic_pointer_cast<Field>(objectKingdom.nodeVector[i]);
+                    if (derived != nullptr) {
+                        // scale of grounds here
+                        derived->setProduction(
+                            static_cast<int>(static_cast<double>(derived->getProduction() * (1 + static_cast<double>(objectKingdom.hulls[j]->groundClass - 3) / 10.0)))
+                        );
+                    }
+                }
+            }
+        }
+
     }
 }
 
@@ -130,12 +154,37 @@ val getNoRelationsCoordinates(int camX, int camY, double zoom, int canvasWidth, 
     val arr = val::array();
 
     for (const auto& node : objectKingdom.nodeVector) {
-
         auto it = objectKingdom.adjList.find(node);
         if (it != objectKingdom.adjList.end() && !it->second.empty()) {
             continue;
         }
 
+        double worldX = node->getX();
+        double worldY = node->getY();
+
+        double screenX = (worldX - static_cast<double>(camX)) * zoom + static_cast<double>(canvasWidth) * 0.5;
+        double screenY = (worldY - static_cast<double>(camY)) * zoom + static_cast<double>(canvasHeight) * 0.5;
+
+        if (screenX < 0 || screenX > canvasWidth || screenY < 0 || screenY > canvasHeight)
+            continue;
+
+        val obj = val::object();
+        obj.set("x", screenX);
+        obj.set("y", screenY);
+        obj.set("name", node->getName());
+        obj.set("ID", node->getID());
+        obj.set("radius", CONST_RADIUS * zoom);
+
+        arr.call<void>("push", obj);
+    }
+
+    return arr;
+}
+
+val getNodesCoordinates(int camX, int camY, double zoom, int canvasWidth, int canvasHeight) {
+    val arr = val::array();
+
+    for (const auto& node : objectKingdom.nodeVector) {
         double worldX = node->getX();
         double worldY = node->getY();
 
@@ -283,6 +332,7 @@ bool isInAnyHull(int x, int y) {
 
 EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("getRelationsAndCoordinates", &getRelationsAndCoordinates);
+    emscripten::function("getNoRelationsCoordinates", &getNoRelationsCoordinates);
     emscripten::function("getHulls", &getHulls);
     emscripten::function("calculateFlow", &calculateFlow);
 
@@ -293,6 +343,6 @@ EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("createRelation", &createRelation);
 
     // helper functions
-    emscripten::function("getNoRelationsCoordinates", &getNoRelationsCoordinates);
+    emscripten::function("getNodesCoordinates", &getNodesCoordinates);
     emscripten::function("isInAnyHull", &isInAnyHull);
 }

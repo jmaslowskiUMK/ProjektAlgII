@@ -3,9 +3,8 @@
 
 class Field:public Node
 {
-private:
-	int production;
 public:
+	int production;
 	Field();
 	Field(int x);
 	Field(int ID, int production, int xMiddle, int yMiddle, int radius);

@@ -56,8 +56,3 @@ def compile_and_run():
 
 if __name__ == "__main__":
     compile_and_run()
-
-
-'''
-komenda kompilacji: emcc csv_parser.cpp ./sourceFiles/Country.cpp ./sourceFiles/Node.cpp ./sourceFiles/Lane.cpp ./sourceFiles/Brewery.cpp ./sourceFiles/Pub.cpp ./sourceFiles/Field.cpp -o csv_parser.js -s EXPORTED_FUNCTIONS="['_processCSV']" -s MODULARIZE=1 -s EXPORT_NAME="CsvParser" -s EXPORTED_RUNTIME_METHODS="['ccall']" --bind
-'''
