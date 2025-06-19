@@ -190,7 +190,7 @@ void Country::addRelationship(  std::map<std::shared_ptr<Node>, std::vector<Lane
 //create shared_ptr of each derived from Node class add to adjList
 
 std::shared_ptr<Pub> Country::createPub(int ID, int xMiiddle, int yMiddle, int radius){
-    auto pub = std::make_shared<Pub>(ID, xMiiddle,yMiddle,radius);
+    auto pub = std::make_shared<Pub>(ID, xMiiddle, yMiddle, radius);
     adjList[pub] = {};
     this->nodeVector.push_back(pub);
     return pub;

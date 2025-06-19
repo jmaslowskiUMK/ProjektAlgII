@@ -7,7 +7,7 @@ const PORT = 8000;
 const server = http.createServer((req, res) => {
     let filePath = '.' + req.url;
     if (filePath === './') {
-        filePath = './index.html';
+        filePath = './view/index.html';
     }
 
     const extname = String(path.extname(filePath)).toLowerCase();
@@ -18,7 +18,7 @@ const server = http.createServer((req, res) => {
         '.json': 'application/json',
         '.png': 'image/png',
         '.jpg': 'image/jpg',
-        '.wasm': 'application/wasm' // Dodano obsługę plików .wasm
+        '.wasm': 'application/wasm'
     };
 
     const contentType = mimeTypes[extname] || 'application/octet-stream';

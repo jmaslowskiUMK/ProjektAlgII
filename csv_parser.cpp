@@ -114,6 +114,8 @@ val getRelationsAndCoordinates(int camX, int camY, double zoom, int canvasWidth,
             obj.set("capacity", to_string(lane.getCapacity()));
             obj.set("startName", lane.getFromPtr()->getName());
             obj.set("endName", lane.getToPtr()->getName());
+            obj.set("startID", lane.getFromPtr()->getID());
+            obj.set("endID", lane.getToPtr()->getID());
             obj.set("radius", CONST_RADIUS * zoom);
 
 
