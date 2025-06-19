@@ -5,7 +5,7 @@ def compile_and_run():
     # Komenda kompilacji
     compile_cmd = [
         "emcc",
-        "csv_parser.cpp",
+        "./view/csv_parser.cpp",
         "./sourceFiles/Country.cpp",
         "./sourceFiles/Node.cpp",
         "./sourceFiles/Lane.cpp",
@@ -13,7 +13,7 @@ def compile_and_run():
         "./sourceFiles/Pub.cpp",
         "./sourceFiles/Field.cpp",
         "./sourceFiles/Hull.cpp",
-        "-o", "csv_parser.js",
+        "-o", "./view/csv_parser.js",
         "-s", "EXPORTED_FUNCTIONS=[\"_processCSVBuildings\"]",
         "-s", "MODULARIZE=1",
         "-s", "EXPORT_NAME=\"CsvParser\"",

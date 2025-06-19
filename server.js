@@ -5,10 +5,8 @@ const path = require('path');
 const PORT = 8000;
 
 const server = http.createServer((req, res) => {
-    let filePath = '.' + req.url;
-    if (filePath === './') {
-        filePath = './view/index.html';
-    }
+    // Ustaw ścieżkę do pliku w katalogu "view"
+    let filePath = path.join(__dirname, 'view', req.url === '/' ? 'index.html' : req.url);
 
     const extname = String(path.extname(filePath)).toLowerCase();
     const mimeTypes = {

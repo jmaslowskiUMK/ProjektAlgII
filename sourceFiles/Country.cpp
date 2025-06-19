@@ -10,11 +10,13 @@
 #include <unordered_set>
 #include <iostream>
 
-Country::Country() {
-}
-
-Country::~Country() {
-
+Country::Country() {}
+Country::~Country() {}
+void Country::reset() {
+    adjList.clear();
+    level.clear();
+    hulls.clear();
+    nodeVector.clear();
 }
 
 void Country::bfs(std::shared_ptr<Node> startingNode) {

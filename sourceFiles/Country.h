@@ -38,6 +38,7 @@ public:
 	Country();
 	~Country();
 
+	void reset();
 	void bfs(std::shared_ptr<Node> startingNode);
 	void addRelationship(std::map<std::shared_ptr<Node>, std::vector<Lane> > &adjList,Lane lane);
 	void addRelationship(Lane lane);

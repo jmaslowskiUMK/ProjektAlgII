@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 // listener to test reyCast with hulls
 document.addEventListener('click', e => {
     const position = getWorldCoordinatesFromMouse(e, canvas, camera.x, camera.y, camera.zoom);
-    console.log(position);
-    console.log(parserInstance.isInAnyHull(position.x, position.y));
+    //console.log(position);
+    //console.log(parserInstance.isInAnyHull(position.x, position.y));
     if (parserInstance.isInAnyHull(position.x, position.y)) {
         ctx.fillStyle = 'red'; // ustaw kolor wypełnienia na czerwony
         ctx.beginPath();
@@ -350,7 +350,7 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
 
 
 
-
+let counter = 0;
 
 function draw() {
     if (!fileLoaded) {
@@ -419,7 +419,7 @@ function draw() {
     ctx.strokeStyle = 'rgb(77, 44, 14)';
     ctx.lineWidth = 2;
 
-    // drawing relations
+    // drawing relations and conected elements
 
     relations.forEach(rel => {
 
@@ -471,10 +471,6 @@ function draw() {
 
     // drawing separated elements
 
-
-    // IT NEEDS TO BE REBUILD, for now it's doubling elements
-
-
     const nodes = parserInstance.getNoRelationsCoordinates(
         Math.floor(camera.x),
         Math.floor(camera.y),
@@ -485,6 +481,8 @@ function draw() {
 
     // drawing verticies
     nodes.forEach(node => {
+        console.log(counter);
+        counter++;
         if (node.radius < 3)
             node.radius = 3.1;
 
@@ -503,6 +501,8 @@ function draw() {
         ctx.fillStyle = "black";
         ctx.fillText(node.name, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
     });
+
+    counter = 0;
 }
 
 document.addEventListener("keydown", key => {
