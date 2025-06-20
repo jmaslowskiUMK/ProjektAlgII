@@ -79,12 +79,14 @@ extern "C" {
             }
         }
 
+        /*
         std::sort(objectKingdom.nodeVector.begin(), objectKingdom.nodeVector.end(),
         [](const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) {
 
             return a->getID() < b->getID();
 
         });
+        */
 
 
         // process to determine field production
@@ -117,7 +119,7 @@ string saveToCSV() {
         int y = node->getY();
 
         if (auto field = std::dynamic_pointer_cast<Field>(node)) {
-            ss << "Field," << id << "," << field->getProduction()
+            ss << "Field," << id << "," << field->getBasicProduction()
                << ",,,"
                << x << "," << y << ",,,,,\n";
 
@@ -336,9 +338,6 @@ void createField(int xMiddle, int yMiddle, int production) {
     fieldsCounter += 1;
 
     cout << "field creation succesfull: " << endl;
-    for(int i = 0; i < objectKingdom.nodeVector.size(); i++) {
-        cout << objectKingdom.nodeVector[i]->getID() << endl;
-    }
 }
 
 void createBrewery(int xMiddle, int yMiddle, int barleyAmount) {
@@ -347,9 +346,6 @@ void createBrewery(int xMiddle, int yMiddle, int barleyAmount) {
     breweriesCounter += 1;
 
     cout << "brewery creation succesfull: " << endl;
-    for(int i = 0; i < objectKingdom.nodeVector.size(); i++) {
-        cout << objectKingdom.nodeVector[i]->getID() << endl;
-    }
 }
 
 void createPub(int xMiddle, int yMiddle) {
@@ -357,9 +353,6 @@ void createPub(int xMiddle, int yMiddle) {
     pubsCounter += 1;
 
     cout << "pub creation succesfull: " << endl;
-    for(int i = 0; i < objectKingdom.nodeVector.size(); i++) {
-        cout << objectKingdom.nodeVector[i]->getID() << endl;
-    }
 }
 
 void createRelation(int firstID, int secoundID, int capacity, int repair_cost) {

@@ -13,6 +13,10 @@ int Field::getProduction() {
 	return production;
 }
 
+int Field::getBasicProduction() {
+	return basicProduction;
+}
+
 void Field::setProduction(int x){
 	production = x;
 }
@@ -23,6 +27,7 @@ Field::Field(int ID, int production, int xMiddle, int yMiddle, int radius) {
 	this->yMiddle = yMiddle;
 	this->radius = radius;
 	this->production = production;
+	this->basicProduction = production;
 }
 
 void Field::print() {
