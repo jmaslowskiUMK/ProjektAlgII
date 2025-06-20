@@ -175,6 +175,15 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
     return max_flow;
 }
 
+void Country::insertNodeSorted(std::vector<std::shared_ptr<Node>>& nodeVector, std::shared_ptr<Node> newNode) {
+    auto it = std::lower_bound(nodeVector.begin(), nodeVector.end(), newNode,
+        [](const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) {
+            return a->getID() < b->getID();
+        });
+    nodeVector.insert(it, newNode);
+}
+
+
 void Country::addRelationship(Lane lane) {//add Lane to adjList
     adjList[lane.getFromPtr()].push_back(lane);
 }
@@ -189,38 +198,57 @@ void Country::addRelationship(  std::map<std::shared_ptr<Node>, std::vector<Lane
 std::shared_ptr<Pub> Country::createPub(int ID, int xMiiddle, int yMiddle, int radius){
     auto pub = std::make_shared<Pub>(ID, xMiiddle,yMiddle,radius);
     adjList[pub] = {};
-    this->nodeVector.push_back(pub);
+    insertNodeSorted(nodeVector, pub);
     return pub;
 }
 
 std::shared_ptr<Brewery> Country::createBrewery(int ID, int xMiddle, int yMiddle, int radius, int barleyAmount) {
     auto brewery = std::make_shared<Brewery>(ID, xMiddle, yMiddle, radius, barleyAmount);
     adjList[brewery] = {};
-    nodeVector.push_back(brewery);
+    insertNodeSorted(nodeVector, brewery);
     return brewery;
 }
 
 std::shared_ptr<Intersection> Country::createIntersection(int x, int y) {
     auto intersection = std::make_shared<Intersection>(x, y);
     adjList[intersection] = {};
-    nodeVector.push_back(intersection);
+    insertNodeSorted(nodeVector, intersection);
     return intersection;
 }
 
 std::shared_ptr<Field> Country::createField(int ID, int production, int xMiddle, int yMiddle, int radius){
     auto field = std::make_shared<Field>(ID, production, xMiddle, yMiddle, radius);
     adjList[field] = {};
-    nodeVector.push_back(field);
+    insertNodeSorted(nodeVector, field);
     return field;
 }
 
 std::shared_ptr<Node> Country::find(int ID) {
+    /*
+    for (int i = 0; i < nodeVector.size(); i++) {
+        std::cout << nodeVector[i]->getID() << std::endl;
+    }
     for (int i = 0; i < nodeVector.size(); i++) {
         if (ID == nodeVector[i]->getID()) {
             return nodeVector[i];
         }
     }
     return std::shared_ptr<Node>();
+    */
+    try {
+        auto it = std::lower_bound(nodeVector.begin(), nodeVector.end(), ID,
+            [](const std::shared_ptr<Node>& node, int value) {
+                return node->getID() < value;
+        });
+
+        if (it != nodeVector.end() && (*it)->getID() == ID) {
+            return *it;
+        }
+    }   catch (const std::exception& e) {
+        std::cout << "COS W FUNKCJI FIND" << std::endl;
+    }
+
+    return std::shared_ptr<Node>();  // nullptr
 }
 
 void Country::printContent() {

@@ -1,4 +1,3 @@
-let counter = 0;
 let besierSwitch = false;
 
 function draw() {
@@ -259,8 +258,6 @@ function draw() {
 
     // drawing verticies
     nodes.forEach(node => {
-        console.log(counter);
-        counter++;
         if (node.radius < 3) {
             node.radius = 3.1;
         }   else if (node.radius > 10) {
@@ -282,6 +279,4 @@ function draw() {
         ctx.fillStyle = "black";
         ctx.fillText(node.name, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
     });
-
-    counter = 0;
 }

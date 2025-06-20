@@ -28,10 +28,6 @@ int pubsCounter = 0;
 extern "C" {
     void processCSVBuildings(const char* csvData) {
 
-        // destruction of manually created kingdom
-        //objectKingdom.~Country(); // destruct
-        //new(&objectKingdom) Country(); // reconstruct
-
         objectKingdom.reset();
         fieldsCounter = 0;
         pubsCounter = 0;
@@ -63,12 +59,15 @@ extern "C" {
             }   else if (row[0] == "Field") {
                 // adding Field
                 objectKingdom.createField(stoi(row[1]), stoi(row[2]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
+                fieldsCounter += 1;
             }   else if (row[0] == "Brewery") {
                 // adding Brewery
                 objectKingdom.createBrewery(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS, stoi(row[3]));
+                breweriesCounter += 1;
             }   else if (row[0] == "Pub") {
                 // adding Pub
                 objectKingdom.createPub(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
+                pubsCounter += 1;
             }   else if (row[0] == "Lane") {
                 auto from = objectKingdom.find(stoi(row[7]));
                 auto to = objectKingdom.find(stoi(row[8]));
@@ -104,6 +103,63 @@ extern "C" {
         }
 
     }
+}
+
+
+string saveToCSV() {
+    std::stringstream ss;
+    ss << "Category,ID,Yield (kg),Processed (kg),Beer (liters),X Coordinate,Y Coordinate,Lane From,Lane To,Capacity (kg/liters),Repair Cost,Ground Class\n";
+
+    // Nodes: Field, Brewery, Pub
+    for (const auto& node : objectKingdom.nodeVector) {
+        int id = node->getID();
+        int x = node->getX();
+        int y = node->getY();
+
+        if (auto field = std::dynamic_pointer_cast<Field>(node)) {
+            ss << "Field," << id << "," << field->getProduction()
+               << ",,,"
+               << x << "," << y << ",,,,,\n";
+
+        } else if (auto brewery = std::dynamic_pointer_cast<Brewery>(node)) {
+            ss << "Brewery," << id << ",," << brewery->getBeerAmount()
+               << ",," << x << "," << y << ",,,,,\n";
+
+        } else if (auto pub = std::dynamic_pointer_cast<Pub>(node)) {
+            ss << "Pub," << id << ",,,"
+               << "," << x << "," << y << ",,,,,\n";
+        }
+    }
+
+    // Lanes
+    for (auto& [fromNode, lanes] : objectKingdom.adjList) {
+        for (auto& lane : lanes) {  // <-- usunięto const
+            auto from = lane.getFromPtr();
+            auto to = lane.getToPtr();
+            if (!from || !to) continue;
+
+            ss << "Lane,,,,,,,"
+               << from->getID() << "," << to->getID()
+               << "," << lane.getCapacity()
+               << "," << lane.getRepairCost()
+               << ",\n";
+        }
+    }
+
+
+    // Hulls and HullPoints
+    for (size_t i = 0; i < objectKingdom.hulls.size(); ++i) {
+        const auto& hull = objectKingdom.hulls[i];
+        ss << "Hull_" << i << ",Array of Points,,,,,,,,,," << hull->groundClass << "\n";
+
+        for (size_t j = 0; j < hull->points.size(); ++j) {
+            auto& p = hull->points[j];
+            ss << "HullPoint_" << i << "," << j << ",,,," << p.first << "," << p.second << ",,,,,"
+               << hull->groundClass << "\n";
+        }
+    }
+
+    return ss.str();
 }
 
 val getRelationsAndCoordinates(int camX, int camY, double zoom, int canvasWidth, int canvasHeight) {
@@ -280,6 +336,9 @@ void createField(int xMiddle, int yMiddle, int production) {
     fieldsCounter += 1;
 
     cout << "field creation succesfull: " << endl;
+    for(int i = 0; i < objectKingdom.nodeVector.size(); i++) {
+        cout << objectKingdom.nodeVector[i]->getID() << endl;
+    }
 }
 
 void createBrewery(int xMiddle, int yMiddle, int barleyAmount) {
@@ -288,6 +347,9 @@ void createBrewery(int xMiddle, int yMiddle, int barleyAmount) {
     breweriesCounter += 1;
 
     cout << "brewery creation succesfull: " << endl;
+    for(int i = 0; i < objectKingdom.nodeVector.size(); i++) {
+        cout << objectKingdom.nodeVector[i]->getID() << endl;
+    }
 }
 
 void createPub(int xMiddle, int yMiddle) {
@@ -295,6 +357,9 @@ void createPub(int xMiddle, int yMiddle) {
     pubsCounter += 1;
 
     cout << "pub creation succesfull: " << endl;
+    for(int i = 0; i < objectKingdom.nodeVector.size(); i++) {
+        cout << objectKingdom.nodeVector[i]->getID() << endl;
+    }
 }
 
 void createRelation(int firstID, int secoundID, int capacity, int repair_cost) {
@@ -325,7 +390,6 @@ bool isInAnyHull(int x, int y) {
 
 
 
-
 EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("getRelationsAndCoordinates", &getRelationsAndCoordinates);
     emscripten::function("getNoRelationsCoordinates", &getNoRelationsCoordinates);
@@ -341,4 +405,6 @@ EMSCRIPTEN_BINDINGS(my_module) {
     // helper functions
     emscripten::function("getNodesCoordinates", &getNodesCoordinates);
     emscripten::function("isInAnyHull", &isInAnyHull);
+
+    emscripten::function("saveToCSV", &saveToCSV);
 }
