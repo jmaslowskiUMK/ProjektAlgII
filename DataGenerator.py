@@ -1,11 +1,12 @@
 import random
 import csv
+import time
+import string
 import math
 import random
 import matplotlib.pyplot as plt
 import numpy as np
 from math import atan2
-
 
 class Point:
     def __init__(self, x, y):
@@ -24,6 +25,87 @@ def is_inside_circle(center, p, radius):
 def orientation(p, q, r):
     #all changed to float64 for consistency
     return (q[0] - p[0])*(r[1] - p[1]) - (q[1] - p[1])*(r[0] - p[0])
+
+def crosses(point, q, pi, pi1, pi2, pi_1):
+    d1 = orientation(point, q, pi)
+    d2 = orientation(point, q, pi1)
+    d3 = orientation(pi, pi1, point)
+    d4 = orientation(pi, pi1, q)
+
+    if ((d1 > 0 and d2 < 0) or (d1 < 0 and d2 > 0)) and \
+       ((d3 > 0 and d4 < 0) or (d3 < 0 and d4 > 0)):
+        return 1
+
+    if d3 == 0:
+        if min(pi[0], pi1[0]) <= point[0] <= max(pi[0], pi1[0]) and \
+           min(pi[1], pi1[1]) <= point[1] <= max(pi[1], pi1[1]):
+            return 2
+
+    if d1 == 0:
+        if pi[0] >= point[0] and \
+           min(pi[1], pi1[1]) <= point[1] <= max(pi[1], pi1[1]):
+            d5 = orientation(point, q, pi2)
+            d6 = orientation(point, q, pi_1)
+            if (d5 > 0 and d6 < 0) or (d5 < 0 and d6 > 0):
+                return 1
+            else:
+                return 0
+
+    return 0
+
+
+def ray_casting(pointVec, point):
+    if not pointVec:
+        return False
+
+    xs = [p[0] for p in pointVec]
+    ys = [p[1] for p in pointVec]
+    minX, maxX = min(xs), max(xs)
+    minY, maxY = min(ys), max(ys)
+
+    if point[0] < minX or point[0] > maxX or point[1] < minY or point[1] > maxY:
+        return False
+
+    q = (maxX + 1, point[1])
+    crossCounter = 0
+    vecLen = len(pointVec)
+
+    for i in range(vecLen):
+        pi = pointVec[i]
+        pi1 = pointVec[(i + 1) % vecLen]
+        pi2 = pointVec[(i + 2) % vecLen]
+        pi_1 = pointVec[(i - 1 + vecLen) % vecLen]
+        result = crosses(point, q, pi, pi1, pi2, pi_1)
+
+        if result == 2:
+            return True
+        crossCounter += result
+
+    return crossCounter % 2 == 1
+
+
+def segments_intersect(p1, q1, p2, q2):
+    def on_segment(p, q, r):
+        return min(p[0], r[0]) <= q[0] <= max(p[0], r[0]) and min(p[1], r[1]) <= q[1] <= max(p[1], r[1])
+
+    def orientation2(p, q, r):
+        val = (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1])
+        if abs(val) < 1e-10:
+            return 0
+        return 1 if val > 0 else 2
+
+    o1 = orientation2(p1, q1, p2)
+    o2 = orientation2(p1, q1, q2)
+    o3 = orientation2(p2, q2, p1)
+    o4 = orientation2(p2, q2, q1)
+
+    if o1 != o2 and o3 != o4:
+        return True
+    if o1 == 0 and on_segment(p1, p2, q1): return True
+    if o2 == 0 and on_segment(p1, q2, q1): return True
+    if o3 == 0 and on_segment(p2, p1, q2): return True
+    if o4 == 0 and on_segment(p2, q1, q2): return True
+    return False
 
 def graham_scan(points):
     if len(points) < 3:
@@ -117,6 +199,12 @@ def generate_lanes_brewery_to_pub(breweries, pubs, repair_probability):
                 "repair_cost": repair_cost
             })
     return lanes
+def generate_seed(length=16):
+    chars = string.ascii_letters + string.digits
+    return ''.join(random.choice(chars) for _ in range(length))
+def generate_convRate():
+    return random.randint(1, 5)
+
 
 def save_all_to_csv(filename, fields, breweries, pubs, lanes, hulls=None, hull_numbers=None):
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
@@ -124,7 +212,7 @@ def save_all_to_csv(filename, fields, breweries, pubs, lanes, hulls=None, hull_n
         writer.writerow([
             "Category", "ID", "Yield (kg)", "Processed (kg)", "Beer (liters)", 
             "X Coordinate", "Y Coordinate", "Lane From", "Lane To", 
-            "Capacity (kg/liters)", "Repair Cost", "Ground Class"
+            "Capacity (kg/liters)", "Repair Cost", "Ground Class", "convRate", "Seed"
         ])
         for field in fields:
             writer.writerow([
@@ -155,6 +243,9 @@ def save_all_to_csv(filename, fields, breweries, pubs, lanes, hulls=None, hull_n
                     writer.writerow([f"HullPoint_{hull_idx}", idx, "", "", "", p.x, p.y, "", "", "", "", hull_num])"""
                 for idx, (x, y) in enumerate(hull):
                     writer.writerow([f"HullPoint_{hull_idx}", idx, "", "", "", x, y, "", "", "", "", hull_num])
+        
+        writer.writerow(["convRate", "", "", "", "", "", "", "", "", "", "", "", generate_convRate(), ""])
+        writer.writerow(["Seed", "", "", "", "", "", "", "", "", "", "", "", "", generate_seed()])
 
 
 number_of_fields = int(input("Enter the number of fields: "))
@@ -198,6 +289,7 @@ hulls = []
  #   hull = convex_hull(points_in_circle)
   #  hulls.append(hull)
    # points = [p for p in points if not is_inside_circle(center, p, radius)]
+start = time.time()
 while len(points) >= 3:
     center = random_start_point(points)
     if len(points) < 3:
@@ -211,18 +303,29 @@ while len(points) >= 3:
     # Zamiana Point na tuple (x, y)
     points_tuples = [(p.x, p.y) for p in points_in_circle]
     hull_tuples = graham_scan(points_tuples)
+    conflict = False
+    for existing_hull in hulls:
+        for point in hull_tuples:
+            if ray_casting(existing_hull, point) or any(segments_intersect(existing_hull[i], existing_hull[(i + 1) % len(existing_hull)], hull_tuples[j], hull_tuples[(j + 1) % len(hull_tuples)]) for i in range(len(existing_hull)) for j in range(len(hull_tuples))):
+                conflict = True
+                break
+        if conflict:
+            break
     #print(hull_tupls)
     # Zamiana z powrotem na Point
     #hull = [ Point(x, y) for x, y in hull_tuples ]
     #print(hull)
-    hulls.append([hull_tuples[i] for i in range(len(hull_tuples))])
-    hull_numbers = [random.randint(1, 6) for _ in range(len(hulls))]
+    if not conflict:
+        hulls.append([hull_tuples[i] for i in range(len(hull_tuples))])
+        hull_numbers = [random.randint(1, 6) for _ in range(len(hulls))]
     #print(hulls)
     points = [p for p in points if not is_inside_circle(center, p, radius)]
+stop = time.time()
+print(f"Hulls crated in {stop - start:.2f} sec")
 save_all_to_csv("input_data.csv", fields, breweries, pubs, combined_lanes, hulls, hull_numbers)
 print("Data have been saved to 'input_data.csv'")
 
-""""
+"""
 plt.figure(figsize=(10, 10))
 colors = plt.cm.get_cmap('tab20', len(hulls))
 
