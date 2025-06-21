@@ -157,11 +157,13 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
         }
 
         for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-        Lane lane(sink, superSink, INT_MAX, 0);
-        addRelationship(adjListCopy, lane);
+        auto sourceField = std::dynamic_pointer_cast<Pub>(sink);
+            if(sourceField){
+                 Lane lane(sink, sourceField,sourceField->getCapacity() , 0);
+                addRelationship(adjListCopy, lane);
+            }
         }
-
-    } 
+    }
 
     while (true) {
     std::vector<Lane> path = augmentingPathBfs(superSource, superSink, adjListCopy);
@@ -237,15 +239,15 @@ void Country::addRelationship(  std::map<std::shared_ptr<Node>, std::vector<Lane
 
 //create shared_ptr of each derived from Node class add to adjList
 
-std::shared_ptr<Pub> Country::createPub(int ID, int xMiiddle, int yMiddle, int radius){
-    auto pub = std::make_shared<Pub>(ID, xMiiddle,yMiddle,radius);
+std::shared_ptr<Pub> Country::createPub(int ID, int xMiiddle, int yMiddle, int radius, int capacity){
+    auto pub = std::make_shared<Pub>(ID, xMiiddle,yMiddle,radius, capacity);
     adjList[pub] = {};
     insertNodeSorted(nodeVector, pub);
     return pub;
 }
 
-std::shared_ptr<Brewery> Country::createBrewery(int ID, int xMiddle, int yMiddle, int radius, int barleyAmount) {
-    auto brewery = std::make_shared<Brewery>(ID, xMiddle, yMiddle, radius, barleyAmount);
+std::shared_ptr<Brewery> Country::createBrewery(int ID, int xMiddle, int yMiddle, int radius, int barleyCap) {
+    auto brewery = std::make_shared<Brewery>(ID, xMiddle, yMiddle, radius, barleyCap);
     adjList[brewery] = {};
     insertNodeSorted(nodeVector, brewery);
     return brewery;

@@ -67,7 +67,7 @@ extern "C" {
                 breweriesCounter += 1;
             }   else if (row[0] == "Pub") {
                 // adding Pub
-                objectKingdom.createPub(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
+                objectKingdom.createPub(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS, stoi(row[4]));
                 pubsCounter += 1;
             }   else if (row[0] == "Lane") {
                 auto from = objectKingdom.find(stoi(row[7]));
@@ -311,6 +311,7 @@ val getHulls(int camX, int camY, double zoom, int canvasWidth, int canvasHeight)
 
 
 val calculateFlow() {
+    /*
 	val resultsArr = val::array();
 
     std::vector<std::shared_ptr<Node>> sinks;
@@ -328,6 +329,40 @@ val calculateFlow() {
 
     resultsArr.call<void>("push", objectKingdom.edmondsKarpManyToMany(sources,sinks));
     resultsArr.call<void>("push", objectKingdom.dinic(sources,sinks));
+    */
+    val resultsArr = val::array();
+    std::vector<std::shared_ptr<Node>> sinks;
+	std::vector<std::shared_ptr<Node>> sources;
+
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+	std::cout<<objectKingdom.edmondsKarpManyToMany(sources,sinks, 1)<<std::endl;
+
+	sources.clear();
+	sinks.clear();
+
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+
+    resultsArr.call<void>("push", objectKingdom.edmondsKarpManyToMany(sources,sinks, 1));
 
     return resultsArr;
 }
@@ -338,23 +373,23 @@ val calculateFlow() {
 // ============================================================================
 
 void createField(int xMiddle, int yMiddle, int production) {
-
+    // add reycasting
     objectKingdom.createField(fieldsCounter * 3 + 0, production, xMiddle, yMiddle, CONST_RADIUS);
     fieldsCounter += 1;
 
     cout << "field creation succesfull: " << endl;
 }
 
-void createBrewery(int xMiddle, int yMiddle, int barleyAmount) {
+void createBrewery(int xMiddle, int yMiddle, int barleyCap) {
 
-    objectKingdom.createBrewery(breweriesCounter * 3 + 1, xMiddle, yMiddle, CONST_RADIUS, barleyAmount);
+    objectKingdom.createBrewery(breweriesCounter * 3 + 1, xMiddle, yMiddle, CONST_RADIUS, barleyCap);
     breweriesCounter += 1;
 
     cout << "brewery creation succesfull: " << endl;
 }
 
-void createPub(int xMiddle, int yMiddle) {
-    objectKingdom.createPub(pubsCounter * 3 + 2, xMiddle, yMiddle, CONST_RADIUS);
+void createPub(int xMiddle, int yMiddle, int capacity) {
+    objectKingdom.createPub(pubsCounter * 3 + 2, xMiddle, yMiddle, CONST_RADIUS, capacity);
     pubsCounter += 1;
 
     cout << "pub creation succesfull: " << endl;
@@ -387,6 +422,44 @@ void moveNode(int id, int x, int y) {
 // ===                            Hull tools                                ===
 // ============================================================================
 
+// from Graham's algorythm
+struct Point {
+    int x, y;
+};
+
+int det(const Point& p, const Point& q, const Point& r) {
+    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+}
+
+//convex hull isnt working
+std::vector<Point> convexHull(std::vector<Point>& points) {
+    if (points.size() < 3) return {};
+
+    std::stack<Point> hull;
+    hull.push(points[0]);
+    hull.push(points[1]);
+
+    for (size_t i = 2; i < points.size(); ++i) {
+        while (hull.size() >= 2) {
+            Point second = hull.top(); hull.pop();
+            Point first = hull.top();
+            if (det(first, second, points[i]) < 0) {
+                hull.push(second);
+                break;
+            }
+        }
+        hull.push(points[i]);
+    }
+
+    std::vector<Point> result;
+    while (!hull.empty()) {
+        result.push_back(hull.top());
+        hull.pop();
+    }
+    return result;
+}
+
+
 void createHull(string points, int groundClass) {
     objectKingdom.addHull(groundClass);
     HullCounter += 1;
@@ -394,12 +467,25 @@ void createHull(string points, int groundClass) {
     std::stringstream ss(points);
     std::string token;
 
+    vector<Point> pointsV;
+
     while (std::getline(ss, token, ',')) {
         int x = std::stoi(token);
         std::getline(ss, token, ',');
         int y = std::stoi(token);
-        objectKingdom.hulls[HullCounter]->points.push_back({x, y});
+        pointsV.push_back({x, y});
     }
+
+    vector<Point> hull = convexHull(pointsV);
+    for (int i = 0; i < hull.size(); i++) {
+        objectKingdom.hulls[HullCounter]->points.push_back({hull[i].x, hull[i].y});
+    }
+
+    if (objectKingdom.hulls[HullCounter]->points.size() < points.size()/2) {
+        cout << "not convex hull" << endl;
+    }
+
+    //objectKingdom.hulls[HullCounter]->points.push_back({x, y});
     for (int i = 0; i < objectKingdom.hulls[HullCounter]->points.size(); i++) {
         cout << objectKingdom.hulls[HullCounter]->points[i].first << " " << objectKingdom.hulls[HullCounter]->points[i].second << endl;
     }
@@ -415,6 +501,39 @@ bool isInAnyHull(int x, int y) {
     return false;
 }
 
+int isInWhichHull(int x, int y) {
+    for (int i = 0; i < objectKingdom.hulls.size(); ++i) {
+        if (objectKingdom.rayCasting(objectKingdom.hulls[i]->points, std::make_pair(x, y))) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// ============================================================================
+// ===                            Deletion tools                            ===
+// ============================================================================
+void deleteHull(int id) {
+    objectKingdom.hulls.erase(objectKingdom.hulls.begin() + id);
+}
+
+void deleteRelation(int id1, int id2) {
+    shared_ptr<Node> from = objectKingdom.find(id1);
+    shared_ptr<Node> to = objectKingdom.find(id2);
+
+    for (int i = 0; i < objectKingdom.adjList[from].size(); i++)
+        if (objectKingdom.adjList[from][i].getToPtr() == to) {
+            objectKingdom.adjList[from].erase(objectKingdom.adjList[from].begin() + i);
+            return;
+        }
+
+
+    for (int i = 0; i < objectKingdom.adjList[to].size(); i++)
+        if (objectKingdom.adjList[to][i].getToPtr() == from) {
+            objectKingdom.adjList[to].erase(objectKingdom.adjList[to].begin() + i);
+            return;
+        }
+}
 
 
 EMSCRIPTEN_BINDINGS(my_module) {
@@ -433,8 +552,14 @@ EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("moveNode", &moveNode);
 
     // hull functions
+    emscripten::function("isInWhichHull", &isInWhichHull);
     emscripten::function("createHull", &createHull);
     emscripten::register_vector<int>("VectorInt");
+
+    // delete object functions
+    //emscripten::function("deleteNode", &deleteNode);
+    emscripten::function("deleteHull", &deleteHull);
+    emscripten::function("deleteRelation", &deleteRelation);
 
     // helper functions
     emscripten::function("getNodesCoordinates", &getNodesCoordinates);

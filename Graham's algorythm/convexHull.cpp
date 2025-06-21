@@ -12,6 +12,7 @@ struct Point {
     int x, y;
 };
 
+/*
 //random point for new standard of convex hull :)
 Point randomStartPoint(const std::vector<Point>& points) {
     return points[rand() % points.size()];
@@ -19,39 +20,6 @@ Point randomStartPoint(const std::vector<Point>& points) {
 
 bool isInsideCircle(const Point& center, const Point& p, int radius) {
     return std::sqrt(std::pow(p.x - center.x, 2) + std::pow(p.y - center.y, 2)) <= radius;
-}
-
-//determinant for orientation
-// 0 - collinear, >0 - clockwise, <0 - counterclockwise
-int det(const Point& p, const Point& q, const Point& r) {
-    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-}
-
-std::vector<Point> convexHull(std::vector<Point>& points) {
-    if (points.size() < 3) return {};
-
-    std::stack<Point> hull;
-    hull.push(points[0]);
-    hull.push(points[1]);
-
-    for (size_t i = 2; i < points.size(); ++i) {
-        while (hull.size() >= 2) {
-            Point second = hull.top(); hull.pop();
-            Point first = hull.top();
-            if (det(first, second, points[i]) < 0) {
-                hull.push(second);
-                break;
-            }
-        }
-        hull.push(points[i]);
-    }
-
-    std::vector<Point> result;
-    while (!hull.empty()) {
-        result.push_back(hull.top());
-        hull.pop();
-    }
-    return result;
 }
 
 //reader CSV
@@ -113,4 +81,38 @@ int main() {
     }
 
     return 0;
+}
+*/
+
+//determinant for orientation
+// 0 - collinear, >0 - clockwise, <0 - counterclockwise
+int det(const Point& p, const Point& q, const Point& r) {
+    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+}
+
+std::vector<Point> convexHull(std::vector<Point>& points) {
+    if (points.size() < 3) return {};
+
+    std::stack<Point> hull;
+    hull.push(points[0]);
+    hull.push(points[1]);
+
+    for (size_t i = 2; i < points.size(); ++i) {
+        while (hull.size() >= 2) {
+            Point second = hull.top(); hull.pop();
+            Point first = hull.top();
+            if (det(first, second, points[i]) < 0) {
+                hull.push(second);
+                break;
+            }
+        }
+        hull.push(points[i]);
+    }
+
+    std::vector<Point> result;
+    while (!hull.empty()) {
+        result.push_back(hull.top());
+        hull.pop();
+    }
+    return result;
 }

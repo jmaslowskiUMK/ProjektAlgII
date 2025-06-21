@@ -1,11 +1,12 @@
 #include "Pub.h"
 #include <iostream>
 
-Pub::Pub(int ID, int xMiddle,int yMiddle, int radius) {
+Pub::Pub(int ID, int xMiddle,int yMiddle, int radius, int capacity) {
 	this->ID = ID;
 	this->xMiddle = xMiddle;
 	this->yMiddle = yMiddle;
 	this->radius = radius;
+	this->capacity = capacity;
 }
 
 void Pub::print() {
@@ -18,3 +19,11 @@ void Pub::print() {
 }
 
 Pub::Pub() {}
+
+int Pub::getCapacity() {
+	return capacity;
+}
+
+void Pub::setCapacity(int capacity) {
+	this->capacity = capacity;
+}

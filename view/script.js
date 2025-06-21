@@ -211,7 +211,7 @@ document.querySelector("#addBreweryButton").addEventListener('click', async () =
         }
 
         // barley
-        let barley = parseInt(prompt("Wprowadz wydajność browaru", "0"));
+        let barley = parseInt(prompt("Wprowadz przepustowość browaru", "0"));
         if (barley == null || barley == "" || isNaN(barley) || barley <= 0) {
             alert("Wprowadzono niewłaściwą wydajnośc !");
             return;
@@ -358,15 +358,15 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
 
 
         // capacity popup
-        let capacity = parseInt(prompt("Wprowadz przepustowosc drogi", "0"));
-        if (capacity == null || capacity == "" || isNaN(capacity)) {
+        let capacity = parseInt(prompt("Wprowadz przepustowosc drogi (>0)", "0"));
+        if (capacity == null || capacity == "" || isNaN(capacity) || capacity <= 0) {
             alert("Wprowadzono niewłaściwą przepustowość !");
             return;
         }
 
         // repair_cost popup
         let repair_cost = parseInt(prompt("Wprowadz koszt naprawy drogi", "0"));
-        if (repair_cost == null || repair_cost == "" || isNaN(repair_cost)) {
+        if (repair_cost == null || repair_cost === "" || isNaN(repair_cost) || repair_cost < 0) {
             alert("Wprowadzono niewłaściwy koszt !");
             return;
         }
@@ -557,6 +557,133 @@ document.querySelector("#createHullButton").addEventListener('click', async () =
 // ===                            Manual deletion                           ===
 // ============================================================================
 
+// hull deletion
+document.querySelector("#deleteHullButton").addEventListener('click', () => {
+    if (CREATION_OCCUPIED) {
+        alert("Narzędzie usuwania otoczek jest już aktywne!");
+        return;
+    }
+
+    const canvas = document.getElementById("Map");
+    canvas.style.cursor = "crosshair";
+    CREATION_OCCUPIED = true;
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Kliknij bezpośrednio w mapę (canvas), aby zaznaczyć otoczkę.");
+            return;
+        }
+
+        const position = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
+        const hullID = parserInstance.isInWhichHull(Math.round(position.x), Math.round(position.y));
+
+        if (hullID === -1) {
+            alert("Nie kliknięto w żadną otoczkę.");
+            return;
+        } else {
+            const confirmDelete = confirm(`Czy na pewno chcesz usunąć otoczkę o ID ${hullID}?`);
+            if (confirmDelete) {
+                parserInstance.deleteHull(hullID);
+                draw();
+            }
+        }
+
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
+        CREATION_OCCUPIED = false;
+    };
+
+    canvas.addEventListener('click', handleClick);
+
+    // Escape to cancel
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+        }
+    }, { once: true });
+});
+
+// relation deletion
+document.querySelector("#deleteRelationButton").addEventListener('click', () => {
+    if (CREATION_OCCUPIED) {
+        alert("Narzędzie kreacji jest już wybrane!");
+        return;
+    }
+
+    const canvas = document.getElementById("Map");
+    canvas.style.cursor = "crosshair";
+
+    let firstID = null;
+
+    const nodes = parserInstance.getNodesCoordinates(
+        Math.floor(camera.x),
+        Math.floor(camera.y),
+        camera.zoom,
+        canvas.width,
+        canvas.height
+    );
+
+    CREATION_OCCUPIED = true;
+
+
+    alert("Wybierz dwa węzły między którymi relacja ma zostać usunięta");
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Kliknij bezpośrednio w mapę (canvas), aby zaznaczyć węzły.");
+            return;
+        }
+
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        const hit = nodes.find(node => {
+            const dx = node.x - x;
+            const dy = node.y - y;
+            return Math.sqrt(dx * dx + dy * dy) <= 20;
+        });
+
+        if (!hit) {
+            alert("Kliknij bliżej węzła.");
+            return;
+        }
+
+        if (firstID === null) {
+            firstID = hit.ID;
+            return;
+        }
+
+        const secondID = hit.ID;
+
+        if (secondID === firstID) {
+            alert("Nie można zaznaczyć tego samego węzła dwa razy.");
+            return;
+        }
+
+        const confirmDelete = confirm(`Czy na pewno chcesz usunąć relację między węzłami ${firstID} i ${secondID}?`);
+        if (confirmDelete) {
+            parserInstance.deleteRelation(firstID, secondID);
+            draw();
+        }
+
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
+        CREATION_OCCUPIED = false;
+    };
+
+    canvas.addEventListener('click', handleClick);
+
+    // Escape to cancel
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+        }
+    }, { once: true });
+});
 
 
 

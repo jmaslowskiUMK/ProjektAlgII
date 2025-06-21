@@ -10,7 +10,7 @@ private:
 	int beerAmount;
 public:
 	Brewery();
-	Brewery(int ID, int xMiddle,int yMiddle,int radius,int barleyAmount);
+	Brewery(int ID, int xMiddle,int yMiddle,int radius,int barleyCap);
 	int getBeerAmount();
 	void setBarley(int barley);
 	void print()override;

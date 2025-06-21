@@ -5,13 +5,14 @@ Brewery::Brewery() {
 	beerAmount = 0;
 }
 
-Brewery::Brewery(int ID, int xMiddle, int yMiddle, int radius, int barleyAmount) {
+Brewery::Brewery(int ID, int xMiddle, int yMiddle, int radius, int barleyCap) {
 	this->ID = ID;
 	this->xMiddle = xMiddle;
 	this->yMiddle = yMiddle;
 	this->radius = radius;
 	// ???
-	this->barleyAmount = barleyAmount;
+	this->barleyAmount = -1;
+	this->barleyCap = barleyCap;
 	this->beerAmount = barleyAmount;
 }
 
@@ -22,7 +23,6 @@ int Brewery::getBeerAmount() {
 void Brewery::setBarley(int barley) {
 	barleyAmount = barley;
 }
-
 
 void Brewery::print() {
 	std::cout << "x: " << xMiddle << std::endl;

@@ -45,8 +45,8 @@ public:
 	std::vector<Lane> augmentingPathBfs(std::shared_ptr<Node> source, std::shared_ptr<Node> sink, std::map<std::shared_ptr<Node>, std::vector<Lane> > adjListCopy);
 	int edmondsKarp(std::shared_ptr<Node> from, std::shared_ptr<Node> to);
 	void insertNodeSorted(std::vector<std::shared_ptr<Node>>& nodeVector, std::shared_ptr<Node> newNode);
-	std::shared_ptr<Pub> createPub(int ID, int xMiiddle,int yMiddle,int radius);
-	std::shared_ptr<Brewery> createBrewery(int ID, int xMiddle,int yMiddle,int radius,int barleyAmount);
+	std::shared_ptr<Pub> createPub(int ID, int xMiiddle,int yMiddle,int radius, int capacity);
+	std::shared_ptr<Brewery> createBrewery(int ID, int xMiddle,int yMiddle,int radius, int barleyCap);
 	std::shared_ptr<Intersection> createIntersection(int x,int y);
 	std::shared_ptr<Field> createField(int ID, int production,int xMiddle,int yMiddle,int radius);
 	std::shared_ptr<Node> find(int ID);
