@@ -23,6 +23,7 @@ Country objectKingdom;
 int fieldsCounter = 0;
 int breweriesCounter = 0;
 int pubsCounter = 0;
+int HullCounter = -1;
 
 
 extern "C" {
@@ -38,7 +39,7 @@ extern "C" {
         stringstream ss(data);
         string line;
 
-        int HullCounter = -1;
+        HullCounter = -1;
 
         while (getline(ss, line)) {
             stringstream lineStream(line);
@@ -135,7 +136,7 @@ string saveToCSV() {
 
     // Lanes
     for (auto& [fromNode, lanes] : objectKingdom.adjList) {
-        for (auto& lane : lanes) {  // <-- usunięto const
+        for (auto& lane : lanes) {
             auto from = lane.getFromPtr();
             auto to = lane.getToPtr();
             if (!from || !to) continue;
@@ -332,6 +333,10 @@ val calculateFlow() {
 }
 
 
+// ============================================================================
+// ===                            Manual Creation                           ===
+// ============================================================================
+
 void createField(int xMiddle, int yMiddle, int production) {
 
     objectKingdom.createField(fieldsCounter * 3 + 0, production, xMiddle, yMiddle, CONST_RADIUS);
@@ -367,12 +372,41 @@ void createRelation(int firstID, int secoundID, int capacity, int repair_cost) {
     }
 }
 
+
+// ============================================================================
+// ===                            Location change tools                     ===
+// ============================================================================
+
+void moveNode(int id, int x, int y) {
+    shared_ptr<Node> node = objectKingdom.find(id);
+    node->setX(x);
+    node->setY(y);
+}
+
+// ============================================================================
+// ===                            Hull tools                                ===
+// ============================================================================
+
+void createHull(string points, int groundClass) {
+    objectKingdom.addHull(groundClass);
+    HullCounter += 1;
+
+    std::stringstream ss(points);
+    std::string token;
+
+    while (std::getline(ss, token, ',')) {
+        int x = std::stoi(token);
+        std::getline(ss, token, ',');
+        int y = std::stoi(token);
+        objectKingdom.hulls[HullCounter]->points.push_back({x, y});
+    }
+    for (int i = 0; i < objectKingdom.hulls[HullCounter]->points.size(); i++) {
+        cout << objectKingdom.hulls[HullCounter]->points[i].first << " " << objectKingdom.hulls[HullCounter]->points[i].second << endl;
+    }
+    //objectKingdom.addHull(groundClass);
+}
+
 bool isInAnyHull(int x, int y) {
-    //cout << "------------------------\n";
-    //for (int i = 0; i < objectKingdom.nodeVector.size(); i++) {
-    //    cout << objectKingdom.nodeVector[i]->getName() << endl;
-    //}
-    //cout << "------------------------\n";
     for (int i = 0; i < objectKingdom.hulls.size(); ++i) {
         if (objectKingdom.rayCasting(objectKingdom.hulls[i]->points, std::make_pair(x, y))) {
             return true;
@@ -394,6 +428,13 @@ EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("createBrewery", &createBrewery);
     emscripten::function("createPub", &createPub);
     emscripten::function("createRelation", &createRelation);
+
+    // move object functions
+    emscripten::function("moveNode", &moveNode);
+
+    // hull functions
+    emscripten::function("createHull", &createHull);
+    emscripten::register_vector<int>("VectorInt");
 
     // helper functions
     emscripten::function("getNodesCoordinates", &getNodesCoordinates);

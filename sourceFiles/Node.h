@@ -11,9 +11,11 @@ public:
     virtual ~Node() = default;
     virtual void print();
     void printName();
-    int getID();
-    std::string getName();
     void setName(std::string name);
+    void setX(int xMiddle);
+    void setY(int yMiddle);
+    std::string getName();
+    int getID();
     int getX();
     int getY();
 };

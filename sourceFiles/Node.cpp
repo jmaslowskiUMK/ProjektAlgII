@@ -5,6 +5,14 @@ void Node::print() {
     std::cout << "Node " << std::endl;
 }
 
+void Node::setX(int xMiddle) {
+    this->xMiddle = xMiddle;
+}
+
+void Node::setY(int yMiddle) {
+    this->yMiddle = yMiddle;
+}
+
 int Node::getID() {
     return this->ID;
 }

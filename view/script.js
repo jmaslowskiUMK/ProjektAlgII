@@ -129,9 +129,9 @@ document.querySelector("#drawButton").addEventListener('click', () => {
 
 
 
-
-// MANUAL CREATION
-
+// ============================================================================
+// ===                            Manual Creation                           ===
+// ============================================================================
 
 // manual field creation
 document.querySelector("#addFieldButton").addEventListener('click', async () => {
@@ -289,26 +289,6 @@ document.querySelector("#addPubButton").addEventListener('click', async () => {
 });
 
 
-// function to calculate coordinates saved in memory
-function getWorldCoordinatesFromMouse(event, canvas, camX, camY, zoom) {
-    const rect = canvas.getBoundingClientRect();
-
-    const screenX = event.clientX - rect.left;
-    const screenY = event.clientY - rect.top;
-
-    const canvasWidth = canvas.width;
-    const canvasHeight = canvas.height;
-
-    const worldX = (screenX - canvasWidth * 0.5) / zoom + camX;
-    const worldY = (screenY - canvasHeight * 0.5) / zoom + camY;
-
-    return {
-        x: Math.round(worldX),
-        y: Math.round(worldY)
-    };
-}
-
-
 // manual relation creation
 document.querySelector("#addRelationButton").addEventListener('click', () => {
     if (CREATION_OCCUPIED) {
@@ -415,7 +395,194 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
     }, { once: true });
 });
 
+// ============================================================================
+// ===                            Location change tools                     ===
+// ============================================================================
 
+
+// manual change of node position
+document.querySelector("#moveNodeButton").addEventListener('click', () => {
+    if (CREATION_OCCUPIED) {
+        alert("Narzędzie jest już aktywne!");
+        return;
+    }
+
+    const canvas = document.getElementById("Map");
+    canvas.style.cursor = "crosshair";
+
+    let selectedNodeID = null;
+
+    const nodes = parserInstance.getNodesCoordinates(
+        Math.floor(camera.x),
+        Math.floor(camera.y),
+        camera.zoom,
+        canvas.width,
+        canvas.height
+    );
+
+    CREATION_OCCUPIED = true;
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Kliknij bezpośrednio w mapę (canvas), aby wybrać węzeł.");
+            return;
+        }
+
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        if (selectedNodeID === null) {
+            const hit = nodes.find(node => {
+                const dx = node.x - x;
+                const dy = node.y - y;
+                return Math.sqrt(dx * dx + dy * dy) <= 20;
+            });
+
+            if (!hit) {
+                alert("Kliknij bliżej węzła.");
+                return;
+            }
+
+            selectedNodeID = hit.ID;
+            console.log(`Wybrany węzeł do przeniesienia: ${selectedNodeID}`);
+            alert("Kliknij teraz w docelową pozycję na mapie.");
+            return;
+        }
+
+        // Drugi klik - ustawienie nowej pozycji
+        const position = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
+
+        // Przesuń węzeł przez wywołanie metody w parserInstance
+        parserInstance.moveNode(selectedNodeID, position.x, position.y);
+
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
+        draw();
+
+        CREATION_OCCUPIED = false;
+    };
+
+    canvas.addEventListener('click', handleClick);
+
+    // Escape to cancel node move
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+            console.log("Anulowano przenoszenie węzła (Escape)");
+        }
+    }, { once: true });
+});
+
+
+
+
+
+
+// ============================================================================
+// ===                            Hull Creation                             ===
+// ============================================================================
+
+// manual hull creation
+document.querySelector("#createHullButton").addEventListener('click', async () => {
+    if (CREATION_OCCUPIED) {
+        alert("Narzędzie kreacji jest już aktywne!");
+        return;
+    }
+
+    const canvas = document.getElementById("Map");
+    canvas.style.cursor = "crosshair";
+    CREATION_OCCUPIED = true;
+
+    const points = [];
+
+    // point count input
+    let pointCount = parseInt(prompt("Podaj liczbę punktów otoczki (min. 3):", "3"));
+    if (pointCount == null || isNaN(pointCount) || pointCount < 3) {
+        alert("Nieprawidłowa liczba punktów (min. 3)!");
+        CREATION_OCCUPIED = false;
+        canvas.style.cursor = "default";
+        return;
+    }
+
+    // ground class input
+    let groundClass = parseInt(prompt("Podaj klasę ziemi (2 - 5):", "2"));
+    if (groundClass == null || isNaN(groundClass) || groundClass < 2 || groundClass > 5) {
+        alert("Nieprawidłowa klasa ziemi (musi być od 2 do 5)!");
+        CREATION_OCCUPIED = false;
+        canvas.style.cursor = "default";
+        return;
+    }
+
+    alert(`Kliknij teraz ${pointCount} punktów na mapie, aby utworzyć otoczkę.`);
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Kliknij bezpośrednio w mapę (canvas), aby wskazać punkt otoczki.");
+            return;
+        }
+
+        const position = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
+        points.push(position.x);
+        points.push(position.y);
+
+        if (points.length >= pointCount * 2) {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+
+            //pointsInt32 = new Int32Array(points);
+
+            parserInstance.createHull(points.toString(), groundClass);
+
+            draw();
+            CREATION_OCCUPIED = false;
+        }
+    };
+
+    canvas.addEventListener('click', handleClick);
+
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+            console.log("Tworzenie otoczki anulowane (Escape)");
+        }
+    }, { once: true });
+});
+
+
+// ============================================================================
+// ===                            Manual deletion                           ===
+// ============================================================================
+
+
+
+
+
+
+// function to calculate coordinates saved in memory
+function getWorldCoordinatesFromMouse(event, canvas, camX, camY, zoom) {
+    const rect = canvas.getBoundingClientRect();
+
+    const screenX = event.clientX - rect.left;
+    const screenY = event.clientY - rect.top;
+
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
+
+    const worldX = (screenX - canvasWidth * 0.5) / zoom + camX;
+    const worldY = (screenY - canvasHeight * 0.5) / zoom + camY;
+
+    return {
+        x: Math.round(worldX),
+        y: Math.round(worldY)
+    };
+}
+
+
+// Arrows to move
 document.addEventListener("keydown", key => {
     if (key.keyCode == 38 || key.keyCode == 87) {
         camera.y -= 10 / camera.zoom;
