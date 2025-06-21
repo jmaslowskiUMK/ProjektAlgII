@@ -685,6 +685,69 @@ document.querySelector("#deleteRelationButton").addEventListener('click', () => 
     }, { once: true });
 });
 
+// node deletion
+document.querySelector("#deletePropertyButton").addEventListener('click', async () => {
+    if (CREATION_OCCUPIED) {
+        alert("Narzędzie usuwania wierzchołków jest już aktywne!");
+        return;
+    }
+
+    const canvas = document.getElementById("Map");
+    canvas.style.cursor = "crosshair";
+
+    // zaznacz, że narzędzie jest zajęte
+    CREATION_OCCUPIED = true;
+
+    const nodes = parserInstance.getNodesCoordinates(
+        Math.floor(camera.x),
+        Math.floor(camera.y),
+        camera.zoom,
+        canvas.width,
+        canvas.height
+    );
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Kliknij bezpośrednio w mapę (canvas), aby usunąć wierzchołek.");
+            return;
+        }
+
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        const hit = nodes.find(node => {
+            const dx = node.x - x;
+            const dy = node.y - y;
+            return Math.sqrt(dx * dx + dy * dy) <= 20;
+        });
+
+        if (!hit) {
+            alert("Nie znaleziono wierzchołka w pobliżu kliknięcia.");
+            return;
+        }
+
+        const confirmDelete = confirm(`Czy na pewno chcesz usunąć wierzchołek o ID ${hit.ID}?`);
+        if (confirmDelete) {
+            parserInstance.deleteNode(hit.ID);
+            draw();
+        }
+
+        // posprzątaj
+        canvas.removeEventListener('click', handleClick);
+        canvas.style.cursor = "default";
+        CREATION_OCCUPIED = false;
+    };
+
+    canvas.addEventListener('click', handleClick);
+
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+        }
+    }, { once: true });
+});
 
 
 

@@ -345,7 +345,7 @@ val calculateFlow() {
 		}
 
 	}
-	std::cout<<objectKingdom.edmondsKarpManyToMany(sources,sinks, 1)<<std::endl;
+	std::cout << "1: " <<objectKingdom.edmondsKarpManyToMany(sources,sinks, 1)<<std::endl;
 
 	sources.clear();
 	sinks.clear();
@@ -421,44 +421,10 @@ void moveNode(int id, int x, int y) {
 // ============================================================================
 // ===                            Hull tools                                ===
 // ============================================================================
-
-// from Graham's algorythm
 struct Point {
-    int x, y;
+    int x;
+    int y;
 };
-
-int det(const Point& p, const Point& q, const Point& r) {
-    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-}
-
-//convex hull isnt working
-std::vector<Point> convexHull(std::vector<Point>& points) {
-    if (points.size() < 3) return {};
-
-    std::stack<Point> hull;
-    hull.push(points[0]);
-    hull.push(points[1]);
-
-    for (size_t i = 2; i < points.size(); ++i) {
-        while (hull.size() >= 2) {
-            Point second = hull.top(); hull.pop();
-            Point first = hull.top();
-            if (det(first, second, points[i]) < 0) {
-                hull.push(second);
-                break;
-            }
-        }
-        hull.push(points[i]);
-    }
-
-    std::vector<Point> result;
-    while (!hull.empty()) {
-        result.push_back(hull.top());
-        hull.pop();
-    }
-    return result;
-}
-
 
 void createHull(string points, int groundClass) {
     objectKingdom.addHull(groundClass);
@@ -476,7 +442,8 @@ void createHull(string points, int groundClass) {
         pointsV.push_back({x, y});
     }
 
-    vector<Point> hull = convexHull(pointsV);
+    //vector<Point> hull = convexHull(pointsV);
+    vector<Point> hull = pointsV;
     for (int i = 0; i < hull.size(); i++) {
         objectKingdom.hulls[HullCounter]->points.push_back({hull[i].x, hull[i].y});
     }
@@ -535,6 +502,19 @@ void deleteRelation(int id1, int id2) {
         }
 }
 
+void deleteNode(int id) {
+    shared_ptr<Node> delNode = objectKingdom.find(id);
+    objectKingdom.adjList[delNode].clear();
+    cout << "node lines deleted" << endl;
+
+    for (int i = 0; objectKingdom.nodeVector.size(); i++) {
+        for (int j = 0; objectKingdom.adjList[objectKingdom.nodeVector[i]].size(); j++) {
+            if (objectKingdom.adjList[objectKingdom.nodeVector[i]][j].getToPtr() == delNode) {
+                objectKingdom.adjList[objectKingdom.nodeVector[i]].erase(objectKingdom.adjList[objectKingdom.nodeVector[i]].begin() + j);
+            }
+        }
+    }
+}
 
 EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("getRelationsAndCoordinates", &getRelationsAndCoordinates);
@@ -557,7 +537,7 @@ EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::register_vector<int>("VectorInt");
 
     // delete object functions
-    //emscripten::function("deleteNode", &deleteNode);
+    emscripten::function("deleteNode", &deleteNode);
     emscripten::function("deleteHull", &deleteHull);
     emscripten::function("deleteRelation", &deleteRelation);
 

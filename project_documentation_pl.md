@@ -50,7 +50,7 @@ Aby zminimalizować koszty napraw dróg przy zachowaniu maksymalnego przepływu,
 
 - **Algorytm Cycle Cancelling** (`cycleCancelling`): Metoda `cycleCancelling` jest używana do optymalizacji kosztów transportu przy zachowaniu maksymalnego przepływu. Algorytm ten działa poprzez iteracyjne znajdowanie i anulowanie cykli o ujemnym koszcie w grafie rezydualnym, co pozwala na zmniejszenie łącznych kosztów przepływu bez zmiany jego wartości.
 
-Do znajdowania cykli o ujemnym koszcie w algorytmie Cycle Cancelling wykorzystano następujący algorytm: 
+Do znajdowania cykli o ujemnym koszcie w algorytmie Cycle Cancelling wykorzystano następujący algorytm:
 
 - **Algorytm Bellmana-Forda** (`bellmanFord`): Służy do znajdowania najkrótszych ścieżek w grafie, nawet jeśli występują w nim krawędzie o ujemnych wagach. 
 

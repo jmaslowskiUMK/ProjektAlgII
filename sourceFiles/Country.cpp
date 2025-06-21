@@ -138,9 +138,9 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
         }
 
         for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-            auto sourceField = std::dynamic_pointer_cast<Brewery>(sink);
-            if(sourceField){
-                Lane lane(sink, sourceField, sourceField->getBarleyCap(), 0);
+            auto sinkBrew = std::dynamic_pointer_cast<Brewery>(sink);
+            if(sinkBrew){
+                Lane lane(sinkBrew, superSink, sinkBrew->getBarleyCap(), 0);
                 addRelationship(adjListCopy, lane);
             }
         }
@@ -149,21 +149,22 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
         superSink = std::make_shared<Pub>();
 
         for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
-            auto sourceField = std::dynamic_pointer_cast<Brewery>(source);
-            if(sourceField){
-                Lane lane(superSource, sourceField, sourceField->getBeerAmount(), 0);
+            auto sourceBrew = std::dynamic_pointer_cast<Brewery>(source);
+            if(sourceBrew){
+                Lane lane(superSource,sourceBrew, sourceBrew->getBeerAmount(), 0);
                 addRelationship(adjListCopy, lane);
             }
         }
 
         for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-        auto sourceField = std::dynamic_pointer_cast<Pub>(sink);
-            if(sourceField){
-                 Lane lane(sink, sourceField,sourceField->getCapacity() , 0);
+        auto sinkPub = std::dynamic_pointer_cast<Pub>(sink);
+            if(sinkPub){
+                 Lane lane(sinkPub, superSink, sinkPub->getCapacity(), 0);
                 addRelationship(adjListCopy, lane);
             }
         }
-    }
+
+    } 
 
     while (true) {
     std::vector<Lane> path = augmentingPathBfs(superSource, superSink, adjListCopy);
