@@ -6,6 +6,7 @@ class Brewery: public Node
 {
 private:
 	int barleyAmount;
+	int barleyCap;
 	int beerAmount;
 public:
 	Brewery();
@@ -14,6 +15,7 @@ public:
 	void setBarley(int barley);
 	void print()override;
 	void setBeer(int x);
-	void conversion();
+	void conversion(int x);
+	int getBarleyCap();
 };
 

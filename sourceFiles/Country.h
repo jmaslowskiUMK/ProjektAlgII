@@ -50,7 +50,7 @@ public:
 	std::shared_ptr<Intersection> createIntersection(int x,int y);
 	std::shared_ptr<Field> createField(int ID, int production,int xMiddle,int yMiddle,int radius);
 	std::shared_ptr<Node> find(int ID);
-	int edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec);
+	int edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec, int convRate);
 	int dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec);
 	void printContent();
 	int sendFlow(std::shared_ptr<Node> u, std::shared_ptr<Node> sink, int flow,std::map<std::shared_ptr<Node>, std::vector<Lane>>& adjListCopy, std::unordered_map<std::shared_ptr<Node>, int>& next); 

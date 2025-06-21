@@ -115,7 +115,7 @@ int Country::edmondsKarp(std::shared_ptr<Node> from, std::shared_ptr<Node> to) {
     return max_flow;
 }
 
-int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec){
+int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate){
     int max_flow = 0;
     std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
 
@@ -138,8 +138,11 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
         }
 
         for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-            Lane lane(sink, superSink, INT_MAX, 0);
-            addRelationship(adjListCopy, lane);
+            auto sourceField = std::dynamic_pointer_cast<Brewery>(sink);
+            if(sourceField){
+                Lane lane(sink, sourceField, sourceField->getBarleyCap(), 0);
+                addRelationship(adjListCopy, lane);
+            }
         }
     }else{
         superSource = std::make_shared<Brewery>();
@@ -204,7 +207,7 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
                 if(el2.getToPtr().get() == superSink.get()){
                     auto brew = std::dynamic_pointer_cast<Brewery>(el);
                     brew->setBarley(el2.getFlow());
-                    brew->conversion();
+                    brew->conversion(convRate);
                     break;
                 }
             }

@@ -37,6 +37,11 @@ void Brewery::setBeer(int x) {
 	beerAmount = x;
 }
 
-void Brewery::conversion(){
-	beerAmount = barleyAmount*5;
+void Brewery::conversion(int x=1){
+	beerAmount = barleyAmount*x;
 }
+
+int Brewery::getBarleyCap(){
+	return barleyCap;
+}
+
