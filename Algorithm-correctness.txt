@@ -1,0 +1,336 @@
+The BFS algorithm performs a correct search across the graph, starting from a given vertex. It uses a queue to process vertices in the order in which they are discovered, and a visited vector to avoid visiting the same nodes multiple times. For each vertex retrieved from the queue, the algorithm checks all its neighbors — if the neighbor has not yet been visited (find function), it is added to the queue. When a vertex is processed, its name is printed. The algorithm works correctly because each vertex is visited exactly once, and the queue provides the typical BFS order of visits by levels. Total complexity O(V × V + E) 
+
+BFS(startingNode): visited ← empty vector q ← empty queue q.enqueue(startingNode) 
+
+while q is not empty: 
+    curr ← q.front() 
+    visited.push_back(curr) 
+ 
+    for every adjacent of curr: 
+        if not in visited: 
+            q.enqueue(adjacent) 
+ 
+    print curr 
+    q.dequeue() 
+  
+
+The Edmonds Karp algorithm is an extended version of the BFS-based Ford-Fulkerson algorithm for determining the maximum flow in a network. It works iteratively as long as there is a zooming path from source to sink. 
+
+In each iteration of the loop, the algorithm: 
+
+1.) Finds a magnifying path. 
+
+2.) Determines the minimum possible flow in this minFlow path. 
+
+3.) Updates flows: increases the flow in the path by minFlow, and adds or updates reverse edges as needed. 
+
+4.) Sums the minFlow to max_flow. 
+
+Using adjListCopy's adjListCopy neighbor list ensures that the original graph structure isn't modified. Adding reverse edges allows flows to be rolled back correctly, which is crucial for the algorithm to work. The algorithm is valid because it guarantees that with each iteration it finds a magnifying path using the shortest (counting the number of edges) possible path, which ensures its completion and compliance with the maximum flow theorem. The time complexity is O(V × E²). For each zooming path (up to O(E×V) times), BFS runs at O(E) time, and the flows update is linearly with respect to the path length. 
+
+EdmondsKarp(from, to): max_flow ← 0 adjListCopy 
+
+while argumenting path exist from source to sink: 
+    path ← augmentingPathBfs(from, to, adjListCopy) 
+    if path is empty: 
+        brake 
+ 
+    minFlow ← min flow on path 
+ 
+    for e in path: 
+        minFlow add to flow 
+        reduce flow on reverse edge by minFlow 
+        if reverse edge is missing add it 
+ 
+    max_flow ← max_flow + minFlow 
+ 
+return max_flow 
+  
+
+The crosses function checks whether the radius segment (formed by the point point and the q point) intersects with the edge segment of the polygon pi–pi1. In addition, it takes into account special cases, such as the point lying exactly on the edge. The function is based on a determinant sign (det function), which determines the position of a point relative to a vector – whether it is on the left, right or on a line.  
+
+Main cases: 
+
+If point–q intersects pi–pi1, 1 is returned. 
+
+If the point lies exactly on the edge of pi–pi1, 2 is returned (so that ray casting can assume that the point belongs inside the polygon). 
+
+If the point pi lies exactly on the radius but does not cause an intersection, the additional points pi2 and pi_1 are used to decide whether to treat it as an intersection (the angle rule). 
+
+The algorithm is correct because it analyzes orientations (using determinants) and covers all the cases relevant in the ray casting algorithm, used, m.in, for example, to test whether a point lies inside a polygon. Function works in constant time O(1) 
+
+crosses(point, q, pi, pi1, pi2, pi_1): d1 ← det(point, q, pi) d2 ← det(point, q, pi1) d3 ← det(pi, pi1, point) d4 ← det(pi, pi1, q) 
+
+if (d1 > 0 and d2 < 0 or d1 < 0 and d2 > 0) and 
+   (d3 > 0 and d4 < 0 or d3 < 0 and d4 > 0): 
+    return 1  //cross 
+ 
+if d3 == 0 and point in [pi, pi1]: 
+    return 2 //point on edge 
+ 
+if d1 == 0 and pi on radius point→q:  
+    d5 ← det(point, q, pi2) 
+    d6 ← det(point, q, pi_1) 
+    if d5 > 0 and d6 < 0 or d5 < 0 and d6 > 0: 
+        return 1 
+    else: 
+        return 0 
+ 
+return 0 
+  
+
+rayCasting checks whether a point is inside a polygon set by a list of pointVec points. The algorithm is based on the ray casting method – it draws a ray to the right of a given point and counts the number of times this ray crosses the edges of the polygon. If the number of intersections is odd, the point lies inside the figure; if even – the point is outside. 
+
+In addition, the feature: 
+
+First, it checks if the point is inside the polygon's bounding box – if not, it immediately returns false, which optimizes performance. 
+
+For each edge (pi, pi+1), it calculates the intersection with the radius using the crosses helper function, which returns: 
+
+1. if there is a cut, 
+
+2. if the point lies exactly on the edge – then rayCasting immediately returns true. 
+
+The algorithm works correctly because it covers all cases: intersection, boundary case, and extreme cases (e.g. a point outside the range of a polygon). Complexity is O(n), where n is the number of vertices. 
+
+rayCasting(polygon, point): minX, maxX ← min i max x in polygon minY, maxY ← min i max y in polygon 
+
+if point not in [minX, maxX] or [minY, maxY]: 
+    return false 
+ 
+q ← (maxX + 1, point.y) 
+crossCount ← 0 
+ 
+for i in 0 to n-1: 
+    pi ← polygon[i] 
+    pi1 ← polygon[(i+1)%n] 
+    pi2 ← polygon[(i+2)%n] 
+    pi_1 ← polygon[(i-1+n)%n] 
+    result ← crosses(point, q, pi, pi1, pi2,  pi_1) 
+ 
+    if result == 2: 
+        return true  // point on edge 
+    crossCount += result 
+ 
+return crossCount % 2 == 1 
+  
+
+The mcmf function implements the algorithm of the minimum cost of the maximum flow in the directed network. It takes two node vectors: source and sink. It creates a copy of the graph and adds two special nodes—a super source and a super sink—connecting them to all sources and sinks, respectively: infinite-bandwidth, zero-cost edges, and zero-bandwidth return edges. It initializes the potentials of all nodes to zero, which modify the edge costs, preventing negative cycling. Then, in a loop, it looks for the cheapest path from the super source to the super sink using a modified Dijkstra algorithm with reduced costs. If the path does not exist, the algorithm exits. When a path is found, it updates the potentials and increases the flow of the path by the minimum available bandwidth, while also updating the total cost and flows at the return edges. The function returns the minimum cost of the maximum flow in the network. The introduction of a super source and super sink allows you to support multiple sources and sinks. The complexity of the algorithm is O(F * E log V), where F is the maximum flow, E is the number of edges, and V is the number of vertices. 
+
+MCMF(sourceVec, sinkVec): adjListCopy = copy of original graph (adjList) 
+
+superSource = new node 
+superSink = new node 
+ 
+// Add edges from superSource to all sources with infinite capacity 
+for source in sourceVec: 
+    add edge (superSource -> source) with capacity ∞ and cost 0 
+    add reverse edge (source -> superSource) with capacity 0 and cost 0 
+ 
+// Add edges from all sinks to superSink with infinite capacity 
+for sink in sinkVec:  
+    add edge (sink -> superSink) with capacity ∞ and cost 0 
+    add reverse edge (superSink -> sink) with capacity 0 and cost 0 
+ 
+total_cost = 0 
+potential[node] = 0 for each node in adjListCopy 
+ 
+while true: 
+    dist[node] = ∞ for all nodes 
+    dist[superSource] = 0 
+    parent[node] = null 
+    parent_edge[node] = null 
+     
+    // Use Dijkstra with potentials to find the shortest path in terms of cost 
+    priority_queue = empty priority queue 
+    priority_queue.insert((0, superSource)) 
+     
+    while priority_queue is not empty: 
+        (d, u) = priority_queue.pop() 
+        if d > dist[u]: continue 
+         
+        for each edge e from node u: 
+            v = e.to 
+            res_capacity = e.capacity - e.flow 
+            if res_capacity <= 0: continue 
+             
+            reduced_cost = e.cost + potential[u] - potential[v] 
+             
+            if dist[v] > dist[u] + reduced_cost: 
+                dist[v] = dist[u] + reduced_cost 
+                parent[v] = u 
+                parent_edge[v] = e 
+                priority_queue.insert((dist[v], v)) 
+     
+    if dist[superSink] == ∞: // no path found from superSource to superSink 
+        break 
+     
+    // Update potentials 
+    for each node: 
+        if dist[node] < ∞: 
+            potential[node] += dist[node] 
+     
+    // Find minimum residual capacity along the path from superSink to superSource 
+    path_flow = ∞ 
+    current = superSink 
+    while current != superSource: 
+        e = parent_edge[current] 
+        path_flow = min(path_flow, e.capacity - e.flow) 
+        current = parent[current] 
+     
+    // Augment flow along the path 
+    current = superSink 
+    while current != superSource: 
+        e = parent_edge[current] 
+        e.flow += path_flow 
+        // Find reverse edge and decrease its flow 
+        e_rev = reverse edge of e 
+        e_rev.flow -= path_flow 
+        total_cost += path_flow * e.cost 
+        current = parent[current] 
+ 
+return total_cost 
+  
+
+The Graham Scan algorithm finds the convex envelope of a set of points on a plane, i.e. the smallest convex polygon containing all the points. First, the starting point with the smallest y coordinate (and in the case of a tie, with the smallest x coordinate) is selected, which definitely belongs to the envelope. Then the remaining points are sorted in ascending order by the polar angle in relation to the starting point, and at equal angles by the distance from it. Once sorted, the algorithm cycles through the points, adding them to the stack while removing those that cause turns to the right, ensuring that only the points that make up the convex polygon remain. Thanks to this, the algorithm correctly returns the convex halo. The time complexity of the algorithm is O(n log n), where n is the number of points, of which the dominant stage is the sorting of points, while the construction of the envelope is linear with respect to the number of points. 
+
+function GrahamScan(points): if number of points < 3: return points 
+
+start = point with lowest y (and lowest x if tie) 
+ 
+sort points by polar angle from start; break ties by distance to start 
+ 
+stack = empty stack 
+ 
+for point in sorted points: 
+    while stack has at least 2 points and orientation(stack[-2], stack[-1], point) is not a left turn: 
+        pop from stack 
+    push point onto stack 
+ 
+return stack 
+  
+
+The search function searches the file line by line, checking whether the line contains the desired pattern. Optionally encodes the text and pattern with the Huffman algorithm. Depending on the search mode, it uses the Rabin-Karp algorithm or KMP. The lines containing the pattern are saved to a new file. By encoding the text and pattern with the same Huffman dictionary (huffman_coding == True), it is possible to correctly compare encoded strings. The search is done using proven RK or KMP algorithms, which guarantee the detection of all matches. RK verifies the results of hash comparisons, and KMP relies on the prefix table and compares characters deterministically. 
+
+n is the number of lines, m is the length of the line, p is the length of the pattern, you is the number of unique characters: 
+
+Huffman Coding: O(n·m + u log u) 
+
+Rabin-Karp/KMP for all lines: O(n·( m + p)) 
+
+Total Complexity: O(n·( m + p) + u log u) 
+
+search(file_name, pattern, search_type, huffman_coding, save_as): 
+
+text = read_data(file_name)  # read lines from file 
+ 
+if huffman_coding is True: 
+    data = copy of text 
+    append pattern to data 
+ 
+    data_huff = huffman(data)  # encode lines and pattern with Huffman 
+    text_ready = all elements of data_huff except last 
+    pattern_ready = last element of data_huff 
+else: 
+    text_ready = text 
+    pattern_ready = pattern 
+ 
+q = 109  //number for Rabin-Karp 
+ 
+if file save_as exists: 
+    delete file save_as 
+ 
+num_of_lines_containing_pattern = 0 
+ 
+for i from 0 to length of text - 1: 
+    line = text_ready[i] 
+ 
+    if search_type == 'rk': 
+        result = rabin_karp(pattern_ready, line, q, huffman_coding) 
+    else if search_type == 'kmp': 
+        result = kmp(pattern_ready, line) 
+ 
+    if result is True: 
+        open file save_as in append mode 
+        write original text line text[i] to file 
+        increment num_of_lines_containing_pattern by 1 
+return num_of_lines_containing_pattern 
+  
+
+The huffman_codes algorithm creates optimal binary codes for characters based on their frequency. First, it adds characters to the priority queue, and then connects the two rarest nodes until it forms a Huffman tree. It then assigns codes to characters based on the paths in the tree. Correctness comes from the mathematical optimality of Huffman coding—it minimizes the average length of the code. The complexity is O(n log n), where n is the number of unique characters, mainly due to priority queue operations. The tree traversal after coding is linear O(n). 
+
+HuffmanCodes(freq): create an empty priority queue pq index = 0 
+
+for each character and its frequency in freq: 
+    insert (frequency, index, new Node(character)) into pq 
+    index += 1 
+ 
+while pq has more than one element: 
+    left = extract_min from pq 
+    right = extract_min from pq 
+ 
+    create new node with value = left.frequency + right.frequency 
+    set new.left = left node 
+    set new.right = right node 
+ 
+    insert (new.value, index, new node) into pq 
+    index += 1 
+ 
+root = extract_min from pq (this is the root of Huffman tree) 
+codes = empty map 
+code = empty string 
+ 
+call preorder_traversal(root, codes, code) to assign binary codes 
+ 
+return codes 
+  
+
+The Rabin-Karp algorithm is used to search for a pattern in text using a hash function. It works by comparing the hashes of the pattern and subsequent fragments of text of the length of the pattern. When the hashes match, a thorough character-by-character comparison takes place, eliminating false positives (hash collisions). This ensures that it always finds all exact occurrences of the pattern in the text. The average complexity is O(n + m), where n is the length of the text and m is the length of the pattern — we calculate the hashes and compare them linearly. In the worst-case scenario, when multiple hash collisions occur, it can drop to O(n*m) due to detailed character comparison. 
+
+rabin_karp(pattern, text, q, use_huffman): convert text and pattern to lowercase 
+
+if not use_huffman: 
+    convert text and pattern characters to ASCII codes 
+else: 
+    use text and pattern as is 
+ 
+pattern_hash = hash(pattern) mod q 
+pattern_length = length of pattern 
+ 
+for i in range from 0 to (length of text - pattern_length): 
+    substring = text[i to i + pattern_length] 
+ 
+    if hash(substring) mod q == pattern_hash:  
+        if substring exactly matches pattern: 
+            return True 
+ 
+return False 
+  
+
+The KMP (Knuth-Morris-Pratt) algorithm is used to efficiently search for a pattern in text. It works by using a prefix-suffix (pi) array, which for each pattern prefix stores the length of the longest proper prefix, which is also the suffix of that prefix. Thanks to this, when comparing a pattern with text, the algorithm does not go back in the text, but shifts the pattern by the optimal number of characters, avoiding repeated comparisons. The algorithm guarantees to find a pattern in the text, if any, by returning True on the first match. With an array, pi doesn't miss any potential match spots while eliminating repetitive comparisons for accurate and complete searches. Preparing the prefix-suffix array takes O(m), where m is the length of the pattern. Then, the text search itself has a complexity of O(n), where n is the length of the text. The total complexity is therefore O(n + m). The algorithm is therefore linear with respect to the length of the text and the pattern. 
+
+KMP(pattern, text): pi = compute_prefix_function(pattern) j = 0 // pattern index 
+
+for i in 0 to length(text)-1: 
+    while j > 0 and text[i] != pattern[j]: 
+        j = pi[j-1] 
+    if text[i] == pattern[j]: 
+        j += 1 
+    if j == length(pattern): 
+        return True  // pattern found 
+        j = pi[j-1] 
+ 
+return False  // pattern not found 
+  
+
+function compute_prefix_function(pattern): pi = array of zeros with length = length(pattern) k = 0 
+
+for q in 1 to length(pattern)-1: 
+    while k > 0 and pattern[k] != pattern[q]: 
+        k = pi[k-1] 
+    if pattern[k] == pattern[q]: 
+        k += 1 
+    pi[q] = k 
+ 
+return pi 
+ 
