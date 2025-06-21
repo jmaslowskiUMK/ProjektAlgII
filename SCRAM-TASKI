@@ -8,12 +8,12 @@ Mateusz:
   - funkcje getCoordinates i getRelations połączyć <- wykonane
   - koszt naprawy drogi dodac do generatora <- wykonane
   - TESTY i dokumentacja testów
-  - wprowadzanie danych przez użytkownika przez GUI
-  - zapis danych (wspólnie z Kubą)
+  - wprowadzanie danych przez użytkownika przez GUI <- prawie
+  - zapis danych (wspólnie z Kubą) <- wykonane
 
-  - GUI do końca - wygodny wybór elementów
-  - GUI otoczek
-  - zapis do pliku danych
+  - GUI do końca - wygodny wybór elementów <- prawie
+  - GUI otoczek <- prawie
+  - zapis do pliku danych <- wykonane
 
   - TESTY
 Kacper:
@@ -23,16 +23,16 @@ Kacper:
   - generowanie otoczek w pythonie (bazowy generator) (piątek pls :) ) <-
   - dalsza praca z otoczkami (image processing distance map)
   
-  - poprawność i złożoność naszych metod()
+  - poprawność i złożoność naszych metod() <- wykonane
 KKuba:
   - Karp <- wykonane
   - algorytm Dynica lub + <- wykonane
   - USTAL KONKRETNE ŹRÓDŁO I ZLEW <- wykonane
-  - ALGORYTM Z KOSZTAMI
+  - ALGORYTM Z KOSZTAMI <- wykonane
   - zmiana nazw "capacity"
   - przechowywanie danych (?)
 
-  - ReyCasting
+  - ReyCasting <- wykonane
   - TESTY
 Milena:
   - Udokumentowanie stosu technologicznego
@@ -41,16 +41,16 @@ Milena:
   - DOkumentacja 
   - algorytmy tekstowe <- wykonane
   - kody Hoffmana <- wykonane
-  - wykorzystanie kodów Hoffmana
-  - poprawienie funkcji Country.find()
+  - wykorzystanie kodów Hoffmana <- wykonane
+  - poprawienie funkcji Country.find() <- wykonane
 
-  - metody szukania i dokumentacja
+  - metody szukania i dokumentacja <- wykonane(?)
 TESTY:
   - Algorytmy przepływu <- wykonane
   - duże liczby - NA RAZIE ZA MAŁE
   - przypadki graniczne (0 fieldow)
   - cześć dane z generatora oraz dane ustawione <- wykonane
-  - czy otoczki dobrze wykrywają punkty
+  - czy otoczki dobrze wykrywają punkty <- wykonane
 
 
 Hasło do naprawy otoczek: distance map image processing
