@@ -6,8 +6,77 @@ int main() {
 
 	std::vector<std::shared_ptr<Node>> sinks;
 	std::vector<std::shared_ptr<Node>> sources;
-/*	for(auto el:polska.nodeVector){
+
+	auto a = polska.createField(2,4, 1, 4, 4);
+	a->setName("a");
+	auto b = polska.createField(2,3, 1, 4, 4);
+	b->setName("b");
+	auto c = polska.createField(2,2, 1, 4, 4);
+	c->setName("c");
+
+	auto e = polska.createBrewery(7,1, 4, 5, 155);
+	e->setName("e");
+	auto f = polska.createBrewery(7,1, 4, 5, 155);
+	f->setName("f");
+	auto g = polska.createBrewery(7,1, 4, 5, 155);
+	g->setName("g");
+
+	auto h = polska.createPub(1,1, 2, 4);
+	h->setName("h");
+	auto i = polska.createPub(3,2, 3, 5);
+	i->setName("i"); 
+	
+	Lane lane1(a,e ,1, 1);
+	polska.addRelationship(lane1);
+
+	Lane lane2(b, f,1,1);
+	polska.addRelationship(lane2);
+	
+	Lane lane3(b, g, 3,1);
+	polska.addRelationship(lane3); 
+	
+	Lane lane4(c, f, 1,4);
+	polska.addRelationship(lane4); 
+	
+	Lane lane5(e, i, 1,1);
+	polska.addRelationship(lane5); 
+	
+	Lane lane6(f,h,2,1);
+	polska.addRelationship(lane6);
+
+	Lane lane7(f,i, 3,1);
+	polska.addRelationship(lane7);
+	
+	Lane lane8(g, i,4,1);
+	polska.addRelationship(lane8);
+	
+//	sources.push_back(pubMentzena);
+//	sinks.push_back(pubPodKogutem);
+
+//	std::cout<<polska.dinic(sources,sinks)<<std::endl;
+//	polska.cycleCancelling(sinks,sources);
+
+//	std::cout<<polska.mcmf(sources,sinks);
+
+
+	for(auto el:polska.nodeVector){
 		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);	
+		}
+	}
+	for(auto el:polska.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sinks.push_back(el);	
+			} 
+
+	}
+	std::cout<<polska.edmondsKarpManyToMany(sources,sinks)<<std::endl;
+
+	sources.clear();
+	sinks.clear();
+
+	for(auto el:polska.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
 			sources.push_back(el);	
 		}
 	}
@@ -16,61 +85,9 @@ int main() {
 			sinks.push_back(el);	
 			} 
 
-	} 
-	*/
-
-
-	auto pubMentzena = polska.createPub(1,1, 2, 4);//A
-	pubMentzena->setName("pubMentzena");
-	auto lysePole = polska.createField(2,1, 1, 4, 4);//B 
-	lysePole->setName("lysePole");
-	auto pubULecha = polska.createPub(3,2, 3, 5);//C
-	pubULecha->setName("pubULecha"); 
-	auto pubPodKogutem = polska.createPub(4,4, 1, 4);//D
-	pubPodKogutem->setName("pubPodKogutem");
-	/*auto zlotePole = polska.createField(5,0, 0, 5, 5);//E
-	zlotePole->setName("zlotePole");
-	auto las = polska.createField(6,3, 2, 41, 5);//F
-	las->setName("las");
-	auto browarWarka = polska.createBrewery(7,1, 4, 5, 155);//G
-	browarWarka->setName("browarWarka");
-*/
-	Lane lane1(pubMentzena, lysePole, 2, 1);
-	polska.addRelationship(lane1);//A B
-
-	Lane lane2(pubMentzena, pubULecha,4,1);
-	polska.addRelationship(lane2);//A C
+	}
+	std::cout<<polska.edmondsKarpManyToMany(sources,sinks)<<std::endl;
 	
-	Lane lane3(lysePole, pubULecha, 3,1);
-	polska.addRelationship(lane3);//B C 
-	
-	Lane lane4(lysePole, pubPodKogutem, 1,4);
-	polska.addRelationship(lane4);//B D 
-	
-	Lane lane5(pubULecha, pubPodKogutem, 6,1);
-	polska.addRelationship(lane5);//C D 
-/*	
-	Lane lane6(pubULecha,las,15,1);
-	polska.addRelationship(lane6);//E F
-
-	Lane lane7(pubULecha,browarWarka, 10,1);
-	polska.addRelationship(lane7);//C G
-	
-	Lane lane8(pubPodKogutem, browarWarka,10,1);
-	polska.addRelationship(lane8);//D G
-	
-	Lane lane9(browarWarka, zlotePole, 10,1);
-	polska.addRelationship(lane9);//G E
-*/	
-	sources.push_back(pubMentzena);
-	sinks.push_back(pubPodKogutem);
-
-//	std::cout<<polska.edmondsKarpManyToMany(sources,sinks)<<std::endl;;
-//	std::cout<<polska.dinic(sources,sinks)<<std::endl;
-//	polska.cycleCancelling(sinks,sources);
-
-	std::cout<<polska.mcmf(sources,sinks);
-
 	return 0;
 }
 

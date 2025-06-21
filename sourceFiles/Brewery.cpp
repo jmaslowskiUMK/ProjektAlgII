@@ -36,3 +36,7 @@ void Brewery::print() {
 void Brewery::setBeer(int x) {
 	beerAmount = x;
 }
+
+void Brewery::conversion(){
+	beerAmount = barleyAmount*5;
+}

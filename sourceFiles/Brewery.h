@@ -14,5 +14,6 @@ public:
 	void setBarley(int barley);
 	void print()override;
 	void setBeer(int x);
+	void conversion();
 };
 
