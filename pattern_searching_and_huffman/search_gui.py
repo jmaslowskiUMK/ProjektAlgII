@@ -9,6 +9,8 @@ class PatternSearch(QMainWindow):
         super().__init__()
         self.setWindowTitle('Pattern search')
         self.setGeometry(500, 300, 600, 400)
+
+        self.setStyleSheet("QLabel{font-size: 16px;}")
         
         # main widget and layout
         central_widget = QWidget()
@@ -22,6 +24,7 @@ class PatternSearch(QMainWindow):
         # pattern input
         self.pattern_input = QLineEdit()
         self.pattern_input.setPlaceholderText("Enter the word to search for...")
+        self.pattern_input.setStyleSheet("QLineEdit {font-size: 16px;}")
         pattern_layout.addWidget(QLabel("Search for a word:"))
         pattern_layout.addWidget(self.pattern_input)
         
@@ -29,18 +32,29 @@ class PatternSearch(QMainWindow):
         method_group = QGroupBox("Search method")
         method_layout = QVBoxLayout()
         self.rk_rb = QRadioButton("Rabin-Karp Algorithm")
+        self.rk_rb.setStyleSheet("QRadioButton {font-size: 16px;}")
         self.kmp_rb = QRadioButton("Knuth-Morris-Pratt Algorithm (KMP)")
+        self.kmp_rb.setStyleSheet("QRadioButton {font-size: 16px;}")
+        self.bm_simplified_rb = QRadioButton("Boyer-Moore Algorithm (simplified)")
+        self.bm_simplified_rb.setStyleSheet("QRadioButton {font-size: 16px;}")
+        self.bm_rb = QRadioButton("Boyer-Moore Algorithm")
+        self.bm_rb.setStyleSheet("QRadioButton {font-size: 16px;}")
         self.rk_rb.setChecked(True)
 
         self.rk_rb.toggled.connect(self.update_output_filename)
         self.kmp_rb.toggled.connect(self.update_output_filename)
+        self.bm_simplified_rb.toggled.connect(self.update_output_filename)
+        self.bm_rb.toggled.connect(self.update_output_filename)
 
         method_layout.addWidget(self.rk_rb)
         method_layout.addWidget(self.kmp_rb)
+        method_layout.addWidget(self.bm_simplified_rb)
+        method_layout.addWidget(self.bm_rb)
         method_group.setLayout(method_layout)
         
         # huffman coding 
         self.huffman_cb = QCheckBox("Use Huffman coding")
+        self.huffman_cb.setStyleSheet("QCheckBox {font-size: 16px;}")
         self.huffman_cb.setChecked(False)
         
         pattern_layout.addWidget(method_group)
@@ -54,6 +68,7 @@ class PatternSearch(QMainWindow):
         # choose input file 
         self.input_file_label = QLabel("No file")
         input_file_btn = QPushButton("Select CSV file to search")
+        input_file_btn.setStyleSheet("QPushButton {font-size: 16px;}")
         input_file_btn.clicked.connect(self.select_input_file)
 
         file_layout.addWidget(QLabel("Input file:"))
@@ -63,6 +78,7 @@ class PatternSearch(QMainWindow):
         # output file name
         self.output_file_input = QLineEdit()
         self.update_output_filename()
+        self.output_file_input.setStyleSheet("QLineEdit {font-size: 16px;}")
     
         file_layout.addWidget(QLabel("Output Results File:"))
         file_layout.addWidget(self.output_file_input)
@@ -95,13 +111,18 @@ class PatternSearch(QMainWindow):
             default_name = "rk_search.csv"
         elif self.kmp_rb.isChecked():
             default_name = "kmp_search.csv"
+        elif self.bm_simplified_rb.isChecked():
+            default_name = "bm_simplified_search.csv"
+        elif self.bm_rb.isChecked():
+            default_name = "bm_search.csv"
         
         
         # update if user didn't modify the file name
         self.output_file_input.setPlaceholderText(default_name)
-        if self.output_file_input.text() in ["rk_search_results.csv", 
-                                          "kmp_search_results.csv", 
-                                          "bm_search_results.csv"]:
+        if self.output_file_input.text() in ["rk_search.csv", 
+                                          "kmp_search.csv", 
+                                          "bm_simplified_search.csv",
+                                          "bm_search.csv"]:
             self.output_file_input.clear()
         
 
@@ -119,8 +140,12 @@ class PatternSearch(QMainWindow):
             return "rk"
         elif self.kmp_rb.isChecked():
             return "kmp"
-        else:
+        elif self.bm_simplified_rb.isChecked():
+            return "bm_simplified"
+        elif self.bm_rb.isChecked():
             return "bm"
+        else:
+            return "error"
     
     def run_search(self):
 
