@@ -17,6 +17,8 @@ class Country
 {
 private:
 	int breweryEfficiency;
+	int convRate;
+	std::string seed;
 public:
 	struct CompareByX {
 	    bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
@@ -37,6 +39,11 @@ public:
 
 	Country();
 	~Country();
+
+	void setConvRate(int convRate);
+	void setSeed(std::string seed);
+	int getConvRate();
+	std::string getSeed();
 
 	void reset();
 	void bfs(std::shared_ptr<Node> startingNode);

@@ -318,6 +318,20 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
     return max_flow;
 }
 
+
+void Country::setConvRate(int convRate) {
+    this->convRate = convRate;
+}
+void Country::setSeed(std::string seed) {
+    this->seed = seed;
+}
+int Country::getConvRate() {
+    return convRate;
+}
+std::string Country::getSeed() {
+    return seed;
+}
+
 void Country::insertNodeSorted(std::vector<std::shared_ptr<Node>>& nodeVector, std::shared_ptr<Node> newNode) {
     auto it = std::lower_bound(nodeVector.begin(), nodeVector.end(), newNode,
         [](const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) {

@@ -10,7 +10,7 @@
 #include "../sourceFiles/Brewery.h"
 #include "../sourceFiles/Hull.h"
 
-#define ROW_LENGTH 12
+#define ROW_LENGTH 14
 #define CONST_RADIUS 10
 
 using namespace emscripten;
@@ -77,6 +77,10 @@ extern "C" {
                     Lane lane(from, to, stod(row[9]), stoi(row[10]));
                     objectKingdom.addRelationship(lane);
                 }
+            }   else if (row[0] == "Seed") {
+                objectKingdom.setSeed(row[13]);
+            }   else if (row[0] == "convRate") {
+                objectKingdom.setConvRate(stoi(row[12]));
             }
         }
 
@@ -125,11 +129,11 @@ string saveToCSV() {
                << x << "," << y << ",,,,,\n";
 
         } else if (auto brewery = std::dynamic_pointer_cast<Brewery>(node)) {
-            ss << "Brewery," << id << ",," << brewery->getBeerAmount()
+            ss << "Brewery," << id << ",," << brewery->getBarleyCap()
                << ",," << x << "," << y << ",,,,,\n";
 
         } else if (auto pub = std::dynamic_pointer_cast<Pub>(node)) {
-            ss << "Pub," << id << ",,,"
+            ss << "Pub," << id << ",,," << pub->getCapacity()
                << "," << x << "," << y << ",,,,,\n";
         }
     }
@@ -345,7 +349,7 @@ val calculateFlow() {
 		}
 
 	}
-	std::cout << "1: " <<objectKingdom.fordFulkerson(sources,sinks, 1)<<std::endl;
+	std::cout << "1: " <<objectKingdom.fordFulkerson(sources,sinks, objectKingdom.getConvRate())<<std::endl;
 
 	sources.clear();
 	sinks.clear();
@@ -362,7 +366,7 @@ val calculateFlow() {
 
 	}
 
-    resultsArr.call<void>("push", objectKingdom.fordFulkerson(sources,sinks, 1));
+    resultsArr.call<void>("push", objectKingdom.fordFulkerson(sources,sinks, objectKingdom.getConvRate()));
         sources.clear();
         sinks.clear();
 
@@ -378,7 +382,7 @@ val calculateFlow() {
 		}
 
 	}
-	std::cout << "1: " <<objectKingdom.edmondsKarpManyToMany(sources,sinks, 1)<<std::endl;
+	std::cout << "1: " <<objectKingdom.edmondsKarpManyToMany(sources,sinks, objectKingdom.getConvRate())<<std::endl;
 
 	sources.clear();
 	sinks.clear();
@@ -395,7 +399,7 @@ val calculateFlow() {
 
 	}
 
-    resultsArr.call<void>("push", objectKingdom.edmondsKarpManyToMany(sources,sinks, 1));
+    resultsArr.call<void>("push", objectKingdom.edmondsKarpManyToMany(sources,sinks, objectKingdom.getConvRate()));
         sources.clear();
         sinks.clear();
     
@@ -411,7 +415,7 @@ val calculateFlow() {
 		}
 
 	}
-	std::cout << "1: " <<objectKingdom.dinic(sources,sinks, 1)<<std::endl;
+	std::cout << "1: " <<objectKingdom.dinic(sources,sinks, objectKingdom.getConvRate())<<std::endl;
 
 	sources.clear();
 	sinks.clear();
@@ -428,7 +432,7 @@ val calculateFlow() {
 
 	}
 
-        resultsArr.call<void>("push", objectKingdom.dinic(sources,sinks, 1));
+        resultsArr.call<void>("push", objectKingdom.dinic(sources,sinks, objectKingdom.getConvRate()));
         sources.clear();
         sinks.clear();   
 
@@ -447,7 +451,7 @@ val calculateFlow() {
 	}
 
     cout << "2" << endl;
-	int x=objectKingdom.mcmf(sources,sinks, 1).first;
+	int x=objectKingdom.mcmf(sources,sinks, objectKingdom.getConvRate()).first;
 
 	sources.clear();
 	sinks.clear();
@@ -464,9 +468,9 @@ val calculateFlow() {
 
 	}
 
-        resultsArr.call<void>("push", objectKingdom.mcmf(sources,sinks, 1).first + x);
+        resultsArr.call<void>("push", objectKingdom.mcmf(sources,sinks, objectKingdom.getConvRate()).first + x);
         sources.clear();
-        sinks.clear();   
+        sinks.clear();
 
 
 
@@ -609,17 +613,28 @@ void deleteRelation(int id1, int id2) {
 }
 
 void deleteNode(int id) {
+    // delete all lines from this node
     shared_ptr<Node> delNode = objectKingdom.find(id);
     objectKingdom.adjList[delNode].clear();
     cout << "node lines deleted" << endl;
 
-    for (int i = 0; objectKingdom.nodeVector.size(); i++) {
-        for (int j = 0; objectKingdom.adjList[objectKingdom.nodeVector[i]].size(); j++) {
+    // delete all lines to this node
+    for (int i = 0; i < objectKingdom.nodeVector.size(); i++) {
+        for (int j = 0; j < objectKingdom.adjList[objectKingdom.nodeVector[i]].size(); j++) {
             if (objectKingdom.adjList[objectKingdom.nodeVector[i]][j].getToPtr() == delNode) {
                 objectKingdom.adjList[objectKingdom.nodeVector[i]].erase(objectKingdom.adjList[objectKingdom.nodeVector[i]].begin() + j);
             }
         }
     }
+
+    // delete node
+    auto & vec = objectKingdom.nodeVector;
+    vec.erase(std::remove(vec.begin(), vec.end(), delNode), vec.end());
+}
+
+
+string getSeed() {
+    return objectKingdom.getSeed();
 }
 
 EMSCRIPTEN_BINDINGS(my_module) {
@@ -650,6 +665,7 @@ EMSCRIPTEN_BINDINGS(my_module) {
     // helper functions
     emscripten::function("getNodesCoordinates", &getNodesCoordinates);
     emscripten::function("isInAnyHull", &isInAnyHull);
+    emscripten::function("getSeed", &getSeed);
 
     emscripten::function("saveToCSV", &saveToCSV);
 }

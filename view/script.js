@@ -13,6 +13,7 @@ let parserInstance = null;
 let fileLoaded = false;
 let CREATION_OCCUPIED = false;
 
+let seed ="DEFAULT";
 
 document.querySelector("#flowButton").addEventListener("click", () => {
     if(!fileLoaded) {
@@ -47,6 +48,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             reader.onload = async (event) => {
                 const csvData = event.target.result;
                 parserInstance.ccall('processCSVBuildings', null, ['string'], [csvData]);
+
+                seed = parserInstance.getSeed();
 
                 // fileLoaded BOOL
                 fileLoaded = true;

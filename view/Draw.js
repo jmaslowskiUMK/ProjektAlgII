@@ -119,7 +119,7 @@ function draw() {
     }   else if (besierSwitch) {
 
     // pseudo random besiere curves
-        const seed = "155138651";
+        console.log("Drawn using :" + seed + " seed");
 
         // Generates a deterministic pseudo-random function from a string seed
         function makeDeterministicRandom(seed) {
