@@ -115,20 +115,22 @@ Ponadto, w pliku `Country.cpp` zaimplemetowano wcześniej wspomniane algorytmy, 
 
 Przygotowano także skrypt Pythona przeznaczony do generowania danych, w tym punktów używanych do definiowania wypukłych otoczek. Dane zapisywane są do pliku CSV, a kolejne kolumny rozdzielone są przecinkami. Przykładowy fragment pliku z danymi wygląda następująco:
 
-| Category | ID | Yield (kg) | Processed (kg) | Beer (liters) | X Coordinate | Y Coordinate | Lane From | Lane To | Capacity (kg/liters) | Repair Cost | Ground Class |
+| Category | ID | Yield (kg) | Processed (kg) | Beer (liters) | X Coordinate | Y Coordinate | Lane From | Lane To | Capacity (kg/liters) | Repair Cost | Ground Class | convRate | Seed |
 | -------- | -- | ----------- | -------------- | ------------- | ------------ | ------------ | --------- | ------- | -------------------- | ----------- | ------------ |
-| Field | 0 | 4013 |  |  | -665 | -665 |  |  |  |  |  |
-| Field | 3 | 7870 |  |  | 276 | 477 |  |  |  |  |  |
-| Field | 6 | 5031 |  |  | 880 | 461 |  |  |  |  |  |
-| Brewery | 1 |  | 2509 |  | -905 | 597 |  |  |  |  |  |
-| Brewery | 4 |  | 2509 |  | 943 | 821 |  |  |  |  |  |
-| Pub | 2 |  |  | 5508 | 568 | -17 |  |  |  |  |  |
-| Pub | 5 |  |  | 292 | -880 | -370 |  |  |  |  |  |
-| Lane |  |  |  |  |  |  | 0 | 1 | 502 | 0 |  |
-| Lane |  |  |  |  |  |  | 3 | 4 | 667 | 0 |  |
-| Hull_0 | Array of Points |  |  |  |  |  |  |  |  |  | 6 |
-| HullPoint_0 | 0 |  |  |  | 606 | -854 |  |  |  |  | 6 |
-| HullPoint_0 | 1 |  |  |  | 628 | -846 |  |  |  |  | 6 |
+| Field | 0 | 4013 |  |  | -665 | -665 |  |  |  |  |  |  |  |
+| Field | 3 | 7870 |  |  | 276 | 477 |  |  |  |  |  |  |  |
+| Field | 6 | 5031 |  |  | 880 | 461 |  |  |  |  |  |  |  |
+| Brewery | 1 |  | 2509 |  | -905 | 597 |  |  |  |  |  |  |  |
+| Brewery | 4 |  | 2509 |  | 943 | 821 |  |  |  |  |  |  |  |
+| Pub | 2 |  |  | 5508 | 568 | -17 |  |  |  |  |  |  |  |
+| Pub | 5 |  |  | 292 | -880 | -370 |  |  |  |  |  |  |  |
+| Lane |  |  |  |  |  |  | 0 | 1 | 502 | 0 |  |  |  |
+| Lane |  |  |  |  |  |  | 3 | 4 | 667 | 0 |  |  |  |
+| Hull_0 | Array of Points |  |  |  |  |  |  |  |  |  | 6 |  |  |
+| HullPoint_0 | 0 |  |  |  | 606 | -854 |  |  |  |  | 6 |  |  |
+| HullPoint_0 | 1 |  |  |  | 628 | -846 |  |  |  |  | 6 |  |  |
+| convRate |  |  |  |  |  |  |  |  |  |  |  | 4 |  |
+| Seed |  |  |  |  |  |  |  |  |  |  |  |  | aqVbQm7PPjAkNOyl |
 
 
 Dodatkowo pliki znajdujące się w katalogu `pattern_searching_and_huffman` rozwiązują problem wyszukiwania słów w tekstach. Zaimplementowene zostały trzy algorytmy (w tym jeden w dwóch wariantach) wyszukiwania wzorca w tekstach, a także kodowanie Huffmana.
