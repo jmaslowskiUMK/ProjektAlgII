@@ -188,7 +188,7 @@ The project consists of two main parts: a web application for visualizing fields
 ## 5.2. Running the desktop application
   1. Open a terminal and navigate to the project's *pattern_searching_and_huffman* directory.
   ```
-  cd ProjektAlgII/pattern_searching_and_huffman/
+  cd ProjektAlgII/pattern_searching_and_huffman/main/
   ```
   2. Make sure PyQt5 for Python is installed.
   3. Run the application using search_gui.py file.
