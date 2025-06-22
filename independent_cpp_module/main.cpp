@@ -94,69 +94,142 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // From Fields to Breweries
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Field>(el)) sources.push_back(el);
-    }
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Brewery>(el)) sinks.push_back(el);
-    }
-	std::cout << "Work in progress..." << std::endl;
-    std::cout << "From Fields to Breweries (Edmonds-Karp): " << objectKingdom.edmondsKarpManyToMany(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sinks.push_back(el);
+		}
 
-    // From Breweries to Pubs
+	}
+
+	int time = 0;
+    std::pair<int,int> para = objectKingdom.fordFulkerson(sources,sinks, objectKingdom.getConvRate());
+	std::cout << "1 ford-fulkerson: " <<para.first<<std::endl;
+    time+=para.second;
+	std::cout << "1 ford-fulkerson Time: " << time << std::endl;
+	sources.clear();
+	sinks.clear();
+
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+
+    para = objectKingdom.fordFulkerson(sources,sinks, objectKingdom.getConvRate());
+    std::cout << "2 ford-fulkerson: " <<para.first<< std::endl;
+    time+=para.second;
+	std::cout << "2 ford-fulkerson Time: " << time << std::endl;
+
+
     sources.clear();
     sinks.clear();
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Brewery>(el)) sources.push_back(el);
-    }
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Pub>(el)) sinks.push_back(el);
-    }
-    std::cout << "From Breweries to Pubs (Edmonds-Karp): " << objectKingdom.edmondsKarpManyToMany(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
+    time=0;
 
 
-    // From Fields to Breweries
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Field>(el)) sources.push_back(el);
-    }
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Brewery>(el)) sinks.push_back(el);
-    }
-	std::cout << "Work in progress..." << std::endl;
-    std::cout << "From Fields to Breweries (dinic): " << objectKingdom.dinic(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sinks.push_back(el);
+		}
 
-    // From Breweries to Pubs
+	}
+	
+    para = objectKingdom.edmondsKarpManyToMany(sources,sinks, objectKingdom.getConvRate());
+    std::cout << "1 Karp: " <<para.first<< std::endl;
+    time+=para.second;
+	std::cout << "1 Karp Time: " << time << std::endl;
     sources.clear();
     sinks.clear();
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Brewery>(el)) sources.push_back(el);
-    }
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Pub>(el)) sinks.push_back(el);
-    }
-    std::cout << "From Breweries to Pubs (dinic): " << objectKingdom.dinic(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
+    time=0;
 
-    // From Fields to Breweries
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Field>(el)) sources.push_back(el);
-    }
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Brewery>(el)) sinks.push_back(el);
-    }
-	std::cout << "Work in progress..." << std::endl;
-    std::cout << "From Fields to Breweries (MCMF): " << objectKingdom.mcmf(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+			sinks.push_back(el);
+		}
 
-    // From Breweries to Pubs
+	}
+
+    para = objectKingdom.edmondsKarpManyToMany(sources,sinks, objectKingdom.getConvRate());
+    std::cout << "2 Karp: " <<para.first<< std::endl;
+    time+=para.second;
+	std::cout << "2 Karp Time: " << time << std::endl;
     sources.clear();
     sinks.clear();
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Brewery>(el)) sources.push_back(el);
-    }
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Pub>(el)) sinks.push_back(el);
-    }
-    std::cout << "From Breweries to Pubs: " << objectKingdom.mcmf(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
+    time=0;
+
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+
+    para = objectKingdom.dinic(sources,sinks, objectKingdom.getConvRate());
+    std::cout << "1 dinic: " <<para.first<< std::endl;
+    time+=para.second;
+	std::cout << "1 dinic Time: " << time << std::endl;
+    sources.clear();
+    sinks.clear();
+    time=0;
+
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+
+    para = objectKingdom.dinic(sources,sinks, objectKingdom.getConvRate());
+    std::cout << "2 dinic: " <<para.first<< std::endl;
+    time+=para.second;
+	std::cout << "2 dinic Time: " << time << std::endl;
+    sources.clear();
+    sinks.clear();
+    time=0;
+
+
+    for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+
 
     return 0;
 }

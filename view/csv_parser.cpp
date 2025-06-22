@@ -349,15 +349,10 @@ val calculateFlow() {
 		}
 
 	}
-<<<<<<< HEAD
-	std::cout << "1: " <<objectKingdom.fordFulkerson(sources,sinks, objectKingdom.getConvRate())<<std::endl;
-
-=======
         int time =0 ;
         std::pair<int,int> para =  objectKingdom.fordFulkerson(sources,sinks, 1);
 	std::cout << "1: " <<para.first<<std::endl;
         time+=para.second;
->>>>>>> 8846caa20271defa5d9acc13e401c0f68395e549
 	sources.clear();
 	sinks.clear();
 
@@ -373,16 +368,12 @@ val calculateFlow() {
 
 	}
 
-<<<<<<< HEAD
-    resultsArr.call<void>("push", objectKingdom.fordFulkerson(sources,sinks, objectKingdom.getConvRate()));
-=======
         para =  objectKingdom.fordFulkerson(sources,sinks, 1);
         resultsArr.call<void>("push", para.first);
         time+=para.second; 
         resultsArr.call<void>("push", time);
 
 
->>>>>>> 8846caa20271defa5d9acc13e401c0f68395e549
         sources.clear();
         sinks.clear();
         time=0;
@@ -399,14 +390,9 @@ val calculateFlow() {
 		}
 
 	}
-<<<<<<< HEAD
-	std::cout << "1: " <<objectKingdom.edmondsKarpManyToMany(sources,sinks, objectKingdom.getConvRate())<<std::endl;
-
-=======
         para =  objectKingdom.edmondsKarpManyToMany(sources,sinks, 1);
 	std::cout << "1: " <<para.first<<std::endl;
         time+=para.second;
->>>>>>> 8846caa20271defa5d9acc13e401c0f68395e549
 	sources.clear();
 	sinks.clear();
 
@@ -422,14 +408,10 @@ val calculateFlow() {
 
 	}
 
-<<<<<<< HEAD
-    resultsArr.call<void>("push", objectKingdom.edmondsKarpManyToMany(sources,sinks, objectKingdom.getConvRate()));
-=======
         para = objectKingdom.edmondsKarpManyToMany(sources,sinks, 1);
         time+=para.second;
         resultsArr.call<void>("push", para.first);
         resultsArr.call<void>("push", time);
->>>>>>> 8846caa20271defa5d9acc13e401c0f68395e549
         sources.clear();
         sinks.clear();
     
@@ -446,15 +428,10 @@ val calculateFlow() {
 		}
 
 	}
-<<<<<<< HEAD
-	std::cout << "1: " <<objectKingdom.dinic(sources,sinks, objectKingdom.getConvRate())<<std::endl;
-
-=======
         
         para=objectKingdom.dinic(sources,sinks, 1);
 	std::cout << "1: " <<para.first<<std::endl;
         time+=para.second;
->>>>>>> 8846caa20271defa5d9acc13e401c0f68395e549
 	sources.clear();
 	sinks.clear();
 
@@ -470,14 +447,10 @@ val calculateFlow() {
 
 	}
 
-<<<<<<< HEAD
-        resultsArr.call<void>("push", objectKingdom.dinic(sources,sinks, objectKingdom.getConvRate()));
-=======
         para=objectKingdom.dinic(sources,sinks, 1);
         time+=para.second;
         resultsArr.call<void>("push", para.first);
         resultsArr.call<void>("push", time);
->>>>>>> 8846caa20271defa5d9acc13e401c0f68395e549
         sources.clear();
         sinks.clear();   
 
@@ -495,13 +468,9 @@ val calculateFlow() {
 
 	}
 
-<<<<<<< HEAD
-    cout << "2" << endl;
-	int x=objectKingdom.mcmf(sources,sinks, objectKingdom.getConvRate()).first;
-=======
     std::cout << "2" << endl;
+    /*
 	int x=objectKingdom.mcmf(sources,sinks, 1).first;
->>>>>>> 8846caa20271defa5d9acc13e401c0f68395e549
 
 	sources.clear();
 	sinks.clear();
@@ -518,15 +487,11 @@ val calculateFlow() {
 
 	}
 
-<<<<<<< HEAD
-        resultsArr.call<void>("push", objectKingdom.mcmf(sources,sinks, objectKingdom.getConvRate()).first + x);
-=======
         x+=objectKingdom.mcmf(sources,sinks, 1).first;
         resultsArr.call<void>("push",x);
->>>>>>> 8846caa20271defa5d9acc13e401c0f68395e549
         sources.clear();
         sinks.clear();
-
+*/
 
 
     return resultsArr;
