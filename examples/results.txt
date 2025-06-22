@@ -1,0 +1,12 @@
+1: 
+max flow: 60
+
+2: 
+max flow: 50
+
+3: 
+max flow: 6
+min cost: 6
+
+4: 
+max flow: 2
