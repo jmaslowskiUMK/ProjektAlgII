@@ -445,6 +445,8 @@ val calculateFlow() {
 		}
 
 	}
+
+    cout << "2" << endl;
 	int x=objectKingdom.mcmf(sources,sinks, 1).first;
 
 	sources.clear();
