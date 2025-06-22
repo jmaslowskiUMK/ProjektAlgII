@@ -62,6 +62,8 @@ Dla zaimplementowania zróżnicowanej wydajności pól w zależności od ich po�
 
 - **Algorytm Grahama**: Służy do generowania wypukłych otoczek dla zbiorów punktów. Punkty należące do otoczek są przechowywane i mogą być wizualizowane.
 
+- **Algorytm Jarvisa**: Algorytm Jarvisa jest również używany do generowania wypukłych otoczek dla zbiorów punktów.
+
 ## 2.4. Wyszukiwanie wzorców tekstowych
 
 W projekcie zaimplementowano trzy algorytmy wyszukiwania wzorców tekstowych:
@@ -132,6 +134,7 @@ Przygotowano także skrypt Pythona przeznaczony do generowania danych, w tym pun
 Dodatkowo pliki znajdujące się w katalogu `pattern_searching_and_huffman` rozwiązują problem wyszukiwania słów w tekstach. Zaimplementowene zostały trzy algorytmy (w tym jeden w dwóch wariantach) wyszukiwania wzorca w tekstach, a także kodowanie Huffmana.
 
 Pozostałe pliki odpowiadją za skompilowanie kodu C++ do formatu WebAssembly i udostępnienie go do użytku w przeglądarce, co pozwala na interaktywną wizualizację i obliczenia.
+Dla celów wizualizacji w interfejsie webowym, projekt wykorzystuje krzywe Béziera. Zaimplementowane w kodzie JavaScript (`Draw.js`), pozwalają one na rysowanie połączeń między węzłami w sposób bardziej złożony i estetyczny niż proste linie. Te same "pseudo-losowe" krzywe Béziera zostaną wygenerowane, jeśli jako ziarno (`seed`) zostanie użyty ten sam ciąg znaków.
 
 
 # 4. Wykorzystane technologie

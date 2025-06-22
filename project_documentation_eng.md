@@ -62,6 +62,9 @@ To implement varying field yields based on their location within convex quadrant
 
 - **Graham Scan Algorithm**: Generates convex hulls for point sets. Points belonging to the hulls are stored and can be visualized.
 
+- **Algorytm Jarvisa**: The Jarvis algorithm is also used to generate convex hulls for sets of points.
+
+
 ## 2.4. Text pattern searching
 
 Three pattern-searching algorithms were implemented:
@@ -134,7 +137,7 @@ A Python script was also prepared for data generation, including points used to 
 Files in the `pattern_searching_and_huffman` directory solve the problem of word searching in texts, implementing three algorithms (including one in two variants) and Huffman encoding.
 
 Other files compile the C++ code to WebAssembly for interactive visualization and calculations in a browser.
-
+For visualization purposes in the web interface, the project uses Bézier curves. Implemented in the JavaScript code (Draw.js), they allow drawing connections between nodes in a more complex and aesthetically pleasing way than simple straight lines. The same "pseudo-random" Bézier curves will be generated if the same string is used as the seed.
 
 
 # 4. Used technologies 
