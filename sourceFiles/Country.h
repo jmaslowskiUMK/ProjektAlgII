@@ -67,7 +67,7 @@ public:
 	int crosses(std::pair<int,int> point,std::pair<int,int> q,std::pair<int,int> pi,std::pair<int,int> pi1,std::pair<int,int> pi2,std::pair<int,int> pi_1);
 	int det(std::pair<int,int> a,std::pair<int,int> b, std::pair<int,int> c);
 	bool rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,int> point);
-	std::pair<int,std::vector<std::shared_ptr<Node>> >mcmf(std::vector<std::shared_ptr<Node>> sourceVec,std::vector<std::shared_ptr<Node>> sinkVec,int convRate);
+	std::pair<int,std::vector<std::shared_ptr<Node>>> mcmf(std::vector<std::shared_ptr<Node>> fromVec,std::vector<std::shared_ptr<Node>> &toVec,int convRate);
 	std::pair<int,int> fordFulkerson(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate);
 	std::vector<Lane> augmentingPathDFS(std::shared_ptr<Node> source, std::shared_ptr<Node> sink,std::map<std::shared_ptr<Node>, std::vector<Lane> > adjListCopy) ;
 };

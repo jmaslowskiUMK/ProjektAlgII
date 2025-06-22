@@ -683,176 +683,165 @@ bool Country::rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
-std::pair<int,std::vector<std::shared_ptr<Node>>> Country::mcmf(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec, int convRate){
-
-    std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;
+std::pair<int,std::vector<std::shared_ptr<Node>>> Country::mcmf(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec, int convRate){
+    std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy;
     
-    // Create super source and super sink
-    std::shared_ptr<Node> superSource = std::make_shared<Field>();
-    std::shared_ptr<Node> superSink = std::make_shared<Pub>();
-
-    //Connect super source to all sources with infinite capacity
-    auto type = std::dynamic_pointer_cast<Field>(fromVec[0]);
-
-    if(type){
-        superSource = std::make_shared<Field>();
-        superSink = std::make_shared<Brewery>();
-
-        for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
-            auto sourceField = std::dynamic_pointer_cast<Field>(source);
-            if(sourceField){
-                Lane lane(superSource, sourceField, sourceField->getProduction(), 0);
-                addRelationship(adjListCopy, lane);
-            }
+    // Copy original edges with reverse edges
+    for (auto& [node, lanes] : adjList) {
+        for (auto& lane : lanes) {
+            adjListCopy[lane.getFromPtr()].push_back(lane);
+            
+            // Add reverse edge
+            adjListCopy[lane.getToPtr()].push_back(
+                Lane(lane.getToPtr(), lane.getFromPtr(), 0, -lane.getRepairCost()));
         }
+    }
 
-        for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-            auto sinkBrew = std::dynamic_pointer_cast<Brewery>(sink);
-            if(sinkBrew){
-                Lane lane(sinkBrew, superSink, sinkBrew->getBarleyCap(), 0);
-                addRelationship(adjListCopy, lane);
-            }
+    auto superSource = std::make_shared<Node>();
+    auto superSink = std::make_shared<Node>();
+
+    // Connect super source to sources
+    for (const auto& source : fromVec) {
+        int capacity = 0;
+        if (auto field = std::dynamic_pointer_cast<Field>(source)) {
+            capacity = field->getProduction();
+        } else if (auto brewery = std::dynamic_pointer_cast<Brewery>(source)) {
+            capacity = brewery->getBeerAmount();
         }
-    }else{
-        superSource = std::make_shared<Brewery>();
-        superSink = std::make_shared<Pub>();
+        adjListCopy[superSource].emplace_back(superSource, source, capacity, 0);
+        adjListCopy[source].emplace_back(source, superSource, 0, 0); // Reverse edge
+    }
 
-        for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
-            auto sourceBrew = std::dynamic_pointer_cast<Brewery>(source);
-            if(sourceBrew){
-                Lane lane(superSource,sourceBrew, sourceBrew->getBeerAmount(), 0);
-                addRelationship(adjListCopy, lane);
-            }
+    // Connect sinks to super sink
+    for (const auto& sink : toVec) {
+        int capacity = 0;
+        if (auto brewery = std::dynamic_pointer_cast<Brewery>(sink)) {
+            capacity = brewery->getBarleyCap();
+        } else if (auto pub = std::dynamic_pointer_cast<Pub>(sink)) {
+            capacity = pub->getCapacity();
         }
-
-        for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-        auto sinkPub = std::dynamic_pointer_cast<Pub>(sink);
-            if(sinkPub){
-                 Lane lane(sinkPub, superSink, sinkPub->getCapacity(), 0);
-                addRelationship(adjListCopy, lane);
-            }
-        }
-
-    } 
+        adjListCopy[sink].emplace_back(sink, superSink, capacity, 0);
+        adjListCopy[superSink].emplace_back(superSink, sink, 0, 0); // Reverse edge
+    }
 
     int total_cost = 0;
-    
-    //Potential function for reduced costs potential ensures that there are no negative cycles
+    int total_flow = 0;
+    std::vector<std::shared_ptr<Node>> best_path;
+    int best_path_cost = INT_MAX;
+    int best_path_flow = 0;
+
+    // Potential function for reduced costs
     std::unordered_map<std::shared_ptr<Node>, int> potential;
-    for(auto& node : adjListCopy){
+    for (auto& node : adjListCopy) {
         potential[node.first] = 0;
     }
 
-        std::unordered_map<std::shared_ptr<Node>, std::shared_ptr<Node>> parent;
-    while(true){
-        //Dijkstra algorithm
-        //unordered_map should be faster than map as it uses hash not RB tree. But because it uses hash func its not ordered
+    while (true) {
+        //Dijkstra with potentials
         std::unordered_map<std::shared_ptr<Node>, int> dist;
+        std::unordered_map<std::shared_ptr<Node>, std::shared_ptr<Node>> parent;
+        std::unordered_map<std::shared_ptr<Node>, Lane*> parent_lane;
         
-        //Priority queue with el(distance, node) and greater that makes nodes with the shortest dist(cost) be put on top 
-        //Note that we store int only because of the fact that its priority_queue that looks for the shortest dist(cost) 
-        std::priority_queue<std::pair<int, std::shared_ptr<Node>>, std::vector<std::pair<int, std::shared_ptr<Node>>>, 
-                          std::greater<std::pair<int, std::shared_ptr<Node>>>> pq;
-    std::unordered_map<std::shared_ptr<Node>, Lane*> parent_lane;
-        // Initialize distances to INF and dist[source] to 0
+        //Init distances to max and source dist to 0
         for(auto& node : adjListCopy){
             dist[node.first] = INT_MAX;
         }
         dist[superSource] = 0;
-        
-        pq.emplace(0, superSource);//add superSource to queue
+        //Priority queue with el(distance, node) and greater that makes nodes with the shortest dist(cost) be put on top 
+        //Note that we store int only because of the fact that its priority_queue that looks for the shortest dist(cost) 
+     std::priority_queue<std::pair<int, std::shared_ptr<Node>>,std::vector<std::pair<int, std::shared_ptr<Node>>>,std::greater<std::pair<int, std::shared_ptr<Node>>>> pq;
 
-        while (!pq.empty()){
-            auto current_dist = pq.top().first;
-            auto curr = pq.top().second;
+        pq.push({0, superSource});
+
+        while(!pq.empty()) {
+            auto [d, u] = pq.top();
             pq.pop();
+            if (d != dist[u]) continue;
 
-            if(current_dist > dist[curr]) continue;
-
-            for (auto& lane : adjListCopy[curr]){//check all the nodes that current(curr) node goes to
-                auto currNext = lane.getToPtr();
-
-                //check res_cap(cap-flow)
-                int res_capacity = lane.getCapacity() - lane.getFlow();
-                if (res_capacity <= 0) continue;
-
-                //reduced cost with potential
-                int reduced_cost = lane.getRepairCost() + potential[curr] - potential[currNext];
-                if (dist[currNext] > dist[curr] + reduced_cost) {
-                    dist[currNext] = dist[curr] + reduced_cost;
-                    parent[currNext] = curr;
-                    parent_lane[currNext] = &lane;
-                    pq.emplace(dist[currNext], currNext);
+            for (auto& lane : adjListCopy[u]) {
+                if (lane.getFlow() >= lane.getCapacity()) continue;
+                
+                auto v = lane.getToPtr();
+                int reduced_cost = lane.getRepairCost() + potential[u] - potential[v];
+                int new_dist = dist[u] + reduced_cost;
+                
+                if (new_dist < dist[v]) {
+                    dist[v] = new_dist;
+                    parent[v] = u;
+                    parent_lane[v] = &lane;
+                    pq.push({new_dist, v});
                 }
             }
         }
 
-        //No path found
-        if(dist[superSink] == INT_MAX){
-            break;
-        }
+        if(dist[superSink] == INT_MAX) break;
 
-        //update potentials
-        for(auto& node : adjListCopy){
-            if(dist[node.first] < INT_MAX){
+        // Update potentials
+        for (auto& node : adjListCopy) {
+            if (dist[node.first] < INT_MAX) {
                 potential[node.first] += dist[node.first];
             }
         }
 
-        // Find minimum residual capacity along the path
+        //Find minimum residual capacity and reconstruct path
         int path_flow = INT_MAX;
-        std::vector<Lane*> path;
-        auto current = superSink;
-        while(current != superSource){
-            path.push_back(parent_lane[current]);
-            path_flow = std::min(path_flow, 
-                               parent_lane[current]->getCapacity() - parent_lane[current]->getFlow());
-            current = parent[current];
+        std::vector<std::shared_ptr<Node>> currentPath;
+        std::vector<Lane*> pathLanes;
+        int current_path_cost = 0;
+        
+        for(auto v = superSink; v != superSource; v = parent[v]){
+            pathLanes.push_back(parent_lane[v]);
+            currentPath.push_back(v);
+            if(path_flow>parent_lane[v]->getCapacity() - parent_lane[v]->getFlow()){
+                path_flow = parent_lane[v]->getCapacity() - parent_lane[v]->getFlow();
+            }
+        }
+        currentPath.push_back(superSource);
+        std::reverse(currentPath.begin(), currentPath.end());
+
+        //Path cost
+        for (auto* lane : pathLanes) {
+            current_path_cost += lane->getRepairCost();
+        }
+        //find  best path
+        if(path_flow > best_path_flow || (path_flow == best_path_flow && current_path_cost < best_path_cost)) {
+            best_path_flow = path_flow;
+            best_path_cost = current_path_cost;
+            best_path = currentPath;
         }
 
-        // Augment flow along the path
-        for(auto* lane : path){
+        //Augment flow
+        //cost is calculated by multiplying with flow
+        for (auto* lane : pathLanes) {
             lane->setFlow(lane->getFlow() + path_flow);
             total_cost += path_flow * lane->getRepairCost();
-
-            // Update reverse edge
-            bool found = false;
+            
+            //Update reverse edge
             for (auto& rev_lane : adjListCopy[lane->getToPtr()]) {
                 if (rev_lane.getToPtr() == lane->getFromPtr()) {
                     rev_lane.setFlow(rev_lane.getFlow() - path_flow);
-                    found = true;
                     break;
                 }
-            }
-            if(!found){
-                adjListCopy[lane->getToPtr()].emplace_back(
-                    lane->getToPtr(), lane->getFromPtr(), 0, -lane->getRepairCost());
-                adjListCopy[lane->getToPtr()].back().setFlow(-path_flow);
             }
         }
 
+        total_flow += path_flow;
     }
 
-
-    if(type){
-        for(auto &el:toVec){
-            for(auto &el2:adjListCopy[el]){
-                if(el2.getToPtr().get() == superSink.get()){
-                    auto brew = std::dynamic_pointer_cast<Brewery>(el);
-                    brew->setBarley(el2.getFlow());
-                    brew->conversion(convRate);
-                    break;
+    //Update sink nodes
+    for(auto& sink : toVec) {
+        for(auto& lane : adjListCopy[sink]){
+            if(lane.getToPtr() == superSink){
+                if(auto brewery = std::dynamic_pointer_cast<Brewery>(sink)){
+                    brewery->setBarley(lane.getFlow());
+                    brewery->conversion(convRate);
+                }else if (auto pub = std::dynamic_pointer_cast<Pub>(sink)) {
+                    pub->setCapacity(lane.getFlow());
                 }
+                break;
             }
-        } 
+        }
     }
 
-    std::shared_ptr<Node> curr = superSink;
-    std::vector<std::shared_ptr<Node>> path;
-    while(curr.get() != superSource.get()){
-        path.push_back(curr);
-        curr = parent[curr];
-    }
-
-    return {total_cost,path};
+    return {total_cost,best_path};
 }
