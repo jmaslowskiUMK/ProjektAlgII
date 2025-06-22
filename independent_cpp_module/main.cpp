@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
         if (std::dynamic_pointer_cast<Brewery>(el)) sinks.push_back(el);
     }
 	std::cout << "Work in progress..." << std::endl;
-    std::cout << "From Fields to Breweries (Edmonds-Karp): " << objectKingdom.edmondsKarpManyToMany(sources, sinks, 1) << std::endl;
+    std::cout << "From Fields to Breweries (Edmonds-Karp): " << objectKingdom.edmondsKarpManyToMany(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
 
     // From Breweries to Pubs
     sources.clear();
@@ -113,29 +113,8 @@ int main(int argc, char* argv[]) {
     for (auto& el : objectKingdom.nodeVector) {
         if (std::dynamic_pointer_cast<Pub>(el)) sinks.push_back(el);
     }
-    std::cout << "From Breweries to Pubs (Edmonds-Karp): " << objectKingdom.edmondsKarpManyToMany(sources, sinks, 1) << std::endl;
+    std::cout << "From Breweries to Pubs (Edmonds-Karp): " << objectKingdom.edmondsKarpManyToMany(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
 
-	
-    // From Fields to Breweries
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Field>(el)) sources.push_back(el);
-    }
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Brewery>(el)) sinks.push_back(el);
-    }
-	std::cout << "Work in progress..." << std::endl;
-    std::cout << "From Fields to Breweries (dinic): " << objectKingdom.dinic(sources, sinks, 1) << std::endl;
-
-    // From Breweries to Pubs
-    sources.clear();
-    sinks.clear();
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Brewery>(el)) sources.push_back(el);
-    }
-    for (auto& el : objectKingdom.nodeVector) {
-        if (std::dynamic_pointer_cast<Pub>(el)) sinks.push_back(el);
-    }
-    std::cout << "From Breweries to Pubs (dinic): " << objectKingdom.dinic(sources, sinks, 1) << std::endl;
 
     // From Fields to Breweries
     for (auto& el : objectKingdom.nodeVector) {
@@ -145,7 +124,7 @@ int main(int argc, char* argv[]) {
         if (std::dynamic_pointer_cast<Brewery>(el)) sinks.push_back(el);
     }
 	std::cout << "Work in progress..." << std::endl;
-    std::cout << "From Fields to Breweries (MCMF): " << objectKingdom.mcmf(sources, sinks, 1).first << std::endl;
+    std::cout << "From Fields to Breweries (dinic): " << objectKingdom.dinic(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
 
     // From Breweries to Pubs
     sources.clear();
@@ -156,7 +135,28 @@ int main(int argc, char* argv[]) {
     for (auto& el : objectKingdom.nodeVector) {
         if (std::dynamic_pointer_cast<Pub>(el)) sinks.push_back(el);
     }
-    std::cout << "From Breweries to Pubs: " << objectKingdom.mcmf(sources, sinks, 1).first << std::endl;
+    std::cout << "From Breweries to Pubs (dinic): " << objectKingdom.dinic(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
+
+    // From Fields to Breweries
+    for (auto& el : objectKingdom.nodeVector) {
+        if (std::dynamic_pointer_cast<Field>(el)) sources.push_back(el);
+    }
+    for (auto& el : objectKingdom.nodeVector) {
+        if (std::dynamic_pointer_cast<Brewery>(el)) sinks.push_back(el);
+    }
+	std::cout << "Work in progress..." << std::endl;
+    std::cout << "From Fields to Breweries (MCMF): " << objectKingdom.mcmf(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
+
+    // From Breweries to Pubs
+    sources.clear();
+    sinks.clear();
+    for (auto& el : objectKingdom.nodeVector) {
+        if (std::dynamic_pointer_cast<Brewery>(el)) sources.push_back(el);
+    }
+    for (auto& el : objectKingdom.nodeVector) {
+        if (std::dynamic_pointer_cast<Pub>(el)) sinks.push_back(el);
+    }
+    std::cout << "From Breweries to Pubs: " << objectKingdom.mcmf(sources, sinks, objectKingdom.getConvRate()).first << std::endl;
 
     return 0;
 }

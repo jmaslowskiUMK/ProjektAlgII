@@ -10,6 +10,7 @@
 #include <unordered_set>
 #include <iostream>
 #include <stack>
+#include <chrono>
 
 Country::Country() {}
 Country::~Country() {}
@@ -107,7 +108,9 @@ std::vector<Lane> Country::augmentingPathDFS(std::shared_ptr<Node> source, std::
 }
 
 
-int Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate){
+std::pair<int,int> Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate){
+    auto old  = std::chrono::steady_clock::now();
+
     int max_flow = 0;
     std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
 
@@ -209,11 +212,15 @@ int Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fromVec, std::vect
         } 
     }
 
-    return max_flow;
+    auto dur = std::chrono::steady_clock::now() - old; 
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur);
+    int ms_int = static_cast<int>(ms.count()); 
+    return {max_flow,ms_int};
 }
 
 
-int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate){
+std::pair<int,int> Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate){
+    auto old  = std::chrono::steady_clock::now();
     int max_flow = 0;
     std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
 
@@ -315,7 +322,10 @@ int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, s
         } 
     }
 
-    return max_flow;
+    auto dur = std::chrono::steady_clock::now() - old; 
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur);
+    int ms_int = static_cast<int>(ms.count()); 
+    return {max_flow,ms_int};
 }
 
 
@@ -414,7 +424,8 @@ void Country::printContent() {
     }
 }
 
-int Country::dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>>& toVec,int convRate){
+std::pair<int,int> Country::dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>>& toVec,int convRate){
+    auto old  = std::chrono::steady_clock::now();
  int max_flow = 0;
     std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
 
@@ -487,7 +498,11 @@ int Country::dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::
     }
 
 
-return max_flow;
+    auto dur = std::chrono::steady_clock::now() - old; 
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur);
+    int ms_int = static_cast<int>(ms.count()); 
+    return {max_flow,ms_int};
+
 }
 
 

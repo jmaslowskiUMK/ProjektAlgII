@@ -11,7 +11,7 @@ private:
 	std::shared_ptr<Node> to;
 	int flow;
 	int capacity;
-	int repair_cost;
+	int repair_cost=0;
 public:
 	Lane();
 	~Lane();
