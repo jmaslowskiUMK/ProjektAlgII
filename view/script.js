@@ -524,9 +524,9 @@ document.querySelector("#createHullButton").addEventListener('click', async () =
     }
 
     // ground class input
-    let groundClass = parseInt(prompt("Enter ground class (2 - 5):", "2"));
-    if (groundClass == null || isNaN(groundClass) || groundClass < 2 || groundClass > 5) {
-        alert("Wrong ground class (2-5)!");
+    let groundClass = parseInt(prompt("Enter ground class (1 - 6):", "2"));
+    if (groundClass == null || isNaN(groundClass) || groundClass < 1 || groundClass > 6) {
+        alert("Wrong ground class (1-6)!");
         CREATION_OCCUPIED = false;
         canvas.style.cursor = "default";
         return;
