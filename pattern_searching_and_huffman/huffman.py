@@ -15,7 +15,6 @@ def prepare_data(text):
     for line in text:
         for letter in line:
             letters.append(letter)  
-
     return letters
 
 
@@ -66,11 +65,13 @@ def huffman(text):
 
     data_count = dict(Counter(prepare_data(text))) # count the frequency of each character 
     hc = huffman_codes(data_count) # huffman codes dict 
-    hc_translate = str.maketrans(hc) # The maketrans() method returns a mapping table that can be used with the translate() method to replace specified characters
 
     encoded = []
     for line in text:
-        encoded.append(line.translate(hc_translate))
+        encoded_line = ''
+        for letter in line:
+            encoded_line = encoded_line + hc[letter] + ' '
+        encoded.append(encoded_line)
 
     return encoded
 
