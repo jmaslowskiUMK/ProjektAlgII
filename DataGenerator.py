@@ -199,6 +199,23 @@ def generate_lanes_brewery_to_pub(breweries, pubs, repair_probability):
                 "repair_cost": repair_cost
             })
     return lanes
+
+def generate_lanes_field_to_pub(fields, pubs, repair_probability):
+    lanes = []
+    for field in fields:
+        number_of_lanes = random.randint(1, len(pubs))
+        destinations = random.sample(pubs, number_of_lanes)
+        for dest in destinations:
+            capacity = random.randint(50, 1000)
+            repair_cost = random.randint(1, 10) if random.random() < repair_probability else 0
+            lanes.append({
+                "from": field["id"],
+                "to": dest["id"],
+                "capacity": capacity,
+                "repair_cost": repair_cost
+            })
+    return lanes
+
 def generate_seed(length=16):
     chars = string.ascii_letters + string.digits
     return ''.join(random.choice(chars) for _ in range(length))
@@ -263,8 +280,9 @@ repair_probability = float(input("Enter probability (0 to 1) that a lane has rep
 
 lanes_field_to_brewery = generate_lanes_yield_to_brewery(fields, breweries, repair_probability)
 lanes_brewery_to_pub = generate_lanes_brewery_to_pub(breweries, pubs, repair_probability)
+lanes_field_to_pub = generate_lanes_field_to_pub(fields, pubs, repair_probability)
 
-combined_lanes = lanes_field_to_brewery + lanes_brewery_to_pub
+combined_lanes = lanes_field_to_brewery + lanes_brewery_to_pub + lanes_field_to_pub
 
 # generating points for convex hulls within canvas, for now input number of hulls (later add generating for all canvas????), possible with large radius
 max_x = 1000
