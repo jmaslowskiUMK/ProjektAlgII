@@ -272,8 +272,15 @@ document.querySelector("#addPubButton").addEventListener('click', async () => {
             return;
         }
 
+        // pub capacity
+        let capacity = parseInt(prompt("Enter the pub's capacity.", "0"));
+        if (capacity == null || capacity == "" || isNaN(capacity) || capacity <= 0) {
+            alert("Wrong efficiency has been entered !");
+            return;
+        }
+
         const position = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
-        parserInstance.createPub(position.x, position.y);
+        parserInstance.createPub(position.x, position.y, capacity);
 
         canvas.removeEventListener('click', handleClick);
         canvas.style.cursor = "default";
@@ -561,6 +568,62 @@ document.querySelector("#createHullButton").addEventListener('click', async () =
         }
     }, { once: true });
 });
+
+
+// add hull point
+document.querySelector("#addPointToHullButton").addEventListener('click', () => {
+    if (CREATION_OCCUPIED) {
+        alert("Creation tool has already been activated!");
+        return;
+    }
+
+    const canvas = document.getElementById("Map");
+    canvas.style.cursor = "crosshair";
+    CREATION_OCCUPIED = true;
+
+    let selectedHullID = null;
+
+    const handleClick = (event) => {
+        if (event.target !== canvas) {
+            alert("Click directly on the map (canvas).");
+            return;
+        }
+
+        const pos = getWorldCoordinatesFromMouse(event, canvas, camera.x, camera.y, camera.zoom);
+        const x = Math.round(pos.x);
+        const y = Math.round(pos.y);
+
+        if (selectedHullID === null) {
+            const hullID = parserInstance.isInWhichHull(x, y);
+            console.log("HullID: " + hullID);
+            if (hullID === -1) {
+                alert("You didn't click inside any hull. Try again.");
+                return;
+            }
+            selectedHullID = hullID;
+            alert("Hull selected. Now click to add a point.");
+        } else {
+            parserInstance.addPointToHull(selectedHullID, x, y);
+            canvas.removeEventListener('click', handleClick); // <– tylko sprzątanie po kliknięciu
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+        }
+        draw();
+        return;
+    };
+
+    canvas.addEventListener('click', handleClick);
+
+    // Escape — oddzielne sprzątanie
+    document.addEventListener('keydown', e => {
+        if (e.key === "Escape") {
+            canvas.removeEventListener('click', handleClick);
+            canvas.style.cursor = "default";
+            CREATION_OCCUPIED = false;
+        }
+    }, { once: true }); // ← tylko raz, jak wcześniej
+});
+
 
 
 // ============================================================================

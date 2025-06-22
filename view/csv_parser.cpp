@@ -18,7 +18,6 @@ using namespace std;
 
 Country objectKingdom;
 
-
 // counters for manual creation
 int fieldsCounter = 0;
 int breweriesCounter = 0;
@@ -84,6 +83,12 @@ extern "C" {
             }
         }
 
+        if (objectKingdom.getConvRate() == 0) {
+            objectKingdom.setConvRate(1);
+        }
+        if (objectKingdom.getSeed() == "") {
+            objectKingdom.setSeed("DEFAULT");
+        }
         /*
         std::sort(objectKingdom.nodeVector.begin(), objectKingdom.nodeVector.end(),
         [](const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) {
@@ -165,6 +170,9 @@ string saveToCSV() {
                << hull->groundClass << "\n";
         }
     }
+
+    ss << "ConvRate,,,,,,,,,,,," << objectKingdom.getConvRate() << ",\n";
+    ss << "Seed,,,,,,,,,,,,," << objectKingdom.getSeed() << "\n";
 
     return ss.str();
 }
@@ -504,8 +512,18 @@ val calculateFlow() {
 
 void createField(int xMiddle, int yMiddle, int production) {
     // add reycasting
-    objectKingdom.createField(fieldsCounter * 3 + 0, production, xMiddle, yMiddle, CONST_RADIUS);
+    shared_ptr<Field> field = objectKingdom.createField(fieldsCounter * 3 + 0, production, xMiddle, yMiddle, CONST_RADIUS);
     fieldsCounter += 1;
+
+    for (int j = 0; j < objectKingdom.hulls.size(); j++) {
+        if (objectKingdom.rayCasting(objectKingdom.hulls[j]->points, std::make_pair(xMiddle, yMiddle))) {
+            // scale of grounds here
+            field->setProduction(
+                static_cast<int>(static_cast<double>(field->getProduction() * (1 + static_cast<double>(objectKingdom.hulls[j]->groundClass - 3) / 10.0)))
+            );
+            break;
+        }
+    }
 
     cout << "field creation succesfull: " << endl;
 }
@@ -546,6 +564,19 @@ void moveNode(int id, int x, int y) {
     shared_ptr<Node> node = objectKingdom.find(id);
     node->setX(x);
     node->setY(y);
+
+    if (shared_ptr<Field> field = std::dynamic_pointer_cast<Field>(node)) {
+        for (int j = 0; j < objectKingdom.hulls.size(); j++) {
+            if (objectKingdom.rayCasting(objectKingdom.hulls[j]->points, std::make_pair(x, y))) {
+                // scale of grounds here
+                field->setProduction(
+                    static_cast<int>(static_cast<double>(field->getProduction() * (1 + static_cast<double>(objectKingdom.hulls[j]->groundClass - 3) / 10.0)))
+                );
+                return;
+            }
+        }
+        field->setProduction(field->getBasicProduction());
+    }
 }
 
 // ============================================================================
@@ -555,6 +586,50 @@ struct Point {
     int x;
     int y;
 };
+
+int orientation(Point p, Point q, Point r)
+{
+    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+
+    if (val == 0)
+        return 0;
+    return (val > 0) ? 1 : 2;
+}
+
+// jarvis algorithm
+vector<Point> convexHull(vector<Point> points, int n) {
+    if (n < 3) {
+        cout << "Not enough points" << endl;
+        return points;
+    }
+
+    vector<Point> hull;
+
+    int l = 0;
+    for (int i = 1; i < n; i++)
+        if (points[i].x < points[l].x)
+            l = i;
+
+    int p = l, q;
+
+    do
+    {
+        hull.push_back(points[p]);
+
+        q = (p + 1) % n;
+        for (int i = 0; i < n; i++)
+        {
+            if (orientation(points[p], points[i], points[q]) == 2)
+                q = i;
+        }
+
+        p = q;
+
+    }
+    while (p != l);
+
+    return hull;
+}
 
 void createHull(string points, int groundClass) {
     objectKingdom.addHull(groundClass);
@@ -572,8 +647,11 @@ void createHull(string points, int groundClass) {
         pointsV.push_back({x, y});
     }
 
-    //vector<Point> hull = convexHull(pointsV);
-    vector<Point> hull = pointsV;
+    vector<Point> hull = convexHull(pointsV, pointsV.size());
+    //vector<Point> hull = pointsV;
+
+    cout << "points: " << points << " size of hull: " << hull.size() << endl;
+
     for (int i = 0; i < hull.size(); i++) {
         objectKingdom.hulls[HullCounter]->points.push_back({hull[i].x, hull[i].y});
     }
@@ -586,7 +664,45 @@ void createHull(string points, int groundClass) {
     for (int i = 0; i < objectKingdom.hulls[HullCounter]->points.size(); i++) {
         cout << objectKingdom.hulls[HullCounter]->points[i].first << " " << objectKingdom.hulls[HullCounter]->points[i].second << endl;
     }
+
+    // set production to all fields inside a hull
+    for (int i = 0; i < objectKingdom.nodeVector.size(); i += 3) {
+        if (objectKingdom.rayCasting(objectKingdom.hulls[HullCounter]->points, (std::make_pair<int, int>(objectKingdom.nodeVector[i]->getX(), objectKingdom.nodeVector[i]->getY())))) {
+            shared_ptr<Field> field = dynamic_pointer_cast<Field>(objectKingdom.nodeVector[i]);
+            cout << field->getID() << endl;
+            field->setProduction(
+                static_cast<int>(static_cast<double>(field->getProduction() * (1 + static_cast<double>(objectKingdom.hulls[HullCounter]->groundClass - 3) / 10.0)))
+            );
+        }
+    }
     //objectKingdom.addHull(groundClass);
+}
+
+void addPointToHull(int hullId, int x, int y) {
+    vector<Point> points;
+    for (int i = 0; i < objectKingdom.hulls[hullId]->points.size(); i++) {
+        points.push_back({objectKingdom.hulls[hullId]->points[i].first, objectKingdom.hulls[hullId]->points[i].second});
+    }
+
+    points.push_back({x, y});
+    vector<Point> hull = convexHull(points, points.size());
+
+    objectKingdom.hulls[hullId]->points.clear();
+    for (int i = 0; i < hull.size(); i++) {
+        objectKingdom.hulls[hullId]->points.push_back({hull[i].x, hull[i].y});
+    }
+
+
+    // set production to all fields inside a hull
+    for (int i = 0; i < objectKingdom.nodeVector.size(); i += 3) {
+        if (objectKingdom.rayCasting(objectKingdom.hulls[HullCounter]->points, (std::make_pair<int, int>(objectKingdom.nodeVector[i]->getX(), objectKingdom.nodeVector[i]->getY())))) {
+            shared_ptr<Field> field = dynamic_pointer_cast<Field>(objectKingdom.nodeVector[i]);
+            cout << field->getID() << endl;
+            field->setProduction(
+                static_cast<int>(static_cast<double>(field->getProduction() * (1 + static_cast<double>(objectKingdom.hulls[HullCounter]->groundClass - 3) / 10.0)))
+            );
+        }
+    }
 }
 
 bool isInAnyHull(int x, int y) {
@@ -600,6 +716,10 @@ bool isInAnyHull(int x, int y) {
 
 int isInWhichHull(int x, int y) {
     for (int i = 0; i < objectKingdom.hulls.size(); ++i) {
+        cout << x << " " << y << endl;
+        for (int j = 0; j < objectKingdom.hulls[i]->points.size(); j++) {
+            cout << "this: " << objectKingdom.hulls[i]->points[j].first << " " << objectKingdom.hulls[i]->points[j].second << endl;
+        }
         if (objectKingdom.rayCasting(objectKingdom.hulls[i]->points, std::make_pair(x, y))) {
             return i;
         }
@@ -611,6 +731,12 @@ int isInWhichHull(int x, int y) {
 // ===                            Deletion tools                            ===
 // ============================================================================
 void deleteHull(int id) {
+    for (int i = 0; i < objectKingdom.nodeVector.size(); i += 3) {
+        if (objectKingdom.rayCasting(objectKingdom.hulls[id]->points, (std::make_pair<int, int>(objectKingdom.nodeVector[i]->getX(), objectKingdom.nodeVector[i]->getY())))) {
+            shared_ptr<Field> field = dynamic_pointer_cast<Field>(objectKingdom.nodeVector[i]);
+            field->setProduction(field->getBasicProduction());
+        }
+    }
     objectKingdom.hulls.erase(objectKingdom.hulls.begin() + id);
 }
 
@@ -675,6 +801,7 @@ EMSCRIPTEN_BINDINGS(my_module) {
     // hull functions
     emscripten::function("isInWhichHull", &isInWhichHull);
     emscripten::function("createHull", &createHull);
+    emscripten::function("addPointToHull", &addPointToHull);
     emscripten::register_vector<int>("VectorInt");
 
     // delete object functions

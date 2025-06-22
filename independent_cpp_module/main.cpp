@@ -12,7 +12,7 @@
 #include "../sourceFiles/Intersection.h"
 #include "../sourceFiles/Hull.h"
 
-#define ROW_LENGTH 12
+#define ROW_LENGTH 14
 #define CONST_RADIUS 4
 
 int main(int argc, char* argv[]) {
@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
     int HullCounter = -1;
     int fieldsCounter = 0, breweriesCounter = 0, pubsCounter = 0;
 
+	std::cout << "dziala" << std::endl;
     while (std::getline(ss, line)) {
         std::stringstream lineStream(line);
         std::vector<std::string> row(ROW_LENGTH);
@@ -148,7 +149,7 @@ int main(int argc, char* argv[]) {
 		}
 
 	}
-	
+
     para = objectKingdom.edmondsKarpManyToMany(sources,sinks, objectKingdom.getConvRate());
     std::cout << "1 Karp: " <<para.first<< std::endl;
     time+=para.second;
@@ -227,7 +228,6 @@ int main(int argc, char* argv[]) {
 		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
 			sinks.push_back(el);
 		}
-
 	}
 
 
