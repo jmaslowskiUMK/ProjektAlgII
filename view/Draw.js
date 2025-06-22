@@ -279,4 +279,33 @@ function draw() {
         ctx.fillStyle = "black";
         ctx.fillText(node.name, node.x + 10 * camera.zoom, node.y - 10 * camera.zoom);
     });
+
+
+    // boundries because of superSource and superSink coordinates
+    for (let i = 0; i < arrOfMaxFlow.length; i += 2) {
+        let worldX = arrOfMaxFlow[i];
+        let worldY = arrOfMaxFlow[i + 1];
+
+        let x = (worldX - (camera.x)) * camera.zoom + (canvas.width) * 0.5;
+        let y = (worldY - (camera.y)) * camera.zoom + (canvas.height) * 0.5;
+
+        if (screenX < 0 || screenX > canvas.width || screenY < 0 || screenY > canvas.height)
+            continue;
+
+        const glowRadius = Math.max(20 * camera.zoom, 5);
+        const markerRadius = glowRadius * 0.7;
+
+        ctx.shadowColor = 'rgba(255, 215, 0, 0.9)';
+        ctx.shadowBlur = glowRadius;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.9)';
+        ctx.beginPath();
+        ctx.arc(x, y, markerRadius, 0, Math.PI * 2, false);
+        ctx.fill();
+    }
+
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = 'transparent';
 }

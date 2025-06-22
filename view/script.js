@@ -13,6 +13,8 @@ let parserInstance = null;
 let fileLoaded = false;
 let CREATION_OCCUPIED = false;
 
+let arrOfMaxFlow = [];
+
 let seed ="DEFAULT";
 
 document.querySelector("#flowButton").addEventListener("click", () => {
@@ -20,7 +22,13 @@ document.querySelector("#flowButton").addEventListener("click", () => {
         alert("Wybierz plik CSV");
     }
 
-    let resultsArr = parserInstance.calculateFlow();
+    let resultsArr = parserInstance.calculateFlow(
+        Math.floor(camera.x),
+        Math.floor(camera.y),
+        camera.zoom,
+        canvas.width,
+        canvas.height
+    );
 
     document.getElementById("maxFlowValue").textContent =resultsArr[0]; 
     document.getElementById("maxFlowValue1").textContent =resultsArr[0]; 
@@ -30,6 +38,12 @@ document.querySelector("#flowButton").addEventListener("click", () => {
     document.getElementById("maxFlowValue3").textContent =resultsArr[4];
     document.getElementById("maxFlowValueTime3").textContent =resultsArr[5];
     document.getElementById("maxFlowValue4").textContent =resultsArr[6];
+    arrOfMaxFlow.length = 0;
+    for (let i = 7; i < resultsArr.length; i++) {
+        arrOfMaxFlow.push(resultsArr[i]);
+    }
+
+    draw();
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -360,7 +374,7 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
         }
 
 
-
+        /*
         // to prevent fields and pubs connections
         if (
             ((firstID % 3) == (hit.ID % 3)) ||
@@ -370,6 +384,7 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
             alert("You are connecting incompatible elements.");
             return;
         }
+        */
 
 
 
@@ -820,7 +835,6 @@ document.querySelector("#deletePropertyButton").addEventListener('click', async 
         }
     }, { once: true });
 });
-
 
 
 

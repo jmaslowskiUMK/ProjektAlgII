@@ -322,26 +322,7 @@ val getHulls(int camX, int camY, double zoom, int canvasWidth, int canvasHeight)
 
 
 
-val calculateFlow() {
-    /*
-	val resultsArr = val::array();
-
-    std::vector<std::shared_ptr<Node>> sinks;
-	std::vector<std::shared_ptr<Node>> sources;
-	for(auto el:objectKingdom.nodeVector){
-		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
-			sources.push_back(el);
-		}
-	}
-	for(auto el:objectKingdom.nodeVector){
-		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
-			sinks.push_back(el);
-		}
-	}
-
-    resultsArr.call<void>("push", objectKingdom.edmondsKarpManyToMany(sources,sinks));
-    resultsArr.call<void>("push", objectKingdom.dinic(sources,sinks));
-    */
+val calculateFlow(int camX, int camY, double zoom, int canvasWidth, int canvasHeight) {
     val resultsArr = val::array();
     std::vector<std::shared_ptr<Node>> sinks;
 	std::vector<std::shared_ptr<Node>> sources;
@@ -357,10 +338,10 @@ val calculateFlow() {
 		}
 
 	}
-        int time =0 ;
-        std::pair<int,int> para =  objectKingdom.fordFulkerson(sources,sinks, 1);
-	std::cout << "1: " <<para.first<<std::endl;
-        time+=para.second;
+
+    int time =0 ;
+    std::pair<int,int> para =  objectKingdom.fordFulkerson(sources,sinks, objectKingdom.getConvRate());
+    time+=para.second;
 	sources.clear();
 	sinks.clear();
 
@@ -376,15 +357,15 @@ val calculateFlow() {
 
 	}
 
-        para =  objectKingdom.fordFulkerson(sources,sinks, 1);
-        resultsArr.call<void>("push", para.first);
-        time+=para.second; 
-        resultsArr.call<void>("push", time);
+    para =  objectKingdom.fordFulkerson(sources,sinks, objectKingdom.getConvRate());
+    resultsArr.call<void>("push", para.first);
+    time+=para.second; 
+    resultsArr.call<void>("push", time);
 
 
-        sources.clear();
-        sinks.clear();
-        time=0;
+    sources.clear();
+    sinks.clear();
+    time=0;
 
 
 	for(auto el:objectKingdom.nodeVector){
@@ -398,9 +379,8 @@ val calculateFlow() {
 		}
 
 	}
-        para =  objectKingdom.edmondsKarpManyToMany(sources,sinks, 1);
-	std::cout << "1: " <<para.first<<std::endl;
-        time+=para.second;
+    para =  objectKingdom.edmondsKarpManyToMany(sources,sinks, objectKingdom.getConvRate());
+    time+=para.second;
 	sources.clear();
 	sinks.clear();
 
@@ -416,14 +396,14 @@ val calculateFlow() {
 
 	}
 
-        para = objectKingdom.edmondsKarpManyToMany(sources,sinks, 1);
-        time+=para.second;
-        resultsArr.call<void>("push", para.first);
-        resultsArr.call<void>("push", time);
-        sources.clear();
-        sinks.clear();
-    
-        time=0;
+    para = objectKingdom.edmondsKarpManyToMany(sources,sinks, objectKingdom.getConvRate());
+    time+=para.second;
+    resultsArr.call<void>("push", para.first);
+    resultsArr.call<void>("push", time);
+    sources.clear();
+    sinks.clear();
+
+    time=0;
 
 	for(auto el:objectKingdom.nodeVector){
 		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
@@ -436,10 +416,9 @@ val calculateFlow() {
 		}
 
 	}
-        
-        para=objectKingdom.dinic(sources,sinks, 1);
-	std::cout << "1: " <<para.first<<std::endl;
-        time+=para.second;
+
+    para=objectKingdom.dinic(sources,sinks, objectKingdom.getConvRate());
+    time+=para.second;
 	sources.clear();
 	sinks.clear();
 
@@ -455,19 +434,19 @@ val calculateFlow() {
 
 	}
 
-        para=objectKingdom.dinic(sources,sinks, 1);
-        time+=para.second;
-        resultsArr.call<void>("push", para.first);
-        resultsArr.call<void>("push", time);
-        sources.clear();
-        sinks.clear();   
+    para=objectKingdom.dinic(sources,sinks, objectKingdom.getConvRate());
+    time+=para.second;
+    resultsArr.call<void>("push", para.first);
+    resultsArr.call<void>("push", time);
+    sources.clear();
+    sinks.clear();
 
 
 
-         for(auto el:objectKingdom.nodeVector){
-		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
-			sources.push_back(el);
-		}
+    for(auto el:objectKingdom.nodeVector){
+	    if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+	    	sources.push_back(el);
+	    }
 	}
 	for(auto el:objectKingdom.nodeVector){
 		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
@@ -476,14 +455,12 @@ val calculateFlow() {
 
 	}
 
-    std::cout << "2" <<std::endl;
-    
-	int x=objectKingdom.mcmf(sources,sinks, 1).first;
-        std::cout<<"PEAX"<<std::endl;
+
+	auto x=objectKingdom.mcmf(sources,sinks, objectKingdom.getConvRate());
 	sources.clear();
 	sinks.clear();
 
-        for(auto el:objectKingdom.nodeVector){
+    for(auto el:objectKingdom.nodeVector){
 		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
 			sources.push_back(el);
 		}
@@ -495,10 +472,23 @@ val calculateFlow() {
 
 	}
 
-        x+=objectKingdom.mcmf(sources,sinks, 1).first;
-        resultsArr.call<void>("push",x);
-        sources.clear();
-        sinks.clear();
+    auto y = objectKingdom.mcmf(sources,sinks, objectKingdom.getConvRate());
+    x.first += y.first;
+    resultsArr.call<void>("push",x.first);
+    for (int i = 0; i < x.second.size(); i++) {
+        //to exclude super source and super sink
+        if (objectKingdom.find(x.second[i]->getID())->getX() != x.second[i]->getX() && objectKingdom.find(x.second[i]->getID())->getY() != x.second[i]->getY()) continue;
+        resultsArr.call<void>("push", x.second[i]->getX());
+        resultsArr.call<void>("push", x.second[i]->getY());
+    }
+    for (int i = 0; i < y.second.size(); i++) {
+        //to exclude super source and super sink
+        if (objectKingdom.find(x.second[i]->getID())->getX() != x.second[i]->getX() && objectKingdom.find(x.second[i]->getID())->getY() != x.second[i]->getY()) continue;
+        resultsArr.call<void>("push", y.second[i]->getX());
+        resultsArr.call<void>("push", y.second[i]->getY());
+    }
+    sources.clear();
+    sinks.clear();
 
 
 

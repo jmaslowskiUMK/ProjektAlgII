@@ -52,24 +52,29 @@ int main(int argc, char* argv[]) {
         }
 
         if (row[0] == "Hull_" + std::to_string(HullCounter + 1)) {
-            objectKingdom.addHull(std::stoi(row[11]));
-            HullCounter++;
-        } else if (row[0].find("HullPoint") != std::string::npos) {
-            objectKingdom.hulls[HullCounter]->addPoint(std::make_pair(std::stoi(row[5]), std::stoi(row[6])));
-        } else if (row[0] == "Field") {
-            objectKingdom.createField(std::stoi(row[1]), std::stoi(row[2]), std::stoi(row[5]), std::stoi(row[6]), CONST_RADIUS);
-            fieldsCounter++;
-        } else if (row[0] == "Brewery") {
-            objectKingdom.createBrewery(std::stoi(row[1]), std::stoi(row[5]), std::stoi(row[6]), CONST_RADIUS, std::stoi(row[3]));
-            breweriesCounter++;
-        } else if (row[0] == "Pub") {
-            objectKingdom.createPub(std::stoi(row[1]), std::stoi(row[5]), std::stoi(row[6]), CONST_RADIUS, std::stoi(row[4]));
-            pubsCounter++;
-        } else if (row[0] == "Lane") {
-            auto from = objectKingdom.find(std::stoi(row[7]));
-            auto to = objectKingdom.find(std::stoi(row[8]));
+            // Function to create Hull object and add to vector
+            objectKingdom.addHull(stoi(row[11]));
+            HullCounter += 1;
+        }   else if (row[0].find("HullPoint") != std::string::npos) {
+            // Function to add to Hull
+            objectKingdom.hulls[HullCounter]->addPoint(std::pair<int, int> (stoi(row[5]), stoi(row[6])));
+        }   else if (row[0] == "Field") {
+            // adding Field
+            objectKingdom.createField(stoi(row[1]), stoi(row[2]), stoi(row[5]), stoi(row[6]), CONST_RADIUS);
+            fieldsCounter += 1;
+        }   else if (row[0] == "Brewery") {
+            // adding Brewery
+            objectKingdom.createBrewery(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS, stoi(row[3]));
+            breweriesCounter += 1;
+        }   else if (row[0] == "Pub") {
+            // adding Pub
+            objectKingdom.createPub(stoi(row[1]), stoi(row[5]), stoi(row[6]), CONST_RADIUS, stoi(row[4]));
+            pubsCounter += 1;
+        }   else if (row[0] == "Lane") {
+            auto from = objectKingdom.find(stoi(row[7]));
+            auto to = objectKingdom.find(stoi(row[8]));
             if (from && to) {
-                Lane lane(from, to, std::stod(row[9]), std::stoi(row[10]));
+                Lane lane(from, to, stod(row[9]), stoi(row[10]));
                 objectKingdom.addRelationship(lane);
             }
         }   else if (row[0] == "Seed") {
@@ -235,7 +240,7 @@ int main(int argc, char* argv[]) {
 }
 
 
-// g++ main.cpp ../sourceFiles/Country.cpp ../sourceFiles/Brewery.cpp ../sourceFiles/Field.cpp ../sourceFiles/Pub.cpp ../sourceFiles/Lane.cpp ../sourceFiles/Node.cpp ../sourceFiles/Hull.cpp ../sourceFiles/Intersection.cpp -o Independent_module
+//g++ main.cpp ../sourceFiles/Country.cpp ../sourceFiles/Brewery.cpp ../sourceFiles/Field.cpp ../sourceFiles/Pub.cpp ../sourceFiles/Lane.cpp ../sourceFiles/Node.cpp ../sourceFiles/Hull.cpp ../sourceFiles/Intersection.cpp -o Independent_module
 
 	/*
 	Country polska;	
