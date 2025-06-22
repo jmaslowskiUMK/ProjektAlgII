@@ -183,7 +183,7 @@ Projekt składa się z dwóch głównych części: aplikacji webowej do wizualiz
 ## 5.2. Uruchomienie aplikacji desktopowej
   1. Otwórz wiersz poleceń (terminal) i przejdź do katalogu *pattern_searching_and_huffman* w projekcie.
   ```
-  cd ProjektAlgII/pattern_searching_and_huffman/
+  cd ProjektAlgII/pattern_searching_and_huffman/main/
   ```
   2. Do uruchomienia niezbędne jest zaistalowanie biblioteki PyQt5 dla Python. 
   3. Uruchom aplikację za pomocą pliku search_gui.py.
