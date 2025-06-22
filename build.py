@@ -21,7 +21,7 @@ def compile_and_run():
         "-g",
         "-s ASSERTIONS=1",
         "-fsanitize=address",
-        "-s INITIAL_MEMORY=2048MB",
+        "-s INITIAL_MEMORY=1024MB",
         "-s ALLOW_MEMORY_GROWTH=1",
         "-s NO_DISABLE_EXCEPTION_CATCHING",
         "--bind"

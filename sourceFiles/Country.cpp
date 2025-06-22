@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <iostream>
+#include <stack>
 
 Country::Country() {}
 Country::~Country() {}
@@ -72,21 +73,104 @@ std::vector<Lane> Country::augmentingPathBfs(std::shared_ptr<Node> source, std::
 }
 
 
-int Country::edmondsKarp(std::shared_ptr<Node> from, std::shared_ptr<Node> to) {
-    int max_flow = 0;
-    std::map<std::shared_ptr<Node>, std::vector<Lane> > adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
-    while (true) {
-        std::vector<Lane> path = augmentingPathBfs(from, to, adjListCopy);//look for aumenting path
-        if (path.empty()) break;//if there is no way from source to sink we are done
+std::vector<Lane> Country::augmentingPathDFS(std::shared_ptr<Node> source, std::shared_ptr<Node> sink,std::map<std::shared_ptr<Node>, std::vector<Lane> > adjListCopy) {
+    std::stack<std::shared_ptr<Node>> s;
+    std::unordered_map<std::shared_ptr<Node>, Lane> parent;
+    std::unordered_set<std::shared_ptr<Node>> visited;
 
-        int minFlow = INT_MAX;//limits.h
+    s.push(source);
+    visited.insert(source);
+    
+    while (!s.empty()) {
+        auto curr = s.top();//take the first element from queue
+        s.pop();//pop the element that is currently held in curr
+
+        for (auto& neighbour : adjListCopy[curr]) {//get EDGES from current VERTIX
+            auto next = neighbour.getToPtr();
+            if (visited.count(next) == 0 && neighbour.getCapacity() - neighbour.getFlow() > 0) {//check if we have already viseted and if the flow is >0
+                parent[next] = neighbour;
+                visited.insert(next);
+                s.push(next);
+
+                if (next == sink) {//check if finished
+                    std::vector<Lane> path;//returning vector
+                    for (auto node = sink; node != source; node = parent[node].getFromPtr()) {//create a path from parent
+                        path.push_back(parent[node]);
+                    }
+                    std::reverse(path.begin(), path.end());
+                    return path;
+                }
+            }
+        }
+    }
+    return {};
+}
+
+
+int Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate){
+    int max_flow = 0;
+    std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
+
+    std::shared_ptr<Node> superSource;
+    std::shared_ptr<Node> superSink;
+
+    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource. THEY ARE CONNECTED BY EGDES WITH INF FLOW.
+    auto type = std::dynamic_pointer_cast<Field>(fromVec[0]);
+
+    if(type){
+        superSource = std::make_shared<Field>();
+        superSink = std::make_shared<Brewery>();
+
+        for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
+            auto sourceField = std::dynamic_pointer_cast<Field>(source);
+            if(sourceField){
+                Lane lane(superSource, sourceField, sourceField->getProduction(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+
+        for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
+            auto sinkBrew = std::dynamic_pointer_cast<Brewery>(sink);
+            if(sinkBrew){
+                Lane lane(sinkBrew, superSink, sinkBrew->getBarleyCap(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+    }else{
+        superSource = std::make_shared<Brewery>();
+        superSink = std::make_shared<Pub>();
+
+        for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
+            auto sourceBrew = std::dynamic_pointer_cast<Brewery>(source);
+            if(sourceBrew){
+                Lane lane(superSource,sourceBrew, sourceBrew->getBeerAmount(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+
+        for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
+        auto sinkPub = std::dynamic_pointer_cast<Pub>(sink);
+            if(sinkPub){
+                 Lane lane(sinkPub, superSink, sinkPub->getCapacity(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+
+    } 
+
+    while (true) {
+    std::vector<Lane> path = augmentingPathBfs(superSource, superSink, adjListCopy);
+    if (path.empty()) break;//if there is no way from source to sink we are finished
+
+
+    int minFlow = INT_MAX;//limits.h
         for (auto& lane : path) {//looking for minFlow in our augmenting path as it is the maximum that can flow through that path
             if (lane.getCapacity() - lane.getFlow() < minFlow) {
                 minFlow = lane.getCapacity() - lane.getFlow();
             }
         }
 
-        //AUGMENT
+    //AUGMENT
         for (auto& lane : path) {//add return edges and substract flow from path found by augmentingPathBfs
             for (auto& l : adjListCopy[lane.getFromPtr()]) {//substract flow from aumenting path
                 if (l.getToPtr() == lane.getToPtr()) {
@@ -112,8 +196,22 @@ int Country::edmondsKarp(std::shared_ptr<Node> from, std::shared_ptr<Node> to) {
         max_flow += minFlow;// add flow from each augmenting path to resulting max flow
     }
 
+    if(type){
+        for(auto &el:toVec){
+            for(auto &el2:adjListCopy[el]){
+                if(el2.getToPtr().get() == superSink.get()){
+                    auto brew = std::dynamic_pointer_cast<Brewery>(el);
+                    brew->setBarley(el2.getFlow());
+                    brew->conversion(convRate);
+                    break;
+                }
+            }
+        } 
+    }
+
     return max_flow;
 }
+
 
 int Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate){
     int max_flow = 0;
@@ -302,26 +400,57 @@ void Country::printContent() {
     }
 }
 
-int Country::dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec){
+int Country::dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>>& toVec,int convRate){
+ int max_flow = 0;
+    std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
 
-int max_flow = 0;
-std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// create a copy of adjList, so that adjList stays the same after adding reverse edges
+    std::shared_ptr<Node> superSource;
+    std::shared_ptr<Node> superSink;
 
-//create superSink and superSource that connect all the sinks and souerces as one superSink and superSource. THEY ARE CONNECTED BY EGDES WITH INF FLOW.
-    auto superSource = std::make_shared<Field>();
-    auto superSink = std::make_shared<Pub>();
+    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource. THEY ARE CONNECTED BY EGDES WITH INF FLOW.
+    auto type = std::dynamic_pointer_cast<Field>(fromVec[0]);
 
-    for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
-    Lane lane(superSource, source, INT_MAX, 0);
-    addRelationship(adjListCopy, lane);
-    }
+    if(type){
+        superSource = std::make_shared<Field>();
+        superSink = std::make_shared<Brewery>();
 
-    for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
-    Lane lane(sink, superSink, INT_MAX, 0);
-    addRelationship(adjListCopy, lane);
-    }
+        for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
+            auto sourceField = std::dynamic_pointer_cast<Field>(source);
+            if(sourceField){
+                Lane lane(superSource, sourceField, sourceField->getProduction(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
 
+        for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
+            auto sinkBrew = std::dynamic_pointer_cast<Brewery>(sink);
+            if(sinkBrew){
+                Lane lane(sinkBrew, superSink, sinkBrew->getBarleyCap(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+    }else{
+        superSource = std::make_shared<Brewery>();
+        superSink = std::make_shared<Pub>();
 
+        for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
+            auto sourceBrew = std::dynamic_pointer_cast<Brewery>(source);
+            if(sourceBrew){
+                Lane lane(superSource,sourceBrew, sourceBrew->getBeerAmount(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+
+        for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
+        auto sinkPub = std::dynamic_pointer_cast<Pub>(sink);
+            if(sinkPub){
+                 Lane lane(sinkPub, superSink, sinkPub->getCapacity(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+
+    } 
+    
     while (buildLevelGraph(superSource, superSink, adjListCopy)) {//we are building level graph similarly as we were doing with augmentingPathBfs function. Serves simmilar role
         std::unordered_map<std::shared_ptr<Node>, int> next; // TODO
         int flow;
@@ -329,6 +458,20 @@ std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;// crea
             max_flow += flow;
         }
     }
+    
+    if(type){
+        for(auto &el:toVec){
+            for(auto &el2:adjListCopy[el]){
+                if(el2.getToPtr().get() == superSink.get()){
+                    auto brew = std::dynamic_pointer_cast<Brewery>(el);
+                    brew->setBarley(el2.getFlow());
+                    brew->conversion(convRate);
+                    break;
+                }
+            }
+        } 
+    }
+
 
 return max_flow;
 }
@@ -511,7 +654,7 @@ bool Country::rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
-int Country::mcmf(std::vector<std::shared_ptr<Node>> sourceVec, std::vector<std::shared_ptr<Node>> sinkVec){
+std::pair<int,std::vector<std::shared_ptr<Node>>> Country::mcmf(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> toVec, int convRate){
 
     std::map<std::shared_ptr<Node>, std::vector<Lane>> adjListCopy = adjList;
     
@@ -520,18 +663,48 @@ int Country::mcmf(std::vector<std::shared_ptr<Node>> sourceVec, std::vector<std:
     std::shared_ptr<Node> superSink = std::make_shared<Pub>();
 
     //Connect super source to all sources with infinite capacity
-    for(auto& source : sourceVec) {
-        adjListCopy[superSource].emplace_back(superSource, source, INT_MAX, 0);
-        //Reverse edge with 0 capacity
-        adjListCopy[source].emplace_back(source, superSource, 0, 0);
-    }
+    auto type = std::dynamic_pointer_cast<Field>(fromVec[0]);
 
-    //Connect super sink to all sinks with infinite capacity
-    for(auto& sink : sinkVec){
-        adjListCopy[sink].emplace_back(sink, superSink, INT_MAX, 0);
-        //Reverse edge with 0 capacity
-        adjListCopy[superSink].emplace_back(superSink, sink, 0, 0);
-    }
+    if(type){
+        superSource = std::make_shared<Field>();
+        superSink = std::make_shared<Brewery>();
+
+        for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
+            auto sourceField = std::dynamic_pointer_cast<Field>(source);
+            if(sourceField){
+                Lane lane(superSource, sourceField, sourceField->getProduction(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+
+        for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
+            auto sinkBrew = std::dynamic_pointer_cast<Brewery>(sink);
+            if(sinkBrew){
+                Lane lane(sinkBrew, superSink, sinkBrew->getBarleyCap(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+    }else{
+        superSource = std::make_shared<Brewery>();
+        superSink = std::make_shared<Pub>();
+
+        for (auto& source : fromVec) {//add to adjListCopy edges from superSource to all the sources
+            auto sourceBrew = std::dynamic_pointer_cast<Brewery>(source);
+            if(sourceBrew){
+                Lane lane(superSource,sourceBrew, sourceBrew->getBeerAmount(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+
+        for (auto& sink : toVec) {//add to adjListCopy edges from sinks to superSink
+        auto sinkPub = std::dynamic_pointer_cast<Pub>(sink);
+            if(sinkPub){
+                 Lane lane(sinkPub, superSink, sinkPub->getCapacity(), 0);
+                addRelationship(adjListCopy, lane);
+            }
+        }
+
+    } 
 
     int total_cost = 0;
     
@@ -541,18 +714,17 @@ int Country::mcmf(std::vector<std::shared_ptr<Node>> sourceVec, std::vector<std:
         potential[node.first] = 0;
     }
 
+        std::unordered_map<std::shared_ptr<Node>, std::shared_ptr<Node>> parent;
     while(true){
         //Dijkstra algorithm
         //unordered_map should be faster than map as it uses hash not RB tree. But because it uses hash func its not ordered
         std::unordered_map<std::shared_ptr<Node>, int> dist;
-        std::unordered_map<std::shared_ptr<Node>, std::shared_ptr<Node>> parent;
-        std::unordered_map<std::shared_ptr<Node>, Lane*> parent_lane;
         
         //Priority queue with el(distance, node) and greater that makes nodes with the shortest dist(cost) be put on top 
         //Note that we store int only because of the fact that its priority_queue that looks for the shortest dist(cost) 
         std::priority_queue<std::pair<int, std::shared_ptr<Node>>, std::vector<std::pair<int, std::shared_ptr<Node>>>, 
                           std::greater<std::pair<int, std::shared_ptr<Node>>>> pq;
-
+    std::unordered_map<std::shared_ptr<Node>, Lane*> parent_lane;
         // Initialize distances to INF and dist[source] to 0
         for(auto& node : adjListCopy){
             dist[node.first] = INT_MAX;
@@ -632,5 +804,26 @@ int Country::mcmf(std::vector<std::shared_ptr<Node>> sourceVec, std::vector<std:
 
     }
 
-    return total_cost;
+
+    if(type){
+        for(auto &el:toVec){
+            for(auto &el2:adjListCopy[el]){
+                if(el2.getToPtr().get() == superSink.get()){
+                    auto brew = std::dynamic_pointer_cast<Brewery>(el);
+                    brew->setBarley(el2.getFlow());
+                    brew->conversion(convRate);
+                    break;
+                }
+            }
+        } 
+    }
+
+    std::shared_ptr<Node> curr = superSink;
+    std::vector<std::shared_ptr<Node>> path;
+    while(curr.get() != superSource.get()){
+        path.push_back(curr);
+        curr = parent[curr];
+    }
+
+    return {total_cost,path};
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wczytywanie CSV (WebAssembly)</title>
+    <title>Loading CSV (WebAssembly)</title>
     <style>
         body {
             display: flex;
@@ -156,48 +156,71 @@
         #addOptions > div:nth-child(4) button:hover {
             background-color: #c0392b;
         }
+        #rightSidebar {
+            width: 350px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            box-sizing: border-box;
+            height: 100vh;
+            overflow-y: auto;
+            border-left: 1px solid #bdc3c7;
+        }
+
+        #rightSidebar h2 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        #infoContainer {
+            font-size: 12px;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
 
 <div id="sidebar">
-    <h2>Menu Akcji</h2>
+    <h2>Menu</h2>
 
     <input type="file" id="csvFileInput" accept=".csv">
 
-    <button id="processButton">Przetwórz</button>
-    <button id="drawButton">Rysuj</button>
-    <button id="flowButton">Oblicz przepływ</button>
+    <button id="processButton">Process</button>
+    <button id="drawButton">Draw</button>
+    <button id="flowButton">Calculate flow</button>
 
     <h2>Zoom</h2>
     <input type="range" value="1" max="4" min="0.25" step="0.05">
 
-    <h2>Narzędzia</h2>
+    <h2>Tools</h2>
     <div id="addOptions">
         <div class="button-group">
-            <button id="addFieldButton">Dodaj Pole</button>
-            <button id="addBreweryButton">Dodaj Browar</button>
-            <button id="addPubButton">Dodaj Pub</button>
-            <button id="addRelationButton">Stwórz Relację</button>
+            <button id="addFieldButton">Add field</button>
+            <button id="addBreweryButton">Add brewery</button>
+            <button id="addPubButton">Add pub</button>
+            <button id="addRelationButton">Create relation</button>
         </div>
 
         <div class="button-group">
-            <button id="moveNodeButton">Przesuń Nieruchomość</button>
-            <button id="moveHullPointButton">Przesuń Punkt Otoczki</button>
+            <button id="moveNodeButton">Move property</button>
+            <button id="moveHullPointButton">Move hull point</button>
         </div>
 
         <div class="button-group">
-            <button id="createHullButton">Stwórz Otoczkę</button>
-            <button id="addPointToHullButton">Dodaj Punkt do Otoczki</button>
+            <button id="createHullButton">Create hull</button>
+            <button id="addPointToHullButton">Add point to hull</button>
         </div>
 
         <div class="button-group">
-            <button id="deletePropertyButton">Usuń Nieruchomość</button>
-            <button id="deleteRelationButton">Usuń Relację</button>
-            <button id="deleteHullPointButton">Usuń Punkt Otoczki</button>
-            <button id="deleteHullButton">Usuń Otoczkę</button>
+            <button id="deletePropertyButton">Delete property</button>
+            <button id="deleteRelationButton">Delete relation</button>
+            <button id="deleteHullPointButton">Delete hull points</button>
+            <button id="deleteHullButton">Delete hull</button>
         </div>
-        <button id="saveButton">Zapisz do pliku</button>
+        <button id="saveButton">Save to file</button>
     </div>
 </div>
 
@@ -205,10 +228,18 @@
     <canvas id="Map"></canvas>
 
     <div id="flowInfo">
-        Maksymalny przepływ w grafie: <span id="maxFlowValue">-</span>
+        Maximum flow in the graph: <span id="maxFlowValue">-</span>
     </div>
 </div>
-
+<div id="rightSidebar">
+    <h2>Additional information </h2>
+    <div id="infoContainer">
+        Maximum flow in the graph(Ford-Fulkerson): <span id="maxFlowValue1">-</span></br>
+        Maximum flow in the graph(Edmonds-Karp): <span id="maxFlowValue2">-</span></br>
+        Maximum flow in the graph(Dinic): <span id="maxFlowValue3">-</span></br>
+        Minimal cost with maximum flow: <span id="maxFlowValue4">-</span></br>
+    </div>
+</div>
 <script src="./csv_parser.js"></script>
 <script src="./script.js"></script>
 <script src="./Draw.js"></script>

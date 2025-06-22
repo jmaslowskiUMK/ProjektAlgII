@@ -21,8 +21,11 @@ document.querySelector("#flowButton").addEventListener("click", () => {
 
     let resultsArr = parserInstance.calculateFlow();
 
-    document.getElementById("maxFlowValue").textContent = resultsArr[0]; // for 0 you have edmonds-karp, for 1 you have Dinic algorithm
-
+    document.getElementById("maxFlowValue").textContent =resultsArr[0]; //0 - fordfulkerson 1 - edmondsKarp 2 - dinic
+    document.getElementById("maxFlowValue1").textContent =resultsArr[0]; //0 - fordfulkerson 1 - edmondsKarp 2 - dinic
+    document.getElementById("maxFlowValue2").textContent =resultsArr[1];
+    document.getElementById("maxFlowValue3").textContent =resultsArr[2];
+    document.getElementById("maxFlowValue4").textContent =resultsArr[3];
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -32,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     processButton.addEventListener('click', async () => {
 
-        if (!confirm('Czy na pewno chcesz wczytać plik? Wprowadzone wcześniej dane zostaną usunięte')) {
+        if (!confirm('Are you sure you want to load the file? Any previously entered data will be lost.')) {
             return;
         }
 
@@ -50,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
             reader.readAsText(file);
         } else {
-            alert('Wybierz plik CSV');
+            alert('Choose CSV file');
         }
     });
 });
@@ -83,7 +86,7 @@ document.addEventListener('click', e => {
 
 document.addEventListener('keypress', e => {
     if (e.key === "i") {
-        console.log("Rozpoczynam skanowanie...");
+        console.log("Starting to scan...");
 
         const rect = canvas.getBoundingClientRect();
 
@@ -107,7 +110,7 @@ document.addEventListener('keypress', e => {
             }
         }
 
-        console.log("Skanowanie zakończone.");
+        console.log("Scanning finished.");
     }   else if (e.key === "o") {
         besierSwitch = !(besierSwitch);
         draw();
@@ -120,7 +123,7 @@ document.addEventListener('keypress', e => {
 // draw button listener
 document.querySelector("#drawButton").addEventListener('click', () => {
     if (!fileLoaded) {
-        alert('Żaden plik nie został wczytany!');
+        alert('No file was loaded!');
         return;
     }
 
@@ -136,7 +139,7 @@ document.querySelector("#drawButton").addEventListener('click', () => {
 // manual field creation
 document.querySelector("#addFieldButton").addEventListener('click', async () => {
     if (CREATION_OCCUPIED) {
-        alert("Narzędzie kreacji jest już wybrane wybrane !");
+        alert("Creation tool has already been selected !");
         return;
     }
 
@@ -151,14 +154,14 @@ document.querySelector("#addFieldButton").addEventListener('click', async () => 
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
-            alert("Kliknij bezpośrednio w mapę (canvas), aby dodać pole.");
+            alert("Click directly on the map (canvas), to add field.");
             return;
         }
 
         // production
-        let production = parseInt(prompt("Wprowadz produkcję jęczmienia", "0"));
+        let production = parseInt(prompt("Input barley production", "0"));
         if (production == null || production == "" || isNaN(production) || production <= 0) {
-            alert("Wprowadzono niewłaściwą ilość produkowanego jęczmienia !");
+            alert("An incorrect amount of produced barley has been entered !");
             return;
         }
 
@@ -194,7 +197,7 @@ document.querySelector("#addFieldButton").addEventListener('click', async () => 
 // manual brewerie creation
 document.querySelector("#addBreweryButton").addEventListener('click', async () => {
     if (CREATION_OCCUPIED) {
-        alert("Narzędzie kreacji jest już wybrane wybrane !");
+        alert("Creation tool has already been selected !");
         return;
     }
 
@@ -206,14 +209,14 @@ document.querySelector("#addBreweryButton").addEventListener('click', async () =
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
-            alert("Kliknij bezpośrednio w mapę (canvas), aby dodać browar.");
+            alert("Click directly on the map (canvas), to add field.");
             return;
         }
 
         // barley
-        let barley = parseInt(prompt("Wprowadz przepustowość browaru", "0"));
+        let barley = parseInt(prompt("Enter the brewery's capacity.", "0"));
         if (barley == null || barley == "" || isNaN(barley) || barley <= 0) {
-            alert("Wprowadzono niewłaściwą wydajnośc !");
+            alert("Wrong efficiency has been entered !");
             return;
         }
 
@@ -246,7 +249,7 @@ document.querySelector("#addBreweryButton").addEventListener('click', async () =
 // manual pub creation
 document.querySelector("#addPubButton").addEventListener('click', async () => {
     if (CREATION_OCCUPIED) {
-        alert("Narzędzie kreacji jest już wybrane wybrane !");
+        alert("Creation tool has already been selected !");
         return;
     }
 
@@ -258,7 +261,7 @@ document.querySelector("#addPubButton").addEventListener('click', async () => {
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
-            alert("Kliknij bezpośrednio w mapę (canvas), aby dodać pub.");
+            alert("Click directly on the map (canvas), to add the pub.");
             return;
         }
 
@@ -292,7 +295,7 @@ document.querySelector("#addPubButton").addEventListener('click', async () => {
 // manual relation creation
 document.querySelector("#addRelationButton").addEventListener('click', () => {
     if (CREATION_OCCUPIED) {
-        alert("Narzędzie kreacji jest już wybrane wybrane !");
+        alert("Creation tool has already been selected !");
         return;
     }
 
@@ -314,7 +317,7 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
-            alert("Kliknij bezpośrednio w mapę (canvas), aby stworzyć relację.");
+            alert("Click directly on the map (canvas), to create relation.");
             return;
         }
 
@@ -328,18 +331,18 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
         });
 
         if (!hit) {
-            alert("Kliknij bliżej węzła.");
+            alert("Click closer to the node.");
             return;
         }
 
         if (firstID === null) {
             firstID = hit.ID;
-            console.log(`Pierwszy węzeł: ${firstID}`);
+            console.log(`First node: ${firstID}`);
             return;
         }
 
         if (hit.ID === firstID) {
-            alert("Nie można połączyć węzła z samym sobą.");
+            alert("Impossible to connect node with itself.");
             return;
         }
 
@@ -351,27 +354,27 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
             (firstID % 3 == 0 && hit.ID % 3 != 1) ||
             (firstID % 3 == 2 && hit.ID % 3 != 1)
         ) {
-            alert("Łączysz nieodpowiednie elementy");
+            alert("You are connecting incompatible elements.");
             return;
         }
 
 
 
         // capacity popup
-        let capacity = parseInt(prompt("Wprowadz przepustowosc drogi (>0)", "0"));
+        let capacity = parseInt(prompt("Input lane capacity (>0)", "0"));
         if (capacity == null || capacity == "" || isNaN(capacity) || capacity <= 0) {
-            alert("Wprowadzono niewłaściwą przepustowość !");
+            alert("Wrong capacity has been entered !");
             return;
         }
 
         // repair_cost popup
-        let repair_cost = parseInt(prompt("Wprowadz koszt naprawy drogi", "0"));
+        let repair_cost = parseInt(prompt("Enter lane repair cost", "0"));
         if (repair_cost == null || repair_cost === "" || isNaN(repair_cost) || repair_cost < 0) {
-            alert("Wprowadzono niewłaściwy koszt !");
+            alert("Wrong lane repair cost has been entered !");
             return;
         }
 
-        console.log(`Drugi węzeł: ${hit.ID}`);
+        console.log(`Second node: ${hit.ID}`);
         parserInstance.createRelation(firstID, hit.ID, capacity, repair_cost);
 
         canvas.removeEventListener('click', handleClick);
@@ -403,7 +406,7 @@ document.querySelector("#addRelationButton").addEventListener('click', () => {
 // manual change of node position
 document.querySelector("#moveNodeButton").addEventListener('click', () => {
     if (CREATION_OCCUPIED) {
-        alert("Narzędzie jest już aktywne!");
+        alert("Tool is activated!");
         return;
     }
 
@@ -424,7 +427,7 @@ document.querySelector("#moveNodeButton").addEventListener('click', () => {
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
-            alert("Kliknij bezpośrednio w mapę (canvas), aby wybrać węzeł.");
+            alert("Click directly on the map (canvas), to chose the node.");
             return;
         }
 
@@ -439,13 +442,13 @@ document.querySelector("#moveNodeButton").addEventListener('click', () => {
             });
 
             if (!hit) {
-                alert("Kliknij bliżej węzła.");
+                alert("Click closer to the node.");
                 return;
             }
 
             selectedNodeID = hit.ID;
-            console.log(`Wybrany węzeł do przeniesienia: ${selectedNodeID}`);
-            alert("Kliknij teraz w docelową pozycję na mapie.");
+            console.log(`Selected node for transfer.: ${selectedNodeID}`);
+            alert("Now, click on the target on the map.");
             return;
         }
 
@@ -470,7 +473,7 @@ document.querySelector("#moveNodeButton").addEventListener('click', () => {
             canvas.removeEventListener('click', handleClick);
             canvas.style.cursor = "default";
             CREATION_OCCUPIED = false;
-            console.log("Anulowano przenoszenie węzła (Escape)");
+            console.log("Node transfer has been canceled (Escape)");
         }
     }, { once: true });
 });
@@ -487,7 +490,7 @@ document.querySelector("#moveNodeButton").addEventListener('click', () => {
 // manual hull creation
 document.querySelector("#createHullButton").addEventListener('click', async () => {
     if (CREATION_OCCUPIED) {
-        alert("Narzędzie kreacji jest już aktywne!");
+        alert("Creation tool has already been activated!");
         return;
     }
 
@@ -498,28 +501,28 @@ document.querySelector("#createHullButton").addEventListener('click', async () =
     const points = [];
 
     // point count input
-    let pointCount = parseInt(prompt("Podaj liczbę punktów otoczki (min. 3):", "3"));
+    let pointCount = parseInt(prompt("Enter number of hull points (min. 3):", "3"));
     if (pointCount == null || isNaN(pointCount) || pointCount < 3) {
-        alert("Nieprawidłowa liczba punktów (min. 3)!");
+        alert("Wrong number of points (min. 3)!");
         CREATION_OCCUPIED = false;
         canvas.style.cursor = "default";
         return;
     }
 
     // ground class input
-    let groundClass = parseInt(prompt("Podaj klasę ziemi (2 - 5):", "2"));
+    let groundClass = parseInt(prompt("Enter ground class (2 - 5):", "2"));
     if (groundClass == null || isNaN(groundClass) || groundClass < 2 || groundClass > 5) {
-        alert("Nieprawidłowa klasa ziemi (musi być od 2 do 5)!");
+        alert("Wrong ground class (2-5)!");
         CREATION_OCCUPIED = false;
         canvas.style.cursor = "default";
         return;
     }
 
-    alert(`Kliknij teraz ${pointCount} punktów na mapie, aby utworzyć otoczkę.`);
+    alert(`Now, click ${pointCount} points on the map, to create convex hull.`);
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
-            alert("Kliknij bezpośrednio w mapę (canvas), aby wskazać punkt otoczki.");
+            alert("Click directly on the map (canvas), to enter hull points.");
             return;
         }
 
@@ -547,7 +550,7 @@ document.querySelector("#createHullButton").addEventListener('click', async () =
             canvas.removeEventListener('click', handleClick);
             canvas.style.cursor = "default";
             CREATION_OCCUPIED = false;
-            console.log("Tworzenie otoczki anulowane (Escape)");
+            console.log("Creation of hull cancelled (Escape)");
         }
     }, { once: true });
 });
@@ -560,7 +563,7 @@ document.querySelector("#createHullButton").addEventListener('click', async () =
 // hull deletion
 document.querySelector("#deleteHullButton").addEventListener('click', () => {
     if (CREATION_OCCUPIED) {
-        alert("Narzędzie usuwania otoczek jest już aktywne!");
+        alert("Creation tool has already been activated!");
         return;
     }
 
@@ -570,7 +573,7 @@ document.querySelector("#deleteHullButton").addEventListener('click', () => {
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
-            alert("Kliknij bezpośrednio w mapę (canvas), aby zaznaczyć otoczkę.");
+            alert("Click directly on the map (canvas), to select hull.");
             return;
         }
 
@@ -578,10 +581,10 @@ document.querySelector("#deleteHullButton").addEventListener('click', () => {
         const hullID = parserInstance.isInWhichHull(Math.round(position.x), Math.round(position.y));
 
         if (hullID === -1) {
-            alert("Nie kliknięto w żadną otoczkę.");
+            alert("No hull has been selected.");
             return;
         } else {
-            const confirmDelete = confirm(`Czy na pewno chcesz usunąć otoczkę o ID ${hullID}?`);
+            const confirmDelete = confirm(`Are you sure you want to delete hull ID:${hullID}?`);
             if (confirmDelete) {
                 parserInstance.deleteHull(hullID);
                 draw();
@@ -608,7 +611,7 @@ document.querySelector("#deleteHullButton").addEventListener('click', () => {
 // relation deletion
 document.querySelector("#deleteRelationButton").addEventListener('click', () => {
     if (CREATION_OCCUPIED) {
-        alert("Narzędzie kreacji jest już wybrane!");
+        alert("Creation tool has already been selected");
         return;
     }
 
@@ -628,11 +631,11 @@ document.querySelector("#deleteRelationButton").addEventListener('click', () => 
     CREATION_OCCUPIED = true;
 
 
-    alert("Wybierz dwa węzły między którymi relacja ma zostać usunięta");
+    alert("Select two nodes between which the connection is to be removed.");
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
-            alert("Kliknij bezpośrednio w mapę (canvas), aby zaznaczyć węzły.");
+            alert("Click directly on the map (canvas), to select nodes.");
             return;
         }
 
@@ -658,11 +661,11 @@ document.querySelector("#deleteRelationButton").addEventListener('click', () => 
         const secondID = hit.ID;
 
         if (secondID === firstID) {
-            alert("Nie można zaznaczyć tego samego węzła dwa razy.");
+            alert("Not possible to select the same node twice.");
             return;
         }
 
-        const confirmDelete = confirm(`Czy na pewno chcesz usunąć relację między węzłami ${firstID} i ${secondID}?`);
+        const confirmDelete = confirm(`Are you sure you want to delete relation between nodes: ${firstID} i ${secondID}?`);
         if (confirmDelete) {
             parserInstance.deleteRelation(firstID, secondID);
             draw();
@@ -688,7 +691,7 @@ document.querySelector("#deleteRelationButton").addEventListener('click', () => 
 // node deletion
 document.querySelector("#deletePropertyButton").addEventListener('click', async () => {
     if (CREATION_OCCUPIED) {
-        alert("Narzędzie usuwania wierzchołków jest już aktywne!");
+        alert("Creation tool has already been activated!");
         return;
     }
 
@@ -708,7 +711,7 @@ document.querySelector("#deletePropertyButton").addEventListener('click', async 
 
     const handleClick = (event) => {
         if (event.target !== canvas) {
-            alert("Kliknij bezpośrednio w mapę (canvas), aby usunąć wierzchołek.");
+            alert("Click directly on the map (canvas), to delete the node.");
             return;
         }
 
@@ -722,11 +725,11 @@ document.querySelector("#deletePropertyButton").addEventListener('click', async 
         });
 
         if (!hit) {
-            alert("Nie znaleziono wierzchołka w pobliżu kliknięcia.");
+            alert("Node has not been found near the click.");
             return;
         }
 
-        const confirmDelete = confirm(`Czy na pewno chcesz usunąć wierzchołek o ID ${hit.ID}?`);
+        const confirmDelete = confirm(`Are you sure you want to delete node with ID: ${hit.ID}?`);
         if (confirmDelete) {
             parserInstance.deleteNode(hit.ID);
             draw();

@@ -345,6 +345,39 @@ val calculateFlow() {
 		}
 
 	}
+	std::cout << "1: " <<objectKingdom.fordFulkerson(sources,sinks, 1)<<std::endl;
+
+	sources.clear();
+	sinks.clear();
+
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+
+    resultsArr.call<void>("push", objectKingdom.fordFulkerson(sources,sinks, 1));
+        sources.clear();
+        sinks.clear();
+
+
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
 	std::cout << "1: " <<objectKingdom.edmondsKarpManyToMany(sources,sinks, 1)<<std::endl;
 
 	sources.clear();
@@ -363,6 +396,77 @@ val calculateFlow() {
 	}
 
     resultsArr.call<void>("push", objectKingdom.edmondsKarpManyToMany(sources,sinks, 1));
+        sources.clear();
+        sinks.clear();
+    
+ 
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+	std::cout << "1: " <<objectKingdom.dinic(sources,sinks, 1)<<std::endl;
+
+	sources.clear();
+	sinks.clear();
+
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+
+        resultsArr.call<void>("push", objectKingdom.dinic(sources,sinks, 1));
+        sources.clear();
+        sinks.clear();   
+
+
+
+         for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Field>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+	int x=objectKingdom.mcmf(sources,sinks, 1).first;
+
+	sources.clear();
+	sinks.clear();
+
+        for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Brewery>(el)) {
+			sources.push_back(el);
+		}
+	}
+	for(auto el:objectKingdom.nodeVector){
+		if (auto derived = std::dynamic_pointer_cast<Pub>(el)) {
+			sinks.push_back(el);
+		}
+
+	}
+
+        resultsArr.call<void>("push", objectKingdom.mcmf(sources,sinks, 1).first + x);
+        sources.clear();
+        sinks.clear();   
+
+
 
     return resultsArr;
 }
