@@ -54,5 +54,5 @@ The project consists of two main parts: a web application for visualizing fields
   - click "Search".
 
 
-For more information see ([documentation](./project_documentation_eng.md)).
+For more information see [documentation](./project_documentation_eng.md).
 
