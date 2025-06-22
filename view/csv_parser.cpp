@@ -476,10 +476,10 @@ val calculateFlow() {
 
 	}
 
-    std::cout << "2" << endl;
-    /*
+    std::cout << "2" <<std::endl;
+    
 	int x=objectKingdom.mcmf(sources,sinks, 1).first;
-
+        std::cout<<"PEAX"<<std::endl;
 	sources.clear();
 	sinks.clear();
 
@@ -499,7 +499,7 @@ val calculateFlow() {
         resultsArr.call<void>("push",x);
         sources.clear();
         sinks.clear();
-*/
+
 
 
     return resultsArr;
