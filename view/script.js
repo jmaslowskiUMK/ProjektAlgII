@@ -23,9 +23,13 @@ document.querySelector("#flowButton").addEventListener("click", () => {
 
     document.getElementById("maxFlowValue").textContent =resultsArr[0]; //0 - fordfulkerson 1 - edmondsKarp 2 - dinic
     document.getElementById("maxFlowValue1").textContent =resultsArr[0]; //0 - fordfulkerson 1 - edmondsKarp 2 - dinic
-    document.getElementById("maxFlowValue2").textContent =resultsArr[1];
-    document.getElementById("maxFlowValue3").textContent =resultsArr[2];
-    document.getElementById("maxFlowValue4").textContent =resultsArr[3];
+    document.getElementById("maxFlowValueTime1").textContent =resultsArr[1]; //0 - fordfulkerson 1 - edmondsKarp 2 - dinic
+    document.getElementById("maxFlowValue2").textContent =resultsArr[2];
+    document.getElementById("maxFlowValueTime2").textContent =resultsArr[3];
+    document.getElementById("maxFlowValue3").textContent =resultsArr[4];
+    document.getElementById("maxFlowValueTime3").textContent =resultsArr[5];
+//    document.getElementById("maxFlowValue4").textContent =resultsArr[6];
+  //  document.getElementById("maxFlowValueTime4").textContent =resultsArr[7];
 });
 
 document.addEventListener('DOMContentLoaded', async () => {

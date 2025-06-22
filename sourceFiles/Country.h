@@ -49,8 +49,8 @@ public:
 	std::shared_ptr<Intersection> createIntersection(int x,int y);
 	std::shared_ptr<Field> createField(int ID, int production,int xMiddle,int yMiddle,int radius);
 	std::shared_ptr<Node> find(int ID);
-	int edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec, int convRate);
-	int dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>>& toVec,int convRate);
+	std::pair<int,int> edmondsKarpManyToMany(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec, int convRate);
+	std::pair<int,int> dinic(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>>& toVec,int convRate);
 	void printContent();
 	int sendFlow(std::shared_ptr<Node> u, std::shared_ptr<Node> sink, int flow,std::map<std::shared_ptr<Node>, std::vector<Lane>>& adjListCopy, std::unordered_map<std::shared_ptr<Node>, int>& next); 
 	bool buildLevelGraph(std::shared_ptr<Node> source, std::shared_ptr<Node> sink,std::map<std::shared_ptr<Node>, std::vector<Lane>>& adjListCopy);
@@ -61,6 +61,6 @@ public:
 	int det(std::pair<int,int> a,std::pair<int,int> b, std::pair<int,int> c);
 	bool rayCasting(std::vector<std::pair<int,int>> pointVec,std::pair<int,int> point);
 	std::pair<int,std::vector<std::shared_ptr<Node>> >mcmf(std::vector<std::shared_ptr<Node>> sourceVec,std::vector<std::shared_ptr<Node>> sinkVec,int convRate);
-	int fordFulkerson(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate);
+	std::pair<int,int> fordFulkerson(std::vector<std::shared_ptr<Node>> fromVec, std::vector<std::shared_ptr<Node>> &toVec,int convRate);
 	std::vector<Lane> augmentingPathDFS(std::shared_ptr<Node> source, std::shared_ptr<Node> sink,std::map<std::shared_ptr<Node>, std::vector<Lane> > adjListCopy) ;
 };
