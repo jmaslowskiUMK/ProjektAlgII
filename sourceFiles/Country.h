@@ -17,8 +17,8 @@ class Country
 {
 private:
 	int breweryEfficiency;
-	int convRate;
-	std::string seed;
+	int convRate = 1;
+	std::string seed = "DEFAULT";
 public:
 	struct CompareByX {
 	    bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
