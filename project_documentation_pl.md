@@ -64,11 +64,13 @@ Dla zaimplementowania zróżnicowanej wydajności pól w zależności od ich po�
 
 ## 2.4. Wyszukiwanie wzorców tekstowych
 
-W projekcie zaimplementowano dwa algorytmy wyszukiwania wzorców tekstowych:
+W projekcie zaimplementowano trzy algorytmy wyszukiwania wzorców tekstowych:
 
 - **Algorytm Rabina-Karpa**: Funkcja `rabin_karp(pattern_ready, line, q, huffman_coding)` wykorzystuje funkcję skrótu do szybkiego porównywania fragmentów tekstu. Parametry `q` i `huffman_coding` oznaczają odpowiednio liczbę pierwszą dla haszowania oraz informację czy zastosować kodowanie Huffmana.
 
 - **Algorytm Knutha-Morrisa-Pratta**: Funkcja `kmp(pattern, text)` to algorytm wyszukiwania wzorca, który minimalizuje liczbę zbędnych porównań, wykorzystując tablicę prefikso-sufiksów. 
+
+- **Algorytm Boyera-Moore'a**: Algorytm został zaimplementowany w dwóch wersjach: uproszczonej `bm_simplified(pattern, text)` oraz pełnej `bm(pattern, text)`. Obie wersje dodają prefiks ^ (w celu indeksowania od 1) oraz wykorzystują funkcję `create_last(text, pattern)`, która tworzy tablicę LAST (LAST[x] = pozycja ostatniego wystąpienia x we wzorcu, 0 gdy x nie występuje we wzorcu). Dodatkowo, pełna wersja używa funkcji `bmnext(pattern)`, aby wyznaczyć tablicę BMNext (kontrola przesunięć).
 
 - **Kodowanie Huffmana**: Może być opcjonalnie stosowane przed wyszukiwaniem wzorców w celu kompresji danych i optymalizacji pamięci. Jeśli kodowanie Huffmana jest używane, zarówno tekst, jak i wzorzec są najpierw kodowane, a następnie wyszukiwanie odbywa się na skompresowanych danych.
 
@@ -127,7 +129,7 @@ Przygotowano także skrypt Pythona przeznaczony do generowania danych, w tym pun
 | HullPoint_0 | 1 |  |  |  | 628 | -846 |  |  |  |  | 6 |
 
 
-Dodatkowo pliki znajdujące się w katalogu `pattern_searching_and_huffman` rozwiązują problem wyszukiwania słów w tekstach. Zaimplementowene zostały dwa algorytmy wyszukiwania wzorca w tekstach, a także kodowanie Huffmana.
+Dodatkowo pliki znajdujące się w katalogu `pattern_searching_and_huffman` rozwiązują problem wyszukiwania słów w tekstach. Zaimplementowene zostały trzy algorytmy (w tym jeden w dwóch wariantach) wyszukiwania wzorca w tekstach, a także kodowanie Huffmana.
 
 Pozostałe pliki odpowiadją za skompilowanie kodu C++ do formatu WebAssembly i udostępnienie go do użytku w przeglądarce, co pozwala na interaktywną wizualizację i obliczenia.
 
@@ -150,11 +152,11 @@ Projekt łączy różne technologie w celu stworzenia wszechstronnej aplikacji:
 
 - **CSV**: Pliki CSV są głównym formatem do wczytywania i zapisywania danych dotyczących budynków (pól, browarów, karczm), relacji (dróg) i otoczek.
 
-## 5. Instrukcje uruchomienia
+# 5. Instrukcje uruchomienia
 
 Projekt składa się z dwóch głównych części: aplikacji webowej do wizualizacji pól, browarów i pubów w Shire oraz aplikacji desktopowej do wyszukiwania wzorców tekstowych.
 
-### 5.1. Uruchomienie aplikacji webowej
+## 5.1. Uruchomienie aplikacji webowej
   1. Otwórz wiersz poleceń (terminal) i przejdź do katalogu głównego projektu.
   ```
   cd ProjektAlgII/
@@ -170,12 +172,12 @@ Projekt składa się z dwóch głównych części: aplikacji webowej do wizualiz
   4. Otwórz przeglądarkę internetową i przejdź pod adres http://localhost:8000.
   5. Testuj aplikację:
     ![web_img1](./images/web1.png)
-    - W interfejsie aplikacji webowej, za pomocą przycisku "Wybierz plik CSV do przetworzenia", wybierz odpowiedni plik danych CSV (np. input_data.csv z repozytorium projektu) Następnie kliknij przycisk "Przetwórz". 
+    - W interfejsie aplikacji webowej wybierz odpowiedni plik danych CSV (np. input_data.csv z repozytorium projektu). Następnie kliknij przycisk "Przetwórz". 
     ![web_img2](./images/web2.png)
-    - Możesz korzystać z dostępnych funkcji, takich jak "Rysuj" (wizualizacja elementów), "Oblicz przepływ" (wywołanie algorytmów przepływu sieciowego), lub "Dodaj element" (manualne dodawanie pól, browarów, pubów, tworzenie relacji).
+    - Możesz korzystać z dostępnych funkcji, takich jak "Rysuj" (wizualizacja elementów), "Oblicz przepływ" (wywołanie algorytmów przepływu sieciowego) lub manualnie dodawać pola, browary, puby, tworzyć relacje, itp.
     ![web_img3](./images/web3.png)
 
-### 5.2. Uruchomienie aplikacji desktopowej
+## 5.2. Uruchomienie aplikacji desktopowej
   1. Otwórz wiersz poleceń (terminal) i przejdź do katalogu *pattern_searching_and_huffman* w projekcie.
   ```
   cd ProjektAlgII/pattern_searching_and_huffman/
@@ -190,11 +192,10 @@ Projekt składa się z dwóch głównych części: aplikacji webowej do wizualiz
   ![desk_img1](./images/desk1.png)
 
   - wprowadź wzorzec tekstowy, który chcesz wyszukać,
-  - wybierz algorytm wyszukiwania, który ma zostać użyty (Rabin-Karp lub KMP),
+  - wybierz algorytm wyszukiwania, który ma zostać użyty (Rabin-Karp, KMP, Boyer-Moore simplified, Boyer-Moore),
   - aby teksty zostały zakodowane za pomocą algorytmu Huffmana przed wyszukiwaniem, zaznacz opcję użycia kodowania Huffmana,
   - wybierz plik CSV, w którym ma zostać przeprowadzone wyszukiwanie,
-  - wybierz algorytm wyszukiwania, który ma zostać użyty (Rabin-Karp lub KMP),
-  - podaj nazwę pliku wyjściowego, w którym zostaną zapisane wyniki wyszukiwania (domyślnie rk_search.csv dla Rabina-Karpa lub kmp_search.csv dla KMP),
+  - podaj nazwę pliku wyjściowego, w którym zostaną zapisane wyniki wyszukiwania (domyślnie: rk_search.csv dla Rabina-Karpa, kmp_search.csv dla KMP, bm_simplified_search.csv dla Boyer-Moore simplified oraz bm_search.csv dla Boyera-Moore'a),
   - kliknij przycisk "Search".
 
 
