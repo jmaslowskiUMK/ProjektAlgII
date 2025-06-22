@@ -1,7 +1,7 @@
 import os
 
 from read_data import read_data 
-from pattern_searching import rabin_karp, kmp
+from pattern_searching import rabin_karp, kmp, bm_simplified, bm
 from huffman import huffman
 
 def search(file_name, pattern, search_type, huffman_coding, save_as):
@@ -12,7 +12,7 @@ def search(file_name, pattern, search_type, huffman_coding, save_as):
     
     if huffman_coding:
         data = text.copy()
-        data.append(pattern)
+        data.append(pattern.lower())
 
         data_huff = huffman(data)
         text_ready = data_huff[:-1]
@@ -33,10 +33,14 @@ def search(file_name, pattern, search_type, huffman_coding, save_as):
 
     for i in range(len(text)):
         line = text_ready[i]
-        if search_type == 'rk':
+        if search_type == 'rk': # rabin karp
             result = rabin_karp(pattern_ready, line, q, huffman_coding)
-        elif search_type == 'kmp':
+        elif search_type == 'kmp': # knuth morris pratt
             result = kmp(pattern_ready, line)
+        elif search_type == 'bm_simplified': # boyer moore, simplified
+            result = bm_simplified(pattern_ready, line)
+        elif search_type == 'bm': # boyer moore 
+            result = bm_simplified(pattern_ready, line)
 
         if result:
             with open(save_as, 'a') as file:
