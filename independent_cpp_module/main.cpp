@@ -236,10 +236,8 @@ int main(int argc, char* argv[]) {
 	}
 
     auto para2 = objectKingdom.mcmf(sources,sinks, objectKingdom.getConvRate());
-    std::cout << "1 mcmf: " <<para.first<< std::endl;
-    time+=para.second;
-	std::cout << "1 mcmf Time: " << time << std::endl;
-    sources.clear();
+    std::cout << "1 mcmf: " <<para2.first<< std::endl;
+       sources.clear();
     sinks.clear();
     time=0;
 
@@ -256,10 +254,8 @@ int main(int argc, char* argv[]) {
 	}
 
     para2 = objectKingdom.mcmf(sources,sinks, objectKingdom.getConvRate());
-    std::cout << "2 mcmf: " <<para.first<< std::endl;
-    time+=para.second;
-	std::cout << "2 mcmf Time: " << time << std::endl;
-    sources.clear();
+    std::cout << "2 mcmf: " <<para2.first<< std::endl;
+        sources.clear();
     sinks.clear();
     time=0;
 

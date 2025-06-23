@@ -117,10 +117,11 @@ std::pair<int,int> Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fro
     std::shared_ptr<Node> superSource;
     std::shared_ptr<Node> superSink;
 
-    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource. THEY ARE CONNECTED BY EGDES WITH INF FLOW.
+    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource.
+    //they are created accordingly to the type so either Field->Brewery or Brewery->Pub the cost is 0 but the capacity depends on the object
     auto type = std::dynamic_pointer_cast<Field>(fromVec[0]);
-
-    if(type){
+    
+    if(type){//Field->Brewery
         superSource = std::make_shared<Field>();
         superSink = std::make_shared<Brewery>();
 
@@ -139,7 +140,7 @@ std::pair<int,int> Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fro
                 addRelationship(adjListCopy, lane);
             }
         }
-    }else{
+    }else{//Brewery-->Pub
         superSource = std::make_shared<Brewery>();
         superSink = std::make_shared<Pub>();
 
@@ -163,18 +164,18 @@ std::pair<int,int> Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fro
 
     while (true) {
     std::vector<Lane> path = augmentingPathBfs(superSource, superSink, adjListCopy);
-    if (path.empty()) break;//if there is no way from source to sink we are finished
+    if(path.empty())break;//if there is no way from source to sink we are finished
 
 
     int minFlow = INT_MAX;//limits.h
-        for (auto& lane : path) {//looking for minFlow in our augmenting path as it is the maximum that can flow through that path
+        for(auto& lane : path){//looking for minFlow in our augmenting path as it is the maximum that can flow through that path
             if (lane.getCapacity() - lane.getFlow() < minFlow) {
                 minFlow = lane.getCapacity() - lane.getFlow();
             }
         }
 
     //AUGMENT
-        for (auto& lane : path) {//add return edges and substract flow from path found by augmentingPathBfs
+        for(auto& lane : path){//add return edges and substract flow from path found by augmentingPathBfs
             for (auto& l : adjListCopy[lane.getFromPtr()]) {//substract flow from aumenting path
                 if (l.getToPtr() == lane.getToPtr()) {
                     l.setFlow(l.getFlow() + minFlow);
@@ -183,7 +184,7 @@ std::pair<int,int> Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fro
             }
 
             bool foundReverse = false;
-            for (auto& l : adjListCopy[lane.getToPtr()]) {
+            for (auto& l : adjListCopy[lane.getToPtr()]){
                 if (l.getToPtr() == lane.getFromPtr()) {
                     l.setFlow(l.getFlow() - minFlow);
                     foundReverse = true;
@@ -199,7 +200,7 @@ std::pair<int,int> Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fro
         max_flow += minFlow;// add flow from each augmenting path to resulting max flow
     }
 
-    if(type){
+    if(type){//because there is an & in toVec we can change it so the next iteration of FF will have the appropraite flow
         for(auto &el:toVec){
             for(auto &el2:adjListCopy[el]){
                 if(el2.getToPtr().get() == superSink.get()){
@@ -212,7 +213,7 @@ std::pair<int,int> Country::fordFulkerson(std::vector<std::shared_ptr<Node>> fro
         } 
     }
 
-    auto dur = std::chrono::steady_clock::now() - old; 
+    auto dur = std::chrono::steady_clock::now() - old; //return time in milliseconds
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur);
     int ms_int = static_cast<int>(ms.count()); 
     return {max_flow,ms_int};
@@ -227,10 +228,11 @@ std::pair<int,int> Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<No
     std::shared_ptr<Node> superSource;
     std::shared_ptr<Node> superSink;
 
-    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource. THEY ARE CONNECTED BY EGDES WITH INF FLOW.
+    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource.
+    //they are created accordingly to the type so either Field->Brewery or Brewery->Pub the cost is 0 but the capacity depends on the object
     auto type = std::dynamic_pointer_cast<Field>(fromVec[0]);
 
-    if(type){
+    if(type){//Field->Brewery
         superSource = std::make_shared<Field>();
         superSink = std::make_shared<Brewery>();
 
@@ -249,7 +251,7 @@ std::pair<int,int> Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<No
                 addRelationship(adjListCopy, lane);
             }
         }
-    }else{
+    }else{//Brewery->Pub
         superSource = std::make_shared<Brewery>();
         superSink = std::make_shared<Pub>();
 
@@ -309,7 +311,7 @@ std::pair<int,int> Country::edmondsKarpManyToMany(std::vector<std::shared_ptr<No
         max_flow += minFlow;// add flow from each augmenting path to resulting max flow
     }
 
-    if(type){
+    if(type){//because there is an & in toVec we can change it so the next iteration of EK will have the appropraite flow
         for(auto &el:toVec){
             for(auto &el2:adjListCopy[el]){
                 if(el2.getToPtr().get() == superSink.get()){
@@ -432,7 +434,8 @@ std::pair<int,int> Country::dinic(std::vector<std::shared_ptr<Node>> fromVec, st
     std::shared_ptr<Node> superSource;
     std::shared_ptr<Node> superSink;
 
-    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource. THEY ARE CONNECTED BY EGDES WITH INF FLOW.
+    //create superSink and superSource that connect all the sinks and souerces as one superSink and superSource.
+    //they are created accordingly to the type so either Field->Brewery or Brewery->Pub the cost is 0 but the capacity depends on the object
     auto type = std::dynamic_pointer_cast<Field>(fromVec[0]);
 
     if(type){
@@ -476,8 +479,8 @@ std::pair<int,int> Country::dinic(std::vector<std::shared_ptr<Node>> fromVec, st
 
     } 
     
-    while (buildLevelGraph(superSource, superSink, adjListCopy)) {//we are building level graph similarly as we were doing with augmentingPathBfs function. Serves simmilar role
-        std::unordered_map<std::shared_ptr<Node>, int> next; // TODO
+    while(buildLevelGraph(superSource, superSink, adjListCopy)){//we are building level graph similarly as we were doing with augmentingPathBfs function. Serves simmilar role
+        std::unordered_map<std::shared_ptr<Node>, int> next; 
         int flow;
         while ((flow = sendFlow(superSource, superSink, INT_MAX, adjListCopy, next)) > 0) {
             max_flow += flow;
@@ -533,34 +536,35 @@ bool Country::buildLevelGraph(std::shared_ptr<Node> source, std::shared_ptr<Node
 }
 
 int Country::sendFlow(std::shared_ptr<Node> source,std::shared_ptr<Node> sink, int flow,std::map<std::shared_ptr<Node>, std::vector<Lane>>& adjListCopy, std::unordered_map<std::shared_ptr<Node>, int>& next) {
-
-    if ( source == sink) return flow;
+    //source here is more like a current node as we are calling sendFlow inside this func
+    if ( source == sink) return flow;//if curr is sink then return the flow
 
     for (int& i = next[source]; i < adjListCopy[source].size(); i++) {
         Lane& lane = adjListCopy[source][i];
         auto v = lane.getToPtr();
 
-        if (lane.getCapacity() - lane.getFlow() > 0 && level[v] == level[source] + 1) {
-            int currFlow = std::min(flow, lane.getCapacity() - lane.getFlow());
-            int tempFlow = sendFlow(v, sink, currFlow, adjListCopy, next);
+        if (lane.getCapacity() - lane.getFlow() > 0 && level[v] == level[source] + 1){//we re looking for a lane that we can go to so cap-flow>0 and we re looking for a node in the next level
+            int currFlow = std::min(flow, lane.getCapacity() - lane.getFlow());//look if the flow is smaller than currenly min  flow
+            int tempFlow = sendFlow(v, sink, currFlow, adjListCopy, next);// go to the next node but its possible we come back here if next node is blocked
 
-            if (tempFlow > 0) {
-            lane.setFlow(lane.getFlow() + tempFlow);
+            if(tempFlow > 0){//means we founf the sink
+                //AUGMENT
+                lane.setFlow(lane.getFlow() + tempFlow);
 
-            
-            bool reverseFound = false;
-            for (auto& revLane : adjListCopy[v]) {
-                if (revLane.getToPtr() == source) {
-                revLane.setFlow(revLane.getFlow() - tempFlow);
-                reverseFound = true;
-                break;
+                
+                bool reverseFound = false;
+                for (auto& revLane : adjListCopy[v]) {
+                    if (revLane.getToPtr() == source) {
+                    revLane.setFlow(revLane.getFlow() - tempFlow);
+                    reverseFound = true;
+                    break;
+                    }
                 }
-            }
-            if (!reverseFound) {
-                adjListCopy[v].emplace_back(v, source, (-1*tempFlow), lane.getRepairCost());
-            }
+                if (!reverseFound) {
+                    adjListCopy[v].emplace_back(v, source, (-1*tempFlow), lane.getRepairCost());
+                }
 
-            return tempFlow;
+                return tempFlow;
             }
         }
     }
