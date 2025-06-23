@@ -48,11 +48,7 @@ For multiple sources (fields) and sinks (pubs), variants with fictitious super-s
 
 To minimize road repair costs while maintaining maximum flow, a cost minimization algorithm was used:
 
-- **Cycle Cancelling Algorithm** (`cycleCancelling`): Used to optimize transportation costs while preserving maximum flow. Iteratively finds and cancels negative-cost cycles in the residual graph, optimizing flow costs without changing its value.
-
-To detect negative-cost cycles in the Cycle Cancelling algorithm, the following algorithm was used:
-
-- **Bellman-Ford Algorithm** (`bellmanFord`): Finds shortest paths in a graph, even the one with negative-weight edges.
+- **Johnson's Algorythm** (`mcmf`) function within the Country class implements the Minimum Cost Maximum Flow algorithm. This algorithm is designed to determine the maximum possible flow that can be sent through a network while ensuring the total cost of that flow is minimised.
 
 ## 2.3. Assigning fields to quarters
 

@@ -48,11 +48,7 @@ W przypadku wielu źródeł (wiele pól jęczmienia) i wielu ujść (wiele karcz
 
 Aby zminimalizować koszty napraw dróg przy zachowaniu maksymalnego przepływu, zastosowano algorytm minimalizacji kosztów:
 
-- **Algorytm Cycle Cancelling** (`cycleCancelling`): Metoda `cycleCancelling` jest używana do optymalizacji kosztów transportu przy zachowaniu maksymalnego przepływu. Algorytm ten działa poprzez iteracyjne znajdowanie i anulowanie cykli o ujemnym koszcie w grafie rezydualnym, co pozwala na zmniejszenie łącznych kosztów przepływu bez zmiany jego wartości.
-
-Do znajdowania cykli o ujemnym koszcie w algorytmie Cycle Cancelling wykorzystano następujący algorytm:
-
-- **Algorytm Bellmana-Forda** (`bellmanFord`): Służy do znajdowania najkrótszych ścieżek w grafie, nawet jeśli występują w nim krawędzie o ujemnych wagach. 
+- **Johnson's Algorythm** (`mcmf`) w klasie Country implementuje algorytm Minimum Cost Maximum Flow. Algorytm ten jest zaprojektowany w celu określenia maksymalnego możliwego przepływu, który można wysłać przez sieć, zapewniając jednocześnie minimalizację całkowitego kosztu tego przepływu.
 
 ## 2.3. Przypisywanie pól do ćwiartek
 
